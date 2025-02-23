@@ -1,0 +1,22 @@
+meta {
+  name: Get All Tournaments
+  type: graphql
+  seq: 2
+}
+
+post {
+  url: http://194.164.200.227:3000/graphql
+  body: graphql
+  auth: none
+}
+
+body:graphql {
+  query
+  {
+    tournaments
+    {
+      id
+      name
+    }
+  }
+}
