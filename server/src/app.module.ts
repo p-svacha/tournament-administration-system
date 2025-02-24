@@ -7,6 +7,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { TournamentModule } from './tournament/tournament.module';
 import { ConfigModule } from '@nestjs/config';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -30,7 +31,8 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
       entities: [__dirname + '/**/*.entity.{ts,js}'],
       synchronize: true,
     }),
-    TournamentModule
+    TournamentModule,
+    UserModule
   ],
   controllers: [AppController],
   providers: [AppService],

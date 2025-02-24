@@ -1,7 +1,7 @@
 meta {
-  name: Get All Tournaments
+  name: Create User
   type: graphql
-  seq: 1
+  seq: 5
 }
 
 post {
@@ -11,12 +11,12 @@ post {
 }
 
 body:graphql {
-  query
-  {
-    tournaments
-    {
+  mutation {
+    createUser(name: "Max Mustermann", seat: "A1", is_global_admin: false) {
       id
       name
+      seat
+      is_global_admin
     }
   }
 }
