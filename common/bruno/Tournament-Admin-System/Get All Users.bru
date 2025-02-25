@@ -1,7 +1,7 @@
 meta {
   name: Get All Users
   type: graphql
-  seq: 6
+  seq: 2
 }
 
 post {
@@ -19,6 +19,16 @@ body:graphql {
       name
       seat
       is_global_admin
+      tournaments
+      {
+        tournament
+        {
+          id
+          name
+        }
+        initialSeed
+        finalRank
+      }
     }
   }
 }

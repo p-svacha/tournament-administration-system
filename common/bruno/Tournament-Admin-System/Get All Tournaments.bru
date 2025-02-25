@@ -17,6 +17,18 @@ body:graphql {
     {
       id
       name
+      participants
+      {
+        user
+        {
+          id
+          name
+          seat
+          is_global_admin
+        }
+        initialSeed
+        finalRank
+      }
     }
   }
 }
