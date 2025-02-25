@@ -1,7 +1,7 @@
 meta {
-  name: Create User
+  name: Get All Users
   type: graphql
-  seq: 5
+  seq: 6
 }
 
 post {
@@ -11,12 +11,10 @@ post {
 }
 
 body:graphql {
-  mutation {
-    createUser(data: {
-      name: "John Doe",
-      seat: "A12",
-      is_global_admin: false
-    }) {
+  query
+  {
+    users
+    {
       id
       name
       seat

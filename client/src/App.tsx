@@ -15,7 +15,7 @@ const GET_TOURNAMENTS = gql`
 `;
 
 const App: React.FC = () => {
-  const { currentUserId } = useUser();
+  const { currentUser } = useUser();
   const { loading, error, data } = useQuery(GET_TOURNAMENTS);
 
   if (loading) return <CircularProgress />;
@@ -25,9 +25,9 @@ const App: React.FC = () => {
     <div>
       <Header />
       <Container sx={{ mt: 4 }}>
-        {currentUserId ? (
+        {currentUser ? (
           <Typography variant="h5">
-            Angemeldet als User-ID: {currentUserId}
+            Angemeldet als: {`${currentUser.name} (${currentUser.seat})`}
           </Typography>
         ) : (
           <Typography variant="h5">

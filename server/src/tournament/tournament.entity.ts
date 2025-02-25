@@ -1,14 +1,14 @@
-import { Field, Int, ObjectType } from "@nestjs/graphql";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { TournamentParticipantEntity } from "src/tournament-participant/tournament-participant.entity";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
-@ObjectType()
 @Entity()
-export class Tournament {
-    @Field(() => Int)
+export class TournamentEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Field()
     @Column({type: 'varchar', length: 255})
     name: string;
+
+    @OneToMany(() => TournamentParticipantEntity, participant => participant.tournament)
+    tournamentParticipants: TournamentParticipantEntity[];
 }

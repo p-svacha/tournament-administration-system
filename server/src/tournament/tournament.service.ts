@@ -1,21 +1,35 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Tournament } from './tournament.entity';
+import { TournamentEntity } from './tournament.entity';
+import { TournamentModel } from './dto/tournament.model';
+import { CreateTournamentInput } from './dto/create-tournament.input';
 
 @Injectable()
 export class TournamentService {
     constructor(
-        @InjectRepository(Tournament)
-        private tournamentRepository: Repository<Tournament>,
+        @InjectRepository(TournamentEntity)
+        private tournamentRepository: Repository<TournamentEntity>
     ) {}
 
-    async create(name: string): Promise<Tournament> {
-        const tournament = this.tournamentRepository.create({ name });
-        return await this.tournamentRepository.save(tournament);
+    async findAllTournaments(): Promise<TournamentModel[]> {
+        // Find all entities
+        const tournaments: TournamentEntity[] = await this.tournamentRepository.find();
+
+        // Map entities to models (output DTOs)
+        return tournaments.map(tournamentEntity => new TournamentModel(tournamentEntity));
     }
 
-    async findAll(): Promise<Tournament[]> {
-        return await this.tournamentRepository.find();
+    async createTournament(input: CreateTournamentInput): Promise<TournamentModel> {
+        // Map input DTO to entity
+        const tournament: TournamentEntity = this.tournamentRepository.create({
+            name: input.name
+        });
+    
+        // Save new entity
+        const savedTournament: TournamentEntity = await this.tournamentRepository.save(tournament);
+    
+        // Return saved entity as model (output DTO)
+        return new TournamentModel(savedTournament);
     }
 }

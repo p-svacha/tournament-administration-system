@@ -12,7 +12,9 @@ post {
 
 body:graphql {
   mutation {
-    createTournament(name: "Erstes Turnier") {
+    createTournament(data: {
+      name: "Turnier"
+    }) {
       id
       name
     }

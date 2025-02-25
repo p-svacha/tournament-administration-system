@@ -1,22 +1,20 @@
-import { Field, Int, ObjectType } from "@nestjs/graphql";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { TournamentParticipantEntity } from "src/tournament-participant/tournament-participant.entity";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
-@ObjectType()
 @Entity()
-export class User {
-    @Field(() => Int)
+export class UserEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Field()
     @Column({ type: 'varchar', length: 255 })
     name: string;
 
-    @Field()
     @Column({ type: 'varchar', length: 255 })
     seat: string;
 
-    @Field()
     @Column({ type: 'boolean', default: false })
     is_global_admin: boolean;
+
+    @OneToMany(() => TournamentParticipantEntity, participant => participant.user)
+    tournamentParticipants: TournamentParticipantEntity[];
 }
