@@ -2,7 +2,7 @@ import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 't
 import { TournamentEntity } from '../tournament/tournament.entity';
 import { UserEntity } from '../user/user.entity';
 
-@Entity()
+@Entity('Tournament_Participant')
 export class TournamentParticipantEntity {
   @PrimaryGeneratedColumn()
   id: number;

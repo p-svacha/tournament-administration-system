@@ -1,7 +1,7 @@
 import { TournamentParticipantEntity } from "src/tournament-participant/tournament-participant.entity";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity()
+@Entity('Tournament')
 export class TournamentEntity {
     @PrimaryGeneratedColumn()
     id: number;
