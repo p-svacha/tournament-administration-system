@@ -4,7 +4,7 @@ export interface UserData {
   id: number;
   name: string;
   seat: string;
-  is_global_admin: boolean;
+  isGlobalAdmin: boolean;
 }
 
 interface UserContextType {

@@ -20,6 +20,18 @@ export class TournamentService {
         return tournaments.map(tournamentEntity => new TournamentModel(tournamentEntity));
     }
 
+    async findTournamentById(id: number): Promise<TournamentModel> {
+        const tournamentEntity = await this.tournamentRepository.findOne({
+            where: { id: id }
+        });
+
+        if (!tournamentEntity) {
+            throw new Error('Tournament not found');
+        }
+
+        return new TournamentModel(tournamentEntity);
+    }
+
     async createTournament(input: CreateTournamentInput): Promise<TournamentModel> {
         // Map input DTO to entity
         const tournament: TournamentEntity = this.tournamentRepository.create({

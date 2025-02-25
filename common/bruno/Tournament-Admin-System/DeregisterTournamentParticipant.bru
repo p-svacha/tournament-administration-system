@@ -1,0 +1,21 @@
+meta {
+  name: DeregisterTournamentParticipant
+  type: graphql
+  seq: 7
+}
+
+post {
+  url: http://217.154.9.148:3000/graphql
+  body: graphql
+  auth: none
+}
+
+body:graphql {
+  mutation
+  {
+    deregisterParticipant(data: {
+      tournamentId: 1,
+      userId: 3,
+    })
+  }
+}

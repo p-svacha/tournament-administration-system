@@ -1,52 +1,31 @@
-import React, { useState } from 'react';
-import './App.css';
-import { gql, useQuery } from '@apollo/client';
-import { CircularProgress, Container, List, ListItem, ListItemText, Typography } from '@mui/material';
+import React from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import Header from './components/Header';
+import NavBar from './components/NavBar';
+import TournamentsPage from './pages/TournamentsPage';
+import AdminPage from './pages/AdminPage';
+import { Container, Typography } from '@mui/material';
 import { useUser } from './contexts/UserContext';
-
-const GET_TOURNAMENTS = gql`
-  query GetTournaments {
-    tournaments {
-      id
-      name
-    }
-  }
-`;
+import TournamentDetailsPage from './pages/TournamentDetailsPage';
 
 const App: React.FC = () => {
   const { currentUser } = useUser();
-  const { loading, error, data } = useQuery(GET_TOURNAMENTS);
-
-  if (loading) return <CircularProgress />;
-  if (error) return <Typography color="error">Fehler: {error.message}</Typography>;
 
   return (
     <div>
       <Header />
-      <Container sx={{ mt: 4 }}>
-        {currentUser ? (
-          <Typography variant="h5">
-            Angemeldet als: {`${currentUser.name} (${currentUser.seat})`}
-          </Typography>
-        ) : (
-          <Typography variant="h5">
-            Bitte wähle einen User aus dem Dropdown.
-          </Typography>
+      <NavBar />
+      <Routes>
+        <Route path="/tournaments" element={<TournamentsPage />} />
+        <Route path="/tournaments/:id" element={<TournamentDetailsPage />} />
+        
+        {currentUser && currentUser.isGlobalAdmin && (
+          <Route path="/admin" element={<AdminPage />} />
         )}
-      </Container>
-      <Container>
-        <Typography variant="h4" gutterBottom>
-          Turniere
-        </Typography>
-        <List>
-          {data.tournaments.map((tournament: { id: number; name: string }) => (
-            <ListItem key={tournament.id}>
-              <ListItemText primary={`${tournament.id}: ${tournament.name}`} />
-            </ListItem>
-          ))}
-        </List>
-      </Container>
+
+        {/* Fallback */}
+        <Route path="*" element={<Navigate to="/tournaments" />} />
+      </Routes>
     </div>
   );
 };

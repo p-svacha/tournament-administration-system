@@ -6,6 +6,22 @@ import reportWebVitals from './reportWebVitals';
 import { ApolloProvider } from '@apollo/client';
 import client from './apollo-client';
 import { UserProvider } from './contexts/UserContext';
+import { BrowserRouter } from 'react-router-dom';
+import { createTheme, ThemeProvider } from '@mui/material';
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#424242',
+    },
+    secondary: {
+      main: '#fb8c00',
+    },
+    background: {
+      paper: '#fb8c00', // For <Card> background color
+    }
+  },
+});
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -14,7 +30,11 @@ root.render(
   <React.StrictMode>
     <ApolloProvider client={client}>
       <UserProvider>
-        <App />
+        <BrowserRouter>
+          <ThemeProvider theme={theme}>
+            <App />
+          </ThemeProvider>
+        </BrowserRouter>
       </UserProvider>
     </ApolloProvider>
   </React.StrictMode>

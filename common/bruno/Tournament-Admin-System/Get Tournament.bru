@@ -1,7 +1,7 @@
 meta {
-  name: Get All Tournaments
+  name: Get Tournament
   type: graphql
-  seq: 1
+  seq: 2
 }
 
 post {
@@ -13,21 +13,20 @@ post {
 body:graphql {
   query
   {
-    tournaments
+    tournament(id: 1)
     {
       id
       name
       participants
       {
+        initialSeed
+        finalRank
         user
         {
           id
           name
           seat
-          isGlobalAdmin
         }
-        initialSeed
-        finalRank
       }
     }
   }

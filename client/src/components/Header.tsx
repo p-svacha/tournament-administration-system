@@ -1,5 +1,5 @@
 import React from 'react';
-import { AppBar, Toolbar, Typography, FormControl, Select, MenuItem, Box, SelectChangeEvent } from '@mui/material';
+import { AppBar, Toolbar, Typography, FormControl, Select, MenuItem, Box, SelectChangeEvent, Container } from '@mui/material';
 import { useQuery, gql } from '@apollo/client';
 import { UserData, useUser } from '../contexts/UserContext';
 
@@ -9,7 +9,7 @@ const GET_USERS = gql`
       id
       name
       seat
-      is_global_admin
+      isGlobalAdmin
     }
   }
 `;
@@ -29,7 +29,15 @@ const Header: React.FC = () => {
         <Toolbar>
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Turnierverwaltung
-            </Typography>           
+            </Typography>
+            <Box sx={{ minWidth: 120 }}>
+                <Typography variant="body1">
+                    Sitzplatz: {currentUser ? currentUser.seat : ''}
+                </Typography>
+                <Typography variant="body1">
+                    Admin: {currentUser ? (currentUser.isGlobalAdmin ? 'Ja' : 'Nein') : ''}
+                </Typography>
+            </Box>           
             <Box sx={{ minWidth: 120 }}>
                 <Typography variant="body1" component="div" sx={{ flexGrow: 1 }}>
                 Angemeldet als

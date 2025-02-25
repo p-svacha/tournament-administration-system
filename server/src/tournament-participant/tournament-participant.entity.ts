@@ -1,8 +1,9 @@
-import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn, Unique } from 'typeorm';
 import { TournamentEntity } from '../tournament/tournament.entity';
 import { UserEntity } from '../user/user.entity';
 
 @Entity('Tournament_Participant')
+@Unique(['tournament', 'user'])
 export class TournamentParticipantEntity {
   @PrimaryGeneratedColumn()
   id: number;

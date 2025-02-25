@@ -1,5 +1,5 @@
 meta {
-  name: RegisterUser
+  name: RegisterTournamentParticipant
   type: graphql
   seq: 6
 }
@@ -11,17 +11,12 @@ post {
 }
 
 body:graphql {
-  mutation {
+  mutation
+  {
     registerParticipant(data: {
       tournamentId: 1,
-      userId: 1,
+      userId: 3,
     }) {
-      tournament {
-        name
-      },
-      user {
-        name
-      },
       initialSeed,
       finalRank
     }

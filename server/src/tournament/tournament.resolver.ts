@@ -1,4 +1,4 @@
-import { Args, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
+import { Args, Int, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 import { TournamentService } from './tournament.service';
 import { TournamentModel } from './dto/tournament.model';
 import { CreateTournamentInput } from './dto/create-tournament.input';
@@ -17,13 +17,18 @@ export class TournamentResolver {
         return this.tournamentService.findAllTournaments();
     }
 
+    @Query(() => TournamentModel, { nullable: true })
+    async tournament(
+        @Args('id', {type: () => Int }) id: number
+    ): Promise<TournamentModel> {
+        return this.tournamentService.findTournamentById(id);
+    }
+
     @ResolveField(() => [TournamentParticipantModel])
     async participants(@Parent() tournament: TournamentModel): Promise<TournamentParticipantModel[]> {
         return this.tournamentParticipantService.findParticipantsByTournament(tournament.id);
     }
 
-
-    
     @Mutation(() => TournamentModel)
     async createTournament(@Args('data') createTournamentData: CreateTournamentInput): Promise<TournamentModel> {
         return this.tournamentService.createTournament(createTournamentData);
