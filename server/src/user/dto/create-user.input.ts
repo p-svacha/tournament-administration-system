@@ -16,5 +16,5 @@ export class CreateUserInput {
 
   @Field({ defaultValue: false })
   @IsBoolean()
-  is_global_admin: boolean;
+  isGlobalAdmin: boolean;
 }

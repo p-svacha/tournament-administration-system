@@ -25,7 +25,7 @@ export class UserService {
     const user: UserEntity = this.userRepository.create({
       name: input.name,
       seat: input.seat,
-      is_global_admin: input.is_global_admin,
+      is_global_admin: input.isGlobalAdmin,
     });
 
     // Save new entity
