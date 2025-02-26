@@ -6,7 +6,7 @@ export class UpdateTournamentInput {
   name?: string;
 
   @Field({ nullable: true, description: "Flag indicating whether the tournament is published" })
-  is_published?: boolean;
+  isPublished?: boolean;
 
   @Field({ nullable: true, description: "Tournament rules and regulations" })
   rules?: string;
@@ -15,23 +15,23 @@ export class UpdateTournamentInput {
   category?: string;
 
   @Field({ nullable: true, description: "Prize for first place" })
-  prize_first?: string;
+  prize1?: string;
 
   @Field({ nullable: true, description: "Prize for second place" })
-  prize_second?: string;
+  prize2?: string;
 
   @Field({ nullable: true, description: "Prize for third place" })
-  prize_third?: string;
+  prize3?: string;
 
   @Field({ nullable: true, description: "Date and time of the tournament briefing" })
-  briefing_time?: Date;
+  briefingTime?: Date;
 
   @Field(() => Int, { nullable: true, description: "Number of players per team (default 1 for solo tournaments)" })
-  num_players_per_team?: number;
+  numPlayersPerTeam?: number;
 
   @Field(() => Int, { nullable: true, description: "Minimum number of participants required for the tournament" })
-  min_participants?: number;
+  minParticipants?: number;
 
   @Field(() => Int, { nullable: true, description: "Maximum number of participants allowed" })
-  max_participants?: number;
+  maxParticipants?: number;
 }

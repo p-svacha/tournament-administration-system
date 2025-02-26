@@ -14,7 +14,7 @@ export class TournamentModel {
   name: string;
 
   @Field(() => Boolean, { description: "Flag indicating whether the tournament is publicly displayed" })
-  is_published: boolean;
+  isPublished: boolean;
 
   @Field({ nullable: true, description: "Tournament rules and regulations" })
   rules?: string;
@@ -23,25 +23,25 @@ export class TournamentModel {
   category?: string;
 
   @Field({ nullable: true, description: "Prize for the first place" })
-  prize_first?: string;
+  prize1?: string;
 
   @Field({ nullable: true, description: "Prize for the second place" })
-  prize_second?: string;
+  prize2?: string;
 
   @Field({ nullable: true, description: "Prize for the third place" })
-  prize_third?: string;
+  prize3?: string;
 
   @Field({ nullable: true, description: "Date and time of the tournament briefing" })
-  briefing_time?: Date;
+  briefingTime?: Date;
 
   @Field(() => Int, { description: "Number of players per team (default 1 for solo tournaments)" })
-  num_players_per_team: number;
+  numPlayersPerTeam: number;
 
   @Field(() => Int, { nullable: true, description: "Minimum number of participants required for the tournament to take place" })
-  min_participants?: number;
+  minParticipants?: number;
 
   @Field(() => Int, { nullable: true, description: "Maximum number of participants that can register for the tournament" })
-  max_participants?: number;
+  maxParticipants?: number;
 
   @Field(() => [TournamentParticipantModel], { nullable: true, description: "List of participants registered for this tournament" })
   participants?: TournamentParticipantModel[];
@@ -50,16 +50,16 @@ export class TournamentModel {
     if (tournamentEntity) {
       this.id = tournamentEntity.id;
       this.name = tournamentEntity.name;
-      this.is_published = tournamentEntity.is_published;
+      this.isPublished = tournamentEntity.is_published;
       this.rules = tournamentEntity.rules;
       this.category = tournamentEntity.category;
-      this.prize_first = tournamentEntity.prize_first;
-      this.prize_second = tournamentEntity.prize_second;
-      this.prize_third = tournamentEntity.prize_third;
-      this.briefing_time = tournamentEntity.briefing_time;
-      this.num_players_per_team = tournamentEntity.num_players_per_team;
-      this.min_participants = tournamentEntity.min_participants;
-      this.max_participants = tournamentEntity.max_participants;
+      this.prize1 = tournamentEntity.prize_first;
+      this.prize2 = tournamentEntity.prize_second;
+      this.prize3 = tournamentEntity.prize_third;
+      this.briefingTime = tournamentEntity.briefing_time;
+      this.numPlayersPerTeam = tournamentEntity.num_players_per_team;
+      this.minParticipants = tournamentEntity.min_participants;
+      this.maxParticipants = tournamentEntity.max_participants;
     }
   }
 }

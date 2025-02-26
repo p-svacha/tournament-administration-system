@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Typography, TextField, Button, Box, CircularProgress, Grid } from '@mui/material';
+import { Container, Typography, TextField, Button, Box, CircularProgress, Grid2 as Grid, FormControlLabel, Checkbox } from '@mui/material';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, gql } from '@apollo/client';
+import client from '../apollo-client';
 
 const GET_TOURNAMENT_DETAILS = gql`
   query GetTournament($id: Int!) {
@@ -10,12 +11,12 @@ const GET_TOURNAMENT_DETAILS = gql`
       name
       category
       rules
-      prize_first
-      prize_second
-      prize_third
-      num_players_per_team
-      min_participants
-      max_participants
+      prize1
+      prize2
+      prize3
+      numPlayersPerTeam
+      minParticipants
+      maxParticipants
     }
   }
 `;
@@ -27,12 +28,12 @@ const UPDATE_TOURNAMENT = gql`
       name
       category
       rules
-      prize_first
-      prize_second
-      prize_third
-      num_players_per_team
-      min_participants
-      max_participants
+      prize1
+      prize2
+      prize3
+      numPlayersPerTeam
+      minParticipants
+      maxParticipants
     }
   }
 `;
@@ -47,12 +48,13 @@ interface FormState {
   name: string;
   category?: string;
   rules?: string;
-  prize_first?: string;
-  prize_second?: string;
-  prize_third?: string;
-  num_players_per_team: number;
-  min_participants?: number;
-  max_participants?: number;
+  prize1?: string;
+  prize2?: string;
+  prize3?: string;
+  numPlayersPerTeam: number;
+  minParticipants?: number;
+  maxParticipants?: number;
+  isPublished: boolean;
 }
 
 const TournamentAdminTab: React.FC = () => {
@@ -76,12 +78,13 @@ const TournamentAdminTab: React.FC = () => {
         name: data.tournament.name,
         category: data.tournament.category || '',
         rules: data.tournament.rules || '',
-        prize_first: data.tournament.prize_first || '',
-        prize_second: data.tournament.prize_second || '',
-        prize_third: data.tournament.prize_third || '',
-        num_players_per_team: data.tournament.num_players_per_team,
-        min_participants: data.tournament.min_participants || 0,
-        max_participants: data.tournament.max_participants || 0,
+        prize1: data.tournament.prize1 || '',
+        prize2: data.tournament.prize2 || '',
+        prize3: data.tournament.prize3 || '',
+        numPlayersPerTeam: data.tournament.numPlayersPerTeam,
+        minParticipants: data.tournament.minParticipants || 0,
+        maxParticipants: data.tournament.maxParticipants || 0,
+        isPublished: data.tournament.isPublished,
       });
     }
   }, [data]);
@@ -112,12 +115,12 @@ const TournamentAdminTab: React.FC = () => {
             name: formState.name,
             category: formState.category,
             rules: formState.rules,
-            prize_first: formState.prize_first,
-            prize_second: formState.prize_second,
-            prize_third: formState.prize_third,
-            num_players_per_team: formState.num_players_per_team,
-            min_participants: formState.min_participants,
-            max_participants: formState.max_participants,
+            prize1: formState.prize1,
+            prize2: formState.prize2,
+            prize3: formState.prize3,
+            numPlayersPerTeam: formState.numPlayersPerTeam,
+            minParticipants: formState.minParticipants,
+            maxParticipants: formState.maxParticipants,
           },
         },
       });
@@ -136,6 +139,7 @@ const TournamentAdminTab: React.FC = () => {
           variables: { id: tournamentId },
         });
         alert('Turnier gelöscht.');
+        await client.resetStore();
         navigate('/tournaments');
       } catch (err) {
         alert('Fehler beim Löschen.');
@@ -151,7 +155,7 @@ const TournamentAdminTab: React.FC = () => {
       </Typography>
       <Box component="form" noValidate autoComplete="off" sx={{ mt: 2 }}>
         <Grid container spacing={2}>
-          <Grid item xs={12}>
+          <Grid size={{xs: 12}}>
             <TextField
               fullWidth
               label="Name"
@@ -159,7 +163,7 @@ const TournamentAdminTab: React.FC = () => {
               onChange={handleChange('name')}
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid size={{xs: 12}}>
             <TextField
               fullWidth
               label="Kategorie"
@@ -167,7 +171,7 @@ const TournamentAdminTab: React.FC = () => {
               onChange={handleChange('category')}
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid size={{xs: 12}}>
             <TextField
               fullWidth
               label="Regeln"
@@ -177,55 +181,71 @@ const TournamentAdminTab: React.FC = () => {
               onChange={handleChange('rules')}
             />
           </Grid>
-          <Grid item xs={12} sm={4}>
+          <Grid size={{xs: 12, sm: 4}}>
             <TextField
               fullWidth
               label="Preis (1. Platz)"
-              value={formState.prize_first}
-              onChange={handleChange('prize_first')}
+              value={formState.prize1}
+              onChange={handleChange('prize1')}
             />
           </Grid>
-          <Grid item xs={12} sm={4}>
+          <Grid size={{xs: 12, sm: 4}}>
             <TextField
               fullWidth
               label="Preis (2. Platz)"
-              value={formState.prize_second}
-              onChange={handleChange('prize_second')}
+              value={formState.prize2}
+              onChange={handleChange('prize2')}
             />
           </Grid>
-          <Grid item xs={12} sm={4}>
+          <Grid size={{xs: 12, sm: 4}}>
             <TextField
               fullWidth
               label="Preis (3. Platz)"
-              value={formState.prize_third}
-              onChange={handleChange('prize_third')}
+              value={formState.prize3}
+              onChange={handleChange('prize3')}
             />
           </Grid>
-          <Grid item xs={12} sm={4}>
+          <Grid size={{xs: 12, sm: 4}}>
             <TextField
               fullWidth
               label="Spieler pro Team"
               type="number"
-              value={formState.num_players_per_team}
-              onChange={handleNumberChange('num_players_per_team')}
+              value={formState.numPlayersPerTeam}
+              onChange={handleNumberChange('numPlayersPerTeam')}
             />
           </Grid>
-          <Grid item xs={12} sm={4}>
+          <Grid size={{xs: 12, sm: 4}}>
             <TextField
               fullWidth
               label="Min. Teilnehmer"
               type="number"
-              value={formState.min_participants}
-              onChange={handleNumberChange('min_participants')}
+              value={formState.minParticipants}
+              onChange={handleNumberChange('minParticipants')}
             />
           </Grid>
-          <Grid item xs={12} sm={4}>
+          <Grid size={{xs: 12, sm: 4}}>
             <TextField
               fullWidth
               label="Max. Teilnehmer"
               type="number"
-              value={formState.max_participants}
-              onChange={handleNumberChange('max_participants')}
+              value={formState.maxParticipants}
+              onChange={handleNumberChange('maxParticipants')}
+            />
+          </Grid>
+          <Grid size={{xs: 12}}>
+            <FormControlLabel
+                control={
+                    <Checkbox
+                    checked={formState.isPublished}
+                    onChange={(e) =>
+                        setFormState({
+                        ...formState,
+                        isPublished: e.target.checked,
+                        })
+                    }
+                    />
+                }
+                label="Veröffentlicht"
             />
           </Grid>
         </Grid>

@@ -53,16 +53,16 @@ export class TournamentService {
         }
         // Update fields if provided
         if (input.name !== undefined) tournament.name = input.name;
-        if (input.is_published !== undefined) tournament.is_published = input.is_published;
+        if (input.isPublished !== undefined) tournament.is_published = input.isPublished;
         if (input.rules !== undefined) tournament.rules = input.rules;
         if (input.category !== undefined) tournament.category = input.category;
-        if (input.prize_first !== undefined) tournament.prize_first = input.prize_first;
-        if (input.prize_second !== undefined) tournament.prize_second = input.prize_second;
-        if (input.prize_third !== undefined) tournament.prize_third = input.prize_third;
-        if (input.briefing_time !== undefined) tournament.briefing_time = input.briefing_time;
-        if (input.num_players_per_team !== undefined) tournament.num_players_per_team = input.num_players_per_team;
-        if (input.min_participants !== undefined) tournament.min_participants = input.min_participants;
-        if (input.max_participants !== undefined) tournament.max_participants = input.max_participants;
+        if (input.prize1 !== undefined) tournament.prize_first = input.prize1;
+        if (input.prize2 !== undefined) tournament.prize_second = input.prize2;
+        if (input.prize3 !== undefined) tournament.prize_third = input.prize3;
+        if (input.briefingTime !== undefined) tournament.briefing_time = input.briefingTime;
+        if (input.numPlayersPerTeam !== undefined) tournament.num_players_per_team = input.numPlayersPerTeam;
+        if (input.minParticipants !== undefined) tournament.min_participants = input.minParticipants;
+        if (input.maxParticipants !== undefined) tournament.max_participants = input.maxParticipants;
     
         const updatedTournament = await this.tournamentRepository.save(tournament);
         return new TournamentModel(updatedTournament);
