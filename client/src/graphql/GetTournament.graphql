@@ -1,0 +1,26 @@
+query GetTournament($id: Int!) {
+    tournament(id: $id) {
+        id
+        name
+        category
+        rules
+        prize1
+        prize2
+        prize3
+        numPlayersPerTeam
+        minParticipants
+        maxParticipants
+        isPublished
+        briefingTime
+        participants {
+            initialSeed
+            finalRank
+            user {
+                id
+                name
+                seat
+                isGlobalAdmin
+            }
+        }
+    }
+}

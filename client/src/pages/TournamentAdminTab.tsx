@@ -1,48 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Typography, TextField, Button, Box, CircularProgress, Grid2 as Grid, FormControlLabel, Checkbox } from '@mui/material';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useQuery, useMutation, gql } from '@apollo/client';
 import client from '../apollo-client';
-
-const GET_TOURNAMENT_DETAILS = gql`
-  query GetTournament($id: Int!) {
-    tournament(id: $id) {
-      id
-      name
-      category
-      rules
-      prize1
-      prize2
-      prize3
-      numPlayersPerTeam
-      minParticipants
-      maxParticipants
-    }
-  }
-`;
-
-const UPDATE_TOURNAMENT = gql`
-  mutation UpdateTournament($id: Int!, $data: UpdateTournamentInput!) {
-    updateTournament(id: $id, data: $data) {
-      id
-      name
-      category
-      rules
-      prize1
-      prize2
-      prize3
-      numPlayersPerTeam
-      minParticipants
-      maxParticipants
-    }
-  }
-`;
-
-const DELETE_TOURNAMENT = gql`
-  mutation DeleteTournament($id: Int!) {
-    deleteTournament(id: $id)
-  }
-`;
+import { useDeleteTournamentMutation, useGetTournamentQuery, useUpdateTournamentMutation } from '../generated/graphql';
 
 interface FormState {
   name: string;
@@ -62,12 +22,12 @@ const TournamentAdminTab: React.FC = () => {
   const tournamentId = Number(id);
   const navigate = useNavigate();
 
-  const { loading, error, data, refetch } = useQuery(GET_TOURNAMENT_DETAILS, {
+  const { loading, error, data, refetch } = useGetTournamentQuery({
     variables: { id: tournamentId },
   });
 
-  const [updateTournament] = useMutation(UPDATE_TOURNAMENT);
-  const [deleteTournament] = useMutation(DELETE_TOURNAMENT);
+  const [updateTournament] = useUpdateTournamentMutation();
+  const [deleteTournament] = useDeleteTournamentMutation();
 
   const [formState, setFormState] = useState<FormState | null>(null);
 
@@ -121,6 +81,7 @@ const TournamentAdminTab: React.FC = () => {
             numPlayersPerTeam: formState.numPlayersPerTeam,
             minParticipants: formState.minParticipants,
             maxParticipants: formState.maxParticipants,
+            isPublished: formState.isPublished,
           },
         },
       });

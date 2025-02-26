@@ -1,0 +1,12 @@
+mutation RegisterParticipant($data: RegisterTournamentParticipantInput!) {
+    registerParticipant(data: $data) {
+        tournament {
+            id
+        }
+        user {
+            id
+        }
+        initialSeed
+        finalRank
+    }
+}

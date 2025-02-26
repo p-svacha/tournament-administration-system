@@ -1,37 +1,19 @@
 import React from 'react';
 import { Container, Typography, List, ListItem, ListItemText, CircularProgress } from '@mui/material';
 import { useParams } from 'react-router-dom';
-import { useQuery, gql } from '@apollo/client';
-
-const GET_TOURNAMENT_DETAILS = gql`
-  query GetTournament($id: Int!) {
-    tournament(id: $id) {
-      id
-      name
-      participants {
-        initialSeed
-        finalRank
-        user {
-          id
-          name
-          seat
-          isGlobalAdmin
-        }
-      }
-    }
-  }
-`;
+import { useGetTournamentQuery } from '../generated/graphql';
 
 const TournamentParticipantsTab: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const tournamentId = Number(id);
 
-  const { loading, error, data } = useQuery(GET_TOURNAMENT_DETAILS, {
+  const { loading, error, data } = useGetTournamentQuery({
     variables: { id: tournamentId },
   });
 
   if (loading) return <CircularProgress />;
   if (error) return <Typography color="error">Error: {error.message}</Typography>;
+  if (!data || !data.tournament) return <Typography color="error">Error: Turnier nicht vorhanden</Typography>;
 
   const tournament = data.tournament;
 

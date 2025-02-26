@@ -43,8 +43,8 @@ export class TournamentModel {
   @Field(() => Int, { nullable: true, description: "Maximum number of participants that can register for the tournament" })
   maxParticipants?: number;
 
-  @Field(() => [TournamentParticipantModel], { nullable: true, description: "List of participants registered for this tournament" })
-  participants?: TournamentParticipantModel[];
+  @Field(() => [TournamentParticipantModel], { description: "List of participants registered for this tournament" })
+  participants: TournamentParticipantModel[];
 
   constructor(tournamentEntity?: TournamentEntity) {
     if (tournamentEntity) {
@@ -60,6 +60,7 @@ export class TournamentModel {
       this.numPlayersPerTeam = tournamentEntity.num_players_per_team;
       this.minParticipants = tournamentEntity.min_participants;
       this.maxParticipants = tournamentEntity.max_participants;
+      this.participants = [];
     }
   }
 }

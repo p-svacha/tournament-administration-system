@@ -19,8 +19,8 @@ export class UserModel {
   @Field()
   isGlobalAdmin: boolean;
 
-  @Field(() => [TournamentParticipantModel], { nullable: true })
-  tournaments?: TournamentParticipantModel[];
+  @Field(() => [TournamentParticipantModel])
+  tournaments: TournamentParticipantModel[];
 
   constructor(userEntity?: UserEntity) {
     if(userEntity) {
@@ -28,6 +28,7 @@ export class UserModel {
       this.name = userEntity.name;
       this.seat = userEntity.seat;
       this.isGlobalAdmin = userEntity.is_global_admin;
+      this.tournaments = [];
     }
   }
 }

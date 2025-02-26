@@ -1,0 +1,6 @@
+mutation CreateTournament($data: CreateTournamentInput!) {
+    createTournament(data: $data) {
+        id
+        name
+    }
+}
