@@ -5,6 +5,7 @@ import { CreateTournamentInput } from './dto/create-tournament.input';
 import { TournamentParticipantService } from 'src/tournament-participant/tournament-participant.service';
 import { TournamentParticipantModel } from 'src/tournament-participant/dto/tournament-participant.model';
 import { UpdateTournamentInput } from './dto/update-tournament-input';
+import { publish } from 'rxjs';
 
 @Resolver(() => TournamentModel)
 export class TournamentResolver {
@@ -14,8 +15,10 @@ export class TournamentResolver {
     ) {}
 
     @Query(() => [TournamentModel])
-    async tournaments(): Promise<TournamentModel[]> {
-        return this.tournamentService.findAllTournaments();
+    async tournaments(
+        @Args('publishedOnly', {type: () => Boolean, nullable: true, defaultValue: true}) publishedOnly: boolean
+    ): Promise<TournamentModel[]> {
+        return this.tournamentService.findAllTournaments(publishedOnly);
     }
 
     @Query(() => TournamentModel, { nullable: true })

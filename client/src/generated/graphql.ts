@@ -105,7 +105,7 @@ export type TournamentModel = {
   /** Number of players per team (default 1 for solo tournaments) */
   numPlayersPerTeam: Scalars['Int']['output'];
   /** List of participants registered for this tournament */
-  participants?: Maybe<Array<TournamentParticipantModel>>;
+  participants: Array<TournamentParticipantModel>;
   /** Prize for the first place */
   prize1?: Maybe<Scalars['String']['output']>;
   /** Prize for the second place */
@@ -155,7 +155,7 @@ export type UserModel = {
   isGlobalAdmin: Scalars['Boolean']['output'];
   name: Scalars['String']['output'];
   seat: Scalars['String']['output'];
-  tournaments?: Maybe<Array<TournamentParticipantModel>>;
+  tournaments: Array<TournamentParticipantModel>;
 };
 
 export type CreateTournamentMutationVariables = Exact<{
@@ -189,7 +189,7 @@ export type GetTournamentQueryVariables = Exact<{
 }>;
 
 
-export type GetTournamentQuery = { __typename?: 'Query', tournament?: { __typename?: 'TournamentModel', id: number, name: string, category?: string | null, rules?: string | null, prize1?: string | null, prize2?: string | null, prize3?: string | null, numPlayersPerTeam: number, minParticipants?: number | null, maxParticipants?: number | null, isPublished: boolean, briefingTime?: any | null, participants?: Array<{ __typename?: 'TournamentParticipantModel', initialSeed?: number | null, finalRank?: number | null, user: { __typename?: 'UserModel', id: number, name: string, seat: string, isGlobalAdmin: boolean } }> | null } | null };
+export type GetTournamentQuery = { __typename?: 'Query', tournament?: { __typename?: 'TournamentModel', id: number, name: string, category?: string | null, rules?: string | null, prize1?: string | null, prize2?: string | null, prize3?: string | null, numPlayersPerTeam: number, minParticipants?: number | null, maxParticipants?: number | null, isPublished: boolean, briefingTime?: any | null, participants: Array<{ __typename?: 'TournamentParticipantModel', initialSeed?: number | null, finalRank?: number | null, user: { __typename?: 'UserModel', id: number, name: string, seat: string, isGlobalAdmin: boolean } }> } | null };
 
 export type RegisterParticipantMutationVariables = Exact<{
   data: RegisterTournamentParticipantInput;

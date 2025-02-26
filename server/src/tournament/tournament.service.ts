@@ -13,9 +13,17 @@ export class TournamentService {
         private tournamentRepository: Repository<TournamentEntity>
     ) {}
 
-    async findAllTournaments(): Promise<TournamentModel[]> {
-        // Find all entities
-        const tournaments: TournamentEntity[] = await this.tournamentRepository.find();
+    async findAllTournaments(publishedOnly: boolean): Promise<TournamentModel[]> {
+        let tournaments: TournamentEntity[]
+
+        if(publishedOnly) {
+            tournaments = await this.tournamentRepository.find({
+                where: { is_published: true }
+            });
+        }
+        else {
+            tournaments = await this.tournamentRepository.find();
+        }
 
         // Map entities to models (output DTOs)
         return tournaments.map(tournamentEntity => new TournamentModel(tournamentEntity));

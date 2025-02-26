@@ -5,10 +5,16 @@ import { useUser } from '../contexts/UserContext';
 import { useCreateTournamentMutation, useGetTournamentsQuery } from '../generated/graphql';
 
 const TournamentsPage: React.FC = () => {
-  const { loading, error, data, refetch } = useGetTournamentsQuery();
-  const [createTournament] = useCreateTournamentMutation();
-  const navigate = useNavigate();
   const { currentUser } = useUser();
+  const isAdmin = (currentUser && currentUser.isGlobalAdmin);
+
+  const { loading, error, data, refetch } = useGetTournamentsQuery();
+  const [createTournament] = useCreateTournamentMutation({
+    variables: {
+      publishedOnly: !isAdmin,
+    }
+  });
+  const navigate = useNavigate();
 
   if (loading) return <Typography>Loading...</Typography>;
   if (error) return <Typography color="error">Error: {error.message}</Typography>;
@@ -37,13 +43,13 @@ const TournamentsPage: React.FC = () => {
         Turniere
       </Typography>
       <Grid container spacing={2}>
-        {data.tournaments.map((tournament: { id: number; name: string }) => (
+        {data.tournaments.map((tournament) => (
           <Grid size={{xs: 12, sm: 6, md: 4}} key={tournament.id}>
             <Card style={{background: '#fb8c00'}}>
               <CardActionArea onClick={() => navigate(`/tournaments/${tournament.id}`)}>
                 <CardContent sx={{minHeight: 60 }}>
                   <Typography variant="h6">{tournament.name}</Typography>
-                  <Typography variant="body2">ID: {tournament.id}</Typography>
+                  <Typography variant="body2">{tournament.isPublished ? '' : 'unveröffentlicht'}</Typography>
                 </CardContent>
               </CardActionArea>
             </Card>
