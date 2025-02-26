@@ -2,6 +2,7 @@ import React from 'react';
 import { AppBar, Toolbar, Typography, FormControl, Select, MenuItem, Box, SelectChangeEvent, Container } from '@mui/material';
 import { useQuery, gql } from '@apollo/client';
 import { UserData, useUser } from '../contexts/UserContext';
+import { Link } from 'react-router-dom';
 
 const GET_USERS = gql`
   query GetUsers {
@@ -27,7 +28,7 @@ const Header: React.FC = () => {
     return (
         <AppBar position="static">
         <Toolbar>
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            <Typography variant="h6" component={Link} to="/tournaments" sx={{ flexGrow: 1, textDecoration: 'none', color: 'inherit' }}>
             Turnierverwaltung
             </Typography>
             <Box sx={{ minWidth: 120 }}>

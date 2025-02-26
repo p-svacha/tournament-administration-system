@@ -27,7 +27,7 @@ const TournamentsPage: React.FC = () => {
       <Grid container spacing={2}>
         {data.tournaments.map((tournament: { id: number; name: string }) => (
           <Grid size={{xs: 12, sm: 6, md: 4}} key={tournament.id}>
-            <Card>
+            <Card style={{background: '#fb8c00'}}>
               <CardActionArea onClick={() => navigate(`/tournaments/${tournament.id}`)}>
                 <CardContent>
                   <Typography variant="h6">{tournament.name}</Typography>

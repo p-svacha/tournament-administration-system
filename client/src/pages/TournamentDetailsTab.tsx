@@ -1,7 +1,7 @@
 import React from 'react';
+import { Container, Typography, Box, Button, CircularProgress } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import { useQuery, useMutation, gql } from '@apollo/client';
-import { Container, Typography, Button, CircularProgress, Box, List, ListItem, ListItemText } from '@mui/material';
 import { useUser } from '../contexts/UserContext';
 
 const GET_TOURNAMENT_DETAILS = gql`
@@ -9,6 +9,15 @@ const GET_TOURNAMENT_DETAILS = gql`
     tournament(id: $id) {
       id
       name
+      rules
+      briefing_time
+      category
+      prize_first
+      prize_second
+      prize_third
+      num_players_per_team
+      min_participants
+      max_participants
       participants {
         initialSeed
         finalRank
@@ -44,7 +53,7 @@ const DEREGISTER_PARTICIPANT = gql`
   }
 `;
 
-const TournamentDetailsPage: React.FC = () => {
+const TournamentDetailsTab: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const tournamentId = Number(id);
   const { currentUser } = useUser();
@@ -81,12 +90,21 @@ const TournamentDetailsPage: React.FC = () => {
   };
 
   return (
-    <Container sx={{ mt: 4 }}>
-      <Typography variant="h4" gutterBottom>
-        {tournament.name}
+    <Container>
+      <Typography variant="h5">Turnierdetails</Typography>
+      <Typography>Name: {tournament.name}</Typography>
+      <Typography>Kategorie: {tournament.category || '-'}</Typography>
+      <Typography>Regeln: {tournament.rules || '-'}</Typography>
+      <Typography>
+        Briefing: {tournament.briefing_time ? new Date(tournament.briefing_time).toLocaleString() : '-'}
       </Typography>
-      <Typography variant="body1">Turnier-ID: {tournament.id}</Typography>
-      
+      <Typography>
+        Preise: 1. {tournament.prize_first || '-'}, 2. {tournament.prize_second || '-'}, 3. {tournament.prize_third || '-'}
+      </Typography>
+      <Typography>Anzahl Spieler pro Team: {tournament.num_players_per_team}</Typography>
+      <Typography>
+        Min./Max. Teilnehmer: {tournament.min_participants || '-'} / {tournament.max_participants || '-'}
+      </Typography>
       <Box sx={{ mt: 2 }}>
         {currentUser && (
           <>
@@ -102,26 +120,8 @@ const TournamentDetailsPage: React.FC = () => {
           </>
         )}
       </Box>
-
-      <Box sx={{ mt: 4 }}>
-        <Typography variant="h5">Teilnehmer:</Typography>
-        {tournament.participants.length > 0 ? (
-          <List>
-            {tournament.participants.map((p: any) => (
-              <ListItem key={p.user.id}>
-                <ListItemText
-                  primary={p.user.name}
-                  secondary={`Seat: ${p.user.seat} | Seed: ${p.initialSeed} | Rank: ${p.finalRank ?? '-'}`}
-                />
-              </ListItem>
-            ))}
-          </List>
-        ) : (
-          <Typography variant="body1">Keine Teilnehmer registriert.</Typography>
-        )}
-      </Box>
     </Container>
   );
 };
 
-export default TournamentDetailsPage;
+export default TournamentDetailsTab;
