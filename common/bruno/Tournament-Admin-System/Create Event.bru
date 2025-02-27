@@ -1,7 +1,7 @@
 meta {
-  name: Create Tournament
+  name: Create Event
   type: graphql
-  seq: 1
+  seq: 11
 }
 
 post {
@@ -12,9 +12,8 @@ post {
 
 body:graphql {
   mutation {
-    createTournament(data: {
-      name: "Turnier"
-      eventId: 1
+    createEvent(data: {
+      name: "Lock and Load 17",
     }) {
       id
       name

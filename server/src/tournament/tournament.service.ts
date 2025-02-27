@@ -52,6 +52,7 @@ export class TournamentService {
     // Map input DTO to entity
     const tournament: TournamentEntity = this.tournamentRepository.create({
       name: input.name,
+      event: { id: input.eventId },
     });
 
     // Save new entity

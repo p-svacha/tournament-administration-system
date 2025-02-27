@@ -8,6 +8,7 @@ import client from './apollo-client';
 import { UserProvider } from './contexts/UserContext';
 import { BrowserRouter, HashRouter } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material';
+import { EventProvider } from './contexts/EventContext';
 
 const theme = createTheme({
   palette: {
@@ -25,11 +26,13 @@ root.render(
   <React.StrictMode>
     <ApolloProvider client={client}>
       <UserProvider>
-        <HashRouter>
-          <ThemeProvider theme={theme}>
-            <App />
-          </ThemeProvider>
-        </HashRouter>
+        <EventProvider>
+          <HashRouter>
+            <ThemeProvider theme={theme}>
+              <App />
+            </ThemeProvider>
+          </HashRouter>
+        </EventProvider>
       </UserProvider>
     </ApolloProvider>
   </React.StrictMode>,

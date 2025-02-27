@@ -1,0 +1,79 @@
+- admins can manually add participants
+- admins can remove participants
+
+- add event table
+    > add mandatory event_id as foreign key for tournaments
+
+- add event selection to header
+    > provides new EventContext
+    > ALWAYS one selected
+    > tournament overview page shows only tournaments with event in context
+    > creating tournament creates in event in context
+
+- make it possible to change event in tournament admin settings (dropdown)
+
+- group tournaments by category in main tournament overview
+- add quick selection dropdown to category input in tournament admin page, where it displays existing categories (from all tournaments or only same event?)
+
+- normal users should be able to go to unpublished tournament pages (tournaments/14/details etc.)
+
+
+- tournament admins
+    > Backend
+        > add entity
+            > FK tournament_id
+            > FK user_id
+        > add module
+        > add service
+            > addTournamentAdmin()
+            > removeTournamentAdmin()
+        > add resolver
+            > Mutation: addTournamentAdmin
+            > Mutation: removeTournamentAdmin
+        > add DTOs
+            > model
+            > add input
+            > remove input
+    > tournament admins have access to admin page
+    > tournament admins can add / kick participants
+    > tournament admins can NOT delete tournament
+    > add new section to tournament admin page where you can:
+        > add tournament new admins (with quick selection à la adding participants)
+        > remove tournament admins
+
+- show tournament name title as fixed element overarching all tabs in tournament
+
+- refactor tournament card into own component
+
+- add tournament registrationGroup field (string)
+    > users can only register to one tournament within same group and event
+    > show reason why they can not register for others
+    > this also applies to team tournaments when being member in team
+    > add registrationGroup input to admin page
+        > with quick selection dropdown showing existing registrationGroups in same event
+
+- general admin page to
+    > see all users
+    > add users
+    > edit users
+    > delete users
+    > see all events
+    > add events
+    > edit events
+    > delete events
+
+- add state to tournament (registration_closed, registration_open, running, finished)
+    > make registering only possible in registration_open
+
+- max participants 0 means no limit (is default)
+- make min participants default = 2
+
+- make tournament details look nicer
+    > take current page as template
+
+- teams & team tournaments
+    > teams are tournament-specific
+    > an existing team is also a registered participant
+    > creating a team also automatically creates a Tournament_Participant entry
+    > participant list should show team name and members
+    > join team via invite link (?) or password (?)

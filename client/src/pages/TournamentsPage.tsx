@@ -3,14 +3,17 @@ import { Container, Typography, Grid2 as Grid, Card, CardActionArea, CardContent
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../contexts/UserContext';
 import { useCreateTournamentMutation, useGetTournamentsQuery } from '../generated/graphql';
+import { useEvent } from '../contexts/EventContext';
 
 const TournamentsPage: React.FC = () => {
   const { currentUser } = useUser();
+  const { currentEvent } = useEvent();
   const isAdmin = currentUser && currentUser.isGlobalAdmin;
 
   const { loading, error, data, refetch } = useGetTournamentsQuery({
     variables: {
       publishedOnly: !isAdmin,
+      eventId: currentEvent.id,
     },
   });
   const [createTournament] = useCreateTournamentMutation();
@@ -23,7 +26,7 @@ const TournamentsPage: React.FC = () => {
   const handleCreateTournament = async () => {
     try {
       const result = await createTournament({
-        variables: { data: { name: 'Neues Turnier' } },
+        variables: { data: { name: 'Neues Turnier', eventId: currentEvent?.id } },
       });
       const newTournament = result.data?.createTournament;
 
