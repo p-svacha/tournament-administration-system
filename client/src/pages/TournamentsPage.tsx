@@ -22,11 +22,12 @@ const TournamentsPage: React.FC = () => {
   if (loading) return <Typography>Loading...</Typography>;
   if (error) return <Typography color="error">Error: {error.message}</Typography>;
   if (!data) return <Typography color="error">Fehler beim Laden der Turniere</Typography>;
+  if (!currentEvent) return <Typography color="error">Fehler beim Laden des Events</Typography>;
 
   const handleCreateTournament = async () => {
     try {
       const result = await createTournament({
-        variables: { data: { name: 'Neues Turnier', eventId: currentEvent?.id } },
+        variables: { data: { name: 'Neues Turnier', eventId: currentEvent.id } },
       });
       const newTournament = result.data?.createTournament;
 

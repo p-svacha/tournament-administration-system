@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, Repository } from 'typeorm';
 import { TournamentEntity } from './tournament.entity';
 import { TournamentModel } from './dto/tournament.model';
 import { CreateTournamentInput } from './dto/create-tournament.input';
@@ -13,16 +13,20 @@ export class TournamentService {
     private tournamentRepository: Repository<TournamentEntity>,
   ) {}
 
-  async findAllTournaments(publishedOnly: boolean): Promise<TournamentModel[]> {
-    let tournaments: TournamentEntity[];
+  async findTournaments(publishedOnly?: boolean, eventId?: number): Promise<TournamentModel[]> {
+    let whereCondition: FindOptionsWhere<TournamentEntity> = {};
 
     if (publishedOnly) {
-      tournaments = await this.tournamentRepository.find({
-        where: { is_published: true },
-      });
-    } else {
-      tournaments = await this.tournamentRepository.find();
+      whereCondition.is_published = true;
     }
+
+    if (eventId) {
+      whereCondition.event = { id: eventId };
+    }
+
+    const tournaments = await this.tournamentRepository.find({
+      where: whereCondition,
+    });
 
     // Map entities to models (output DTOs)
     return tournaments.map((tournamentEntity) => new TournamentModel(tournamentEntity));

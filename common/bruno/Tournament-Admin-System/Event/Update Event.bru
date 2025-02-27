@@ -1,0 +1,24 @@
+meta {
+  name: Update Event
+  type: graphql
+  seq: 3
+}
+
+post {
+  url: http://217.154.9.148:3000/graphql
+  body: graphql
+  auth: none
+}
+
+body:graphql {
+  mutation {
+      updateEvent(id: 2, data:
+        {
+          name: "Lock and Load 17B"
+        }
+      )
+      {
+        name
+      }
+    }
+}

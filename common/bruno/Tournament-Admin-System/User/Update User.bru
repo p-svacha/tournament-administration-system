@@ -1,0 +1,28 @@
+meta {
+  name: Update User
+  type: graphql
+  seq: 3
+}
+
+post {
+  url: http://217.154.9.148:3000/graphql
+  body: graphql
+  auth: none
+}
+
+body:graphql {
+  mutation {
+      updateUser(id: 5, data:
+        {
+          name: "Hans-Ruedi"
+          seat: "C-04"
+          isGlobalAdmin: false
+        }
+      )
+      {
+        name
+        seat
+        isGlobalAdmin
+      }
+    }
+}
