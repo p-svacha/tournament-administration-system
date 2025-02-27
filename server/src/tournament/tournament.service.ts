@@ -24,8 +24,9 @@ export class TournamentService {
       whereCondition.event = { id: eventId };
     }
 
-    const tournaments = await this.tournamentRepository.find({
+    const tournaments: TournamentEntity[] = await this.tournamentRepository.find({
       where: whereCondition,
+      relations: ['event'],
     });
 
     // Map entities to models (output DTOs)
@@ -35,6 +36,7 @@ export class TournamentService {
   async findTournamentById(id: number): Promise<TournamentModel> {
     const tournamentEntity = await this.tournamentRepository.findOne({
       where: { id: id },
+      relations: ['event'],
     });
 
     if (!tournamentEntity) {
@@ -45,8 +47,9 @@ export class TournamentService {
   }
 
   async findTournamentsByEventId(eventId: number): Promise<TournamentModel[]> {
-    const tournaments = await this.tournamentRepository.find({
+    const tournaments: TournamentEntity[] = await this.tournamentRepository.find({
       where: { event: { id: eventId } },
+      relations: ['event'],
     });
 
     return tournaments.map((tournamentEntity) => new TournamentModel(tournamentEntity));

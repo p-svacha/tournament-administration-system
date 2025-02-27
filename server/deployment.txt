@@ -2,9 +2,9 @@ Bei Änderungen am Server folgende Schritte machen:
 
 1. Änderungen commiten und pushen
 2. Auf Backend-Server verbinden (per "ssh root@217.154.9.148" Command im Terminal)
-3. Go to tournament-administration-system
+3. cd tournament-administration-system
 4. git pull
-5. Go to tournament-administration-system/server
+5. cd server
 6. npm install
 7. npm run build
 8. pm2 restart tournament-backend
