@@ -38,12 +38,12 @@ export class UserResolver {
   async updateUser(
     @Args('id', { type: () => Int }) id: number,
     @Args('data', { type: () => UpdateUserInput }) data: UpdateUserInput,
-  ) {
-    this.userService.updateUser(id, data);
+  ): Promise<UserModel> {
+    return this.userService.updateUser(id, data);
   }
 
   @Mutation(() => Boolean)
-  async deleteUser(@Args('id', { type: () => Int }) id: number) {
+  async deleteUser(@Args('id', { type: () => Int }) id: number): Promise<boolean> {
     return this.userService.deleteUser(id);
   }
 }

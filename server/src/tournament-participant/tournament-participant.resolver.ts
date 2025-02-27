@@ -15,7 +15,9 @@ export class TournamentParticipantResolver {
   }
 
   @Mutation(() => Boolean)
-  async deregisterParticipant(@Args('data') registerParticipantData: RegisterTournamentParticipantInput): Promise<boolean> {
+  async deregisterParticipant(
+    @Args('data') registerParticipantData: RegisterTournamentParticipantInput,
+  ): Promise<boolean> {
     return this.participantService.deregisterParticipant(registerParticipantData);
   }
 }

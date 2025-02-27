@@ -20,8 +20,22 @@ export class TournamentEntity {
   @Column({ type: 'text', nullable: true, comment: 'Regeln des Turniers' })
   rules: string;
 
-  @Column({ type: 'varchar', length: 255, nullable: true, comment: 'Kategorie des Turniers (zur Gruppierung)' })
+  @Column({
+    type: 'varchar',
+    length: 255,
+    nullable: true,
+    comment: 'Kategorie des Turniers, wonach die Turniere in der Turnierübersicht gruppiert werden.',
+  })
   category: string;
+
+  @Column({
+    type: 'varchar',
+    length: 255,
+    nullable: true,
+    comment:
+      'Registrierungsgruppe des Turniers. Teilnehmer können sich nur für ein Turnier innerhalb derselben Grupper registrieren.',
+  })
+  registration_group: string;
 
   @Column({ type: 'varchar', length: 255, nullable: true, comment: 'Preis für den Erstplatzierten' })
   prize_first: string;

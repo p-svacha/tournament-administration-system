@@ -7,60 +7,67 @@ import { TournamentParticipantModel } from 'src/tournament-participant/dto/tourn
  */
 @ObjectType()
 export class TournamentModel {
-  @Field(() => Int, { description: 'Unique identifier of the tournament' })
+  @Field(() => Int, { description: 'Unique identifier of the tournament.' })
   id: number;
 
-  @Field({ description: 'Name of the tournament' })
+  @Field({ description: 'Name of the tournament.' })
   name: string;
 
   @Field(() => Boolean, {
-    description: 'Flag indicating whether the tournament is publicly displayed',
+    description: 'Flag indicating whether the tournament is publicly displayed.',
   })
   isPublished: boolean;
 
-  @Field({ nullable: true, description: 'Tournament rules and regulations' })
+  @Field({ nullable: true, description: 'Tournament rules.' })
   rules?: string;
 
   @Field({
     nullable: true,
-    description: 'Category of the tournament (used for grouping)',
+    description: 'Tournaments are grouped by this category when displayed in the tournament overview.',
   })
   category?: string;
 
-  @Field({ nullable: true, description: 'Prize for the first place' })
+  @Field({
+    nullable: true,
+    description: 'Users can only participate in one tournament within the same registration group.',
+  })
+  registrationGroup?: string;
+
+  @Field({ nullable: true, description: 'Prize for the first place.' })
   prize1?: string;
 
-  @Field({ nullable: true, description: 'Prize for the second place' })
+  @Field({ nullable: true, description: 'Prize for the second place.' })
   prize2?: string;
 
-  @Field({ nullable: true, description: 'Prize for the third place' })
+  @Field({ nullable: true, description: 'Prize for the third place.' })
   prize3?: string;
 
   @Field({
     nullable: true,
-    description: 'Date and time of the tournament briefing',
+    description: 'Date and time of the tournament briefing.',
   })
   briefingTime?: Date;
 
   @Field(() => Int, {
-    description: 'Number of players per team (default 1 for solo tournaments)',
+    description: 'Number of players per team (1 means solo tournaments).',
   })
   numPlayersPerTeam: number;
 
   @Field(() => Int, {
     nullable: true,
-    description: 'Minimum number of participants required for the tournament to take place',
+    description: 'Minimum number of participants required for the tournament to take place.',
   })
   minParticipants?: number;
 
   @Field(() => Int, {
     nullable: true,
-    description: 'Maximum number of participants that can register for the tournament',
+    description:
+      'Maximum number of participants that can register for the tournament (0 means there is no upper limit).',
   })
   maxParticipants?: number;
 
   @Field(() => [TournamentParticipantModel], {
-    description: 'List of participants registered for this tournament',
+    description: 'List of participants registered for this tournament.',
   })
   participants: TournamentParticipantModel[];
 
@@ -71,6 +78,7 @@ export class TournamentModel {
       this.isPublished = tournamentEntity.is_published;
       this.rules = tournamentEntity.rules;
       this.category = tournamentEntity.category;
+      this.registrationGroup = tournamentEntity.registration_group;
       this.prize1 = tournamentEntity.prize_first;
       this.prize2 = tournamentEntity.prize_second;
       this.prize3 = tournamentEntity.prize_third;

@@ -20,7 +20,8 @@ export class TournamentParticipantService {
     });
 
     // Save new entity
-    const savedTournamentParticipant: TournamentParticipantEntity = await this.participantRepository.save(tournamentParticipant);
+    const savedTournamentParticipant: TournamentParticipantEntity =
+      await this.participantRepository.save(tournamentParticipant);
 
     // Return saved entity as model
     return new TournamentParticipantModel(savedTournamentParticipant);

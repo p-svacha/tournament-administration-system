@@ -75,6 +75,7 @@ export class TournamentService {
     if (input.isPublished !== undefined) tournament.is_published = input.isPublished;
     if (input.rules !== undefined) tournament.rules = input.rules;
     if (input.category !== undefined) tournament.category = input.category;
+    if (input.registrationGroup !== undefined) tournament.registration_group = input.registrationGroup;
     if (input.prize1 !== undefined) tournament.prize_first = input.prize1;
     if (input.prize2 !== undefined) tournament.prize_second = input.prize2;
     if (input.prize3 !== undefined) tournament.prize_third = input.prize3;

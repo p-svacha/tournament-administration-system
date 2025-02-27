@@ -5,7 +5,6 @@ import { CreateTournamentInput } from './dto/create-tournament.input';
 import { TournamentParticipantService } from 'src/tournament-participant/tournament-participant.service';
 import { TournamentParticipantModel } from 'src/tournament-participant/dto/tournament-participant.model';
 import { UpdateTournamentInput } from './dto/update-tournament-input';
-import { publish } from 'rxjs';
 
 @Resolver(() => TournamentModel)
 export class TournamentResolver {
