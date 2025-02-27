@@ -23,7 +23,7 @@ export class UserModel {
   tournaments: TournamentParticipantModel[];
 
   constructor(userEntity?: UserEntity) {
-    if(userEntity) {
+    if (userEntity) {
       this.id = userEntity.id;
       this.name = userEntity.name;
       this.seat = userEntity.seat;

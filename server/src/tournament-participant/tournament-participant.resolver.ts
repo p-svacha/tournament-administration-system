@@ -5,15 +5,17 @@ import { TournamentParticipantService } from './tournament-participant.service';
 
 @Resolver(() => TournamentParticipantModel)
 export class TournamentParticipantResolver {
-    constructor(private readonly participantService: TournamentParticipantService) {}
+  constructor(private readonly participantService: TournamentParticipantService) {}
 
-    @Mutation(() => TournamentParticipantModel)
-    async registerParticipant(@Args('data') registerParticipantData: RegisterTournamentParticipantInput): Promise<TournamentParticipantModel> {
-        return this.participantService.registerParticipant(registerParticipantData);
-    }
+  @Mutation(() => TournamentParticipantModel)
+  async registerParticipant(
+    @Args('data') registerParticipantData: RegisterTournamentParticipantInput,
+  ): Promise<TournamentParticipantModel> {
+    return this.participantService.registerParticipant(registerParticipantData);
+  }
 
-    @Mutation(() => Boolean)
-    async deregisterParticipant(@Args('data') registerParticipantData: RegisterTournamentParticipantInput): Promise<boolean> {
-        return this.participantService.deregisterParticipant(registerParticipantData);
-    }
+  @Mutation(() => Boolean)
+  async deregisterParticipant(@Args('data') registerParticipantData: RegisterTournamentParticipantInput): Promise<boolean> {
+    return this.participantService.deregisterParticipant(registerParticipantData);
+  }
 }

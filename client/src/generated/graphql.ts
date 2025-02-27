@@ -10,12 +10,12 @@ export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' |
 const defaultOptions = {} as const;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: { input: string; output: string; }
-  String: { input: string; output: string; }
-  Boolean: { input: boolean; output: boolean; }
-  Int: { input: number; output: number; }
-  Float: { input: number; output: number; }
-  DateTime: { input: any; output: any; }
+  ID: { input: string; output: string };
+  String: { input: string; output: string };
+  Boolean: { input: boolean; output: boolean };
+  Int: { input: number; output: number };
+  Float: { input: number; output: number };
+  DateTime: { input: any; output: any };
 };
 
 export type CreateTournamentInput = {
@@ -38,31 +38,25 @@ export type Mutation = {
   updateTournament: TournamentModel;
 };
 
-
 export type MutationCreateTournamentArgs = {
   data: CreateTournamentInput;
 };
-
 
 export type MutationCreateUserArgs = {
   data: CreateUserInput;
 };
 
-
 export type MutationDeleteTournamentArgs = {
   id: Scalars['Int']['input'];
 };
-
 
 export type MutationDeregisterParticipantArgs = {
   data: RegisterTournamentParticipantInput;
 };
 
-
 export type MutationRegisterParticipantArgs = {
   data: RegisterTournamentParticipantInput;
 };
-
 
 export type MutationUpdateTournamentArgs = {
   data: UpdateTournamentInput;
@@ -76,9 +70,12 @@ export type Query = {
   users: Array<UserModel>;
 };
 
-
 export type QueryTournamentArgs = {
   id: Scalars['Int']['input'];
+};
+
+export type QueryTournamentsArgs = {
+  publishedOnly?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type RegisterTournamentParticipantInput = {
@@ -162,59 +159,114 @@ export type CreateTournamentMutationVariables = Exact<{
   data: CreateTournamentInput;
 }>;
 
-
-export type CreateTournamentMutation = { __typename?: 'Mutation', createTournament: { __typename?: 'TournamentModel', id: number, name: string } };
+export type CreateTournamentMutation = {
+  __typename?: 'Mutation';
+  createTournament: { __typename?: 'TournamentModel'; id: number; name: string };
+};
 
 export type DeleteTournamentMutationVariables = Exact<{
   id: Scalars['Int']['input'];
 }>;
 
-
-export type DeleteTournamentMutation = { __typename?: 'Mutation', deleteTournament: boolean };
+export type DeleteTournamentMutation = { __typename?: 'Mutation'; deleteTournament: boolean };
 
 export type DeregisterParticipantMutationVariables = Exact<{
   data: RegisterTournamentParticipantInput;
 }>;
 
+export type DeregisterParticipantMutation = { __typename?: 'Mutation'; deregisterParticipant: boolean };
 
-export type DeregisterParticipantMutation = { __typename?: 'Mutation', deregisterParticipant: boolean };
+export type GetTournamentsQueryVariables = Exact<{
+  publishedOnly?: InputMaybe<Scalars['Boolean']['input']>;
+}>;
 
-export type GetTournamentsQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GetTournamentsQuery = { __typename?: 'Query', tournaments: Array<{ __typename?: 'TournamentModel', id: number, name: string }> };
+export type GetTournamentsQuery = {
+  __typename?: 'Query';
+  tournaments: Array<{ __typename?: 'TournamentModel'; id: number; name: string; isPublished: boolean }>;
+};
 
 export type GetTournamentQueryVariables = Exact<{
   id: Scalars['Int']['input'];
 }>;
 
+export type GetTournamentQuery = {
+  __typename?: 'Query';
+  tournament?: {
+    __typename?: 'TournamentModel';
+    id: number;
+    name: string;
+    category?: string | null;
+    rules?: string | null;
+    prize1?: string | null;
+    prize2?: string | null;
+    prize3?: string | null;
+    numPlayersPerTeam: number;
+    minParticipants?: number | null;
+    maxParticipants?: number | null;
+    isPublished: boolean;
+    briefingTime?: any | null;
+    participants: Array<{
+      __typename?: 'TournamentParticipantModel';
+      initialSeed?: number | null;
+      finalRank?: number | null;
+      user: { __typename?: 'UserModel'; id: number; name: string; seat: string; isGlobalAdmin: boolean };
+    }>;
+  } | null;
+};
 
-export type GetTournamentQuery = { __typename?: 'Query', tournament?: { __typename?: 'TournamentModel', id: number, name: string, category?: string | null, rules?: string | null, prize1?: string | null, prize2?: string | null, prize3?: string | null, numPlayersPerTeam: number, minParticipants?: number | null, maxParticipants?: number | null, isPublished: boolean, briefingTime?: any | null, participants: Array<{ __typename?: 'TournamentParticipantModel', initialSeed?: number | null, finalRank?: number | null, user: { __typename?: 'UserModel', id: number, name: string, seat: string, isGlobalAdmin: boolean } }> } | null };
+export type GetUsersQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetUsersQuery = {
+  __typename?: 'Query';
+  users: Array<{ __typename?: 'UserModel'; id: number; name: string; seat: string; isGlobalAdmin: boolean }>;
+};
 
 export type RegisterParticipantMutationVariables = Exact<{
   data: RegisterTournamentParticipantInput;
 }>;
 
-
-export type RegisterParticipantMutation = { __typename?: 'Mutation', registerParticipant: { __typename?: 'TournamentParticipantModel', initialSeed?: number | null, finalRank?: number | null, tournament: { __typename?: 'TournamentModel', id: number }, user: { __typename?: 'UserModel', id: number } } };
+export type RegisterParticipantMutation = {
+  __typename?: 'Mutation';
+  registerParticipant: {
+    __typename?: 'TournamentParticipantModel';
+    initialSeed?: number | null;
+    finalRank?: number | null;
+    tournament: { __typename?: 'TournamentModel'; id: number };
+    user: { __typename?: 'UserModel'; id: number };
+  };
+};
 
 export type UpdateTournamentMutationVariables = Exact<{
   id: Scalars['Int']['input'];
   data: UpdateTournamentInput;
 }>;
 
-
-export type UpdateTournamentMutation = { __typename?: 'Mutation', updateTournament: { __typename?: 'TournamentModel', id: number, name: string, category?: string | null, rules?: string | null, prize1?: string | null, prize2?: string | null, prize3?: string | null, numPlayersPerTeam: number, minParticipants?: number | null, maxParticipants?: number | null, isPublished: boolean } };
-
+export type UpdateTournamentMutation = {
+  __typename?: 'Mutation';
+  updateTournament: {
+    __typename?: 'TournamentModel';
+    id: number;
+    name: string;
+    category?: string | null;
+    rules?: string | null;
+    prize1?: string | null;
+    prize2?: string | null;
+    prize3?: string | null;
+    numPlayersPerTeam: number;
+    minParticipants?: number | null;
+    maxParticipants?: number | null;
+    isPublished: boolean;
+  };
+};
 
 export const CreateTournamentDocument = gql`
-    mutation CreateTournament($data: CreateTournamentInput!) {
-  createTournament(data: $data) {
-    id
-    name
+  mutation CreateTournament($data: CreateTournamentInput!) {
+    createTournament(data: $data) {
+      id
+      name
+    }
   }
-}
-    `;
+`;
 export type CreateTournamentMutationFn = Apollo.MutationFunction<CreateTournamentMutation, CreateTournamentMutationVariables>;
 
 /**
@@ -234,18 +286,20 @@ export type CreateTournamentMutationFn = Apollo.MutationFunction<CreateTournamen
  *   },
  * });
  */
-export function useCreateTournamentMutation(baseOptions?: Apollo.MutationHookOptions<CreateTournamentMutation, CreateTournamentMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateTournamentMutation, CreateTournamentMutationVariables>(CreateTournamentDocument, options);
-      }
+export function useCreateTournamentMutation(
+  baseOptions?: Apollo.MutationHookOptions<CreateTournamentMutation, CreateTournamentMutationVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<CreateTournamentMutation, CreateTournamentMutationVariables>(CreateTournamentDocument, options);
+}
 export type CreateTournamentMutationHookResult = ReturnType<typeof useCreateTournamentMutation>;
 export type CreateTournamentMutationResult = Apollo.MutationResult<CreateTournamentMutation>;
 export type CreateTournamentMutationOptions = Apollo.BaseMutationOptions<CreateTournamentMutation, CreateTournamentMutationVariables>;
 export const DeleteTournamentDocument = gql`
-    mutation DeleteTournament($id: Int!) {
-  deleteTournament(id: $id)
-}
-    `;
+  mutation DeleteTournament($id: Int!) {
+    deleteTournament(id: $id)
+  }
+`;
 export type DeleteTournamentMutationFn = Apollo.MutationFunction<DeleteTournamentMutation, DeleteTournamentMutationVariables>;
 
 /**
@@ -265,19 +319,24 @@ export type DeleteTournamentMutationFn = Apollo.MutationFunction<DeleteTournamen
  *   },
  * });
  */
-export function useDeleteTournamentMutation(baseOptions?: Apollo.MutationHookOptions<DeleteTournamentMutation, DeleteTournamentMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeleteTournamentMutation, DeleteTournamentMutationVariables>(DeleteTournamentDocument, options);
-      }
+export function useDeleteTournamentMutation(
+  baseOptions?: Apollo.MutationHookOptions<DeleteTournamentMutation, DeleteTournamentMutationVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<DeleteTournamentMutation, DeleteTournamentMutationVariables>(DeleteTournamentDocument, options);
+}
 export type DeleteTournamentMutationHookResult = ReturnType<typeof useDeleteTournamentMutation>;
 export type DeleteTournamentMutationResult = Apollo.MutationResult<DeleteTournamentMutation>;
 export type DeleteTournamentMutationOptions = Apollo.BaseMutationOptions<DeleteTournamentMutation, DeleteTournamentMutationVariables>;
 export const DeregisterParticipantDocument = gql`
-    mutation DeregisterParticipant($data: RegisterTournamentParticipantInput!) {
-  deregisterParticipant(data: $data)
-}
-    `;
-export type DeregisterParticipantMutationFn = Apollo.MutationFunction<DeregisterParticipantMutation, DeregisterParticipantMutationVariables>;
+  mutation DeregisterParticipant($data: RegisterTournamentParticipantInput!) {
+    deregisterParticipant(data: $data)
+  }
+`;
+export type DeregisterParticipantMutationFn = Apollo.MutationFunction<
+  DeregisterParticipantMutation,
+  DeregisterParticipantMutationVariables
+>;
 
 /**
  * __useDeregisterParticipantMutation__
@@ -296,21 +355,27 @@ export type DeregisterParticipantMutationFn = Apollo.MutationFunction<Deregister
  *   },
  * });
  */
-export function useDeregisterParticipantMutation(baseOptions?: Apollo.MutationHookOptions<DeregisterParticipantMutation, DeregisterParticipantMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeregisterParticipantMutation, DeregisterParticipantMutationVariables>(DeregisterParticipantDocument, options);
-      }
+export function useDeregisterParticipantMutation(
+  baseOptions?: Apollo.MutationHookOptions<DeregisterParticipantMutation, DeregisterParticipantMutationVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<DeregisterParticipantMutation, DeregisterParticipantMutationVariables>(DeregisterParticipantDocument, options);
+}
 export type DeregisterParticipantMutationHookResult = ReturnType<typeof useDeregisterParticipantMutation>;
 export type DeregisterParticipantMutationResult = Apollo.MutationResult<DeregisterParticipantMutation>;
-export type DeregisterParticipantMutationOptions = Apollo.BaseMutationOptions<DeregisterParticipantMutation, DeregisterParticipantMutationVariables>;
+export type DeregisterParticipantMutationOptions = Apollo.BaseMutationOptions<
+  DeregisterParticipantMutation,
+  DeregisterParticipantMutationVariables
+>;
 export const GetTournamentsDocument = gql`
-    query GetTournaments {
-  tournaments {
-    id
-    name
+  query GetTournaments($publishedOnly: Boolean = true) {
+    tournaments(publishedOnly: $publishedOnly) {
+      id
+      name
+      isPublished
+    }
   }
-}
-    `;
+`;
 
 /**
  * __useGetTournamentsQuery__
@@ -324,53 +389,56 @@ export const GetTournamentsDocument = gql`
  * @example
  * const { data, loading, error } = useGetTournamentsQuery({
  *   variables: {
+ *      publishedOnly: // value for 'publishedOnly'
  *   },
  * });
  */
 export function useGetTournamentsQuery(baseOptions?: Apollo.QueryHookOptions<GetTournamentsQuery, GetTournamentsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetTournamentsQuery, GetTournamentsQueryVariables>(GetTournamentsDocument, options);
-      }
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetTournamentsQuery, GetTournamentsQueryVariables>(GetTournamentsDocument, options);
+}
 export function useGetTournamentsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTournamentsQuery, GetTournamentsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetTournamentsQuery, GetTournamentsQueryVariables>(GetTournamentsDocument, options);
-        }
-export function useGetTournamentsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetTournamentsQuery, GetTournamentsQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<GetTournamentsQuery, GetTournamentsQueryVariables>(GetTournamentsDocument, options);
-        }
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetTournamentsQuery, GetTournamentsQueryVariables>(GetTournamentsDocument, options);
+}
+export function useGetTournamentsSuspenseQuery(
+  baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetTournamentsQuery, GetTournamentsQueryVariables>,
+) {
+  const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<GetTournamentsQuery, GetTournamentsQueryVariables>(GetTournamentsDocument, options);
+}
 export type GetTournamentsQueryHookResult = ReturnType<typeof useGetTournamentsQuery>;
 export type GetTournamentsLazyQueryHookResult = ReturnType<typeof useGetTournamentsLazyQuery>;
 export type GetTournamentsSuspenseQueryHookResult = ReturnType<typeof useGetTournamentsSuspenseQuery>;
 export type GetTournamentsQueryResult = Apollo.QueryResult<GetTournamentsQuery, GetTournamentsQueryVariables>;
 export const GetTournamentDocument = gql`
-    query GetTournament($id: Int!) {
-  tournament(id: $id) {
-    id
-    name
-    category
-    rules
-    prize1
-    prize2
-    prize3
-    numPlayersPerTeam
-    minParticipants
-    maxParticipants
-    isPublished
-    briefingTime
-    participants {
-      initialSeed
-      finalRank
-      user {
-        id
-        name
-        seat
-        isGlobalAdmin
+  query GetTournament($id: Int!) {
+    tournament(id: $id) {
+      id
+      name
+      category
+      rules
+      prize1
+      prize2
+      prize3
+      numPlayersPerTeam
+      minParticipants
+      maxParticipants
+      isPublished
+      briefingTime
+      participants {
+        initialSeed
+        finalRank
+        user {
+          id
+          name
+          seat
+          isGlobalAdmin
+        }
       }
     }
   }
-}
-    `;
+`;
 
 /**
  * __useGetTournamentQuery__
@@ -388,36 +456,85 @@ export const GetTournamentDocument = gql`
  *   },
  * });
  */
-export function useGetTournamentQuery(baseOptions: Apollo.QueryHookOptions<GetTournamentQuery, GetTournamentQueryVariables> & ({ variables: GetTournamentQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetTournamentQuery, GetTournamentQueryVariables>(GetTournamentDocument, options);
-      }
+export function useGetTournamentQuery(
+  baseOptions: Apollo.QueryHookOptions<GetTournamentQuery, GetTournamentQueryVariables> &
+    ({ variables: GetTournamentQueryVariables; skip?: boolean } | { skip: boolean }),
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetTournamentQuery, GetTournamentQueryVariables>(GetTournamentDocument, options);
+}
 export function useGetTournamentLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTournamentQuery, GetTournamentQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetTournamentQuery, GetTournamentQueryVariables>(GetTournamentDocument, options);
-        }
-export function useGetTournamentSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetTournamentQuery, GetTournamentQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<GetTournamentQuery, GetTournamentQueryVariables>(GetTournamentDocument, options);
-        }
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetTournamentQuery, GetTournamentQueryVariables>(GetTournamentDocument, options);
+}
+export function useGetTournamentSuspenseQuery(
+  baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetTournamentQuery, GetTournamentQueryVariables>,
+) {
+  const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<GetTournamentQuery, GetTournamentQueryVariables>(GetTournamentDocument, options);
+}
 export type GetTournamentQueryHookResult = ReturnType<typeof useGetTournamentQuery>;
 export type GetTournamentLazyQueryHookResult = ReturnType<typeof useGetTournamentLazyQuery>;
 export type GetTournamentSuspenseQueryHookResult = ReturnType<typeof useGetTournamentSuspenseQuery>;
 export type GetTournamentQueryResult = Apollo.QueryResult<GetTournamentQuery, GetTournamentQueryVariables>;
-export const RegisterParticipantDocument = gql`
-    mutation RegisterParticipant($data: RegisterTournamentParticipantInput!) {
-  registerParticipant(data: $data) {
-    tournament {
+export const GetUsersDocument = gql`
+  query GetUsers {
+    users {
       id
+      name
+      seat
+      isGlobalAdmin
     }
-    user {
-      id
-    }
-    initialSeed
-    finalRank
   }
+`;
+
+/**
+ * __useGetUsersQuery__
+ *
+ * To run a query within a React component, call `useGetUsersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUsersQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetUsersQuery(baseOptions?: Apollo.QueryHookOptions<GetUsersQuery, GetUsersQueryVariables>) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<GetUsersQuery, GetUsersQueryVariables>(GetUsersDocument, options);
 }
-    `;
+export function useGetUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUsersQuery, GetUsersQueryVariables>) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<GetUsersQuery, GetUsersQueryVariables>(GetUsersDocument, options);
+}
+export function useGetUsersSuspenseQuery(
+  baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetUsersQuery, GetUsersQueryVariables>,
+) {
+  const options = baseOptions === Apollo.skipToken ? baseOptions : { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<GetUsersQuery, GetUsersQueryVariables>(GetUsersDocument, options);
+}
+export type GetUsersQueryHookResult = ReturnType<typeof useGetUsersQuery>;
+export type GetUsersLazyQueryHookResult = ReturnType<typeof useGetUsersLazyQuery>;
+export type GetUsersSuspenseQueryHookResult = ReturnType<typeof useGetUsersSuspenseQuery>;
+export type GetUsersQueryResult = Apollo.QueryResult<GetUsersQuery, GetUsersQueryVariables>;
+export const RegisterParticipantDocument = gql`
+  mutation RegisterParticipant($data: RegisterTournamentParticipantInput!) {
+    registerParticipant(data: $data) {
+      tournament {
+        id
+      }
+      user {
+        id
+      }
+      initialSeed
+      finalRank
+    }
+  }
+`;
 export type RegisterParticipantMutationFn = Apollo.MutationFunction<RegisterParticipantMutation, RegisterParticipantMutationVariables>;
 
 /**
@@ -437,30 +554,35 @@ export type RegisterParticipantMutationFn = Apollo.MutationFunction<RegisterPart
  *   },
  * });
  */
-export function useRegisterParticipantMutation(baseOptions?: Apollo.MutationHookOptions<RegisterParticipantMutation, RegisterParticipantMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<RegisterParticipantMutation, RegisterParticipantMutationVariables>(RegisterParticipantDocument, options);
-      }
+export function useRegisterParticipantMutation(
+  baseOptions?: Apollo.MutationHookOptions<RegisterParticipantMutation, RegisterParticipantMutationVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<RegisterParticipantMutation, RegisterParticipantMutationVariables>(RegisterParticipantDocument, options);
+}
 export type RegisterParticipantMutationHookResult = ReturnType<typeof useRegisterParticipantMutation>;
 export type RegisterParticipantMutationResult = Apollo.MutationResult<RegisterParticipantMutation>;
-export type RegisterParticipantMutationOptions = Apollo.BaseMutationOptions<RegisterParticipantMutation, RegisterParticipantMutationVariables>;
+export type RegisterParticipantMutationOptions = Apollo.BaseMutationOptions<
+  RegisterParticipantMutation,
+  RegisterParticipantMutationVariables
+>;
 export const UpdateTournamentDocument = gql`
-    mutation UpdateTournament($id: Int!, $data: UpdateTournamentInput!) {
-  updateTournament(id: $id, data: $data) {
-    id
-    name
-    category
-    rules
-    prize1
-    prize2
-    prize3
-    numPlayersPerTeam
-    minParticipants
-    maxParticipants
-    isPublished
+  mutation UpdateTournament($id: Int!, $data: UpdateTournamentInput!) {
+    updateTournament(id: $id, data: $data) {
+      id
+      name
+      category
+      rules
+      prize1
+      prize2
+      prize3
+      numPlayersPerTeam
+      minParticipants
+      maxParticipants
+      isPublished
+    }
   }
-}
-    `;
+`;
 export type UpdateTournamentMutationFn = Apollo.MutationFunction<UpdateTournamentMutation, UpdateTournamentMutationVariables>;
 
 /**
@@ -481,10 +603,12 @@ export type UpdateTournamentMutationFn = Apollo.MutationFunction<UpdateTournamen
  *   },
  * });
  */
-export function useUpdateTournamentMutation(baseOptions?: Apollo.MutationHookOptions<UpdateTournamentMutation, UpdateTournamentMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateTournamentMutation, UpdateTournamentMutationVariables>(UpdateTournamentDocument, options);
-      }
+export function useUpdateTournamentMutation(
+  baseOptions?: Apollo.MutationHookOptions<UpdateTournamentMutation, UpdateTournamentMutationVariables>,
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<UpdateTournamentMutation, UpdateTournamentMutationVariables>(UpdateTournamentDocument, options);
+}
 export type UpdateTournamentMutationHookResult = ReturnType<typeof useUpdateTournamentMutation>;
 export type UpdateTournamentMutationResult = Apollo.MutationResult<UpdateTournamentMutation>;
 export type UpdateTournamentMutationOptions = Apollo.BaseMutationOptions<UpdateTournamentMutation, UpdateTournamentMutationVariables>;

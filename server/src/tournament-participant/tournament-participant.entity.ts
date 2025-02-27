@@ -8,11 +8,13 @@ export class TournamentParticipantEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => TournamentEntity, tournament => tournament.tournamentParticipants, { onDelete: 'CASCADE' })
+  @ManyToOne(() => TournamentEntity, (tournament) => tournament.tournamentParticipants, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'tournament_id' })
   tournament: TournamentEntity;
 
-  @ManyToOne(() => UserEntity, user => user.tournamentParticipants, { onDelete: 'CASCADE' })
+  @ManyToOne(() => UserEntity, (user) => user.tournamentParticipants, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'user_id' })
   user: UserEntity;
 

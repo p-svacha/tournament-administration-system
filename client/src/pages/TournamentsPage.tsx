@@ -6,19 +6,19 @@ import { useCreateTournamentMutation, useGetTournamentsQuery } from '../generate
 
 const TournamentsPage: React.FC = () => {
   const { currentUser } = useUser();
-  const isAdmin = (currentUser && currentUser.isGlobalAdmin);
+  const isAdmin = currentUser && currentUser.isGlobalAdmin;
 
-  const { loading, error, data, refetch } = useGetTournamentsQuery();
-  const [createTournament] = useCreateTournamentMutation({
+  const { loading, error, data, refetch } = useGetTournamentsQuery({
     variables: {
       publishedOnly: !isAdmin,
-    }
+    },
   });
+  const [createTournament] = useCreateTournamentMutation();
   const navigate = useNavigate();
 
   if (loading) return <Typography>Loading...</Typography>;
   if (error) return <Typography color="error">Error: {error.message}</Typography>;
-  if (!data) return <Typography color="error">Keine Turniere vorhanden</Typography>;
+  if (!data) return <Typography color="error">Fehler beim Laden der Turniere</Typography>;
 
   const handleCreateTournament = async () => {
     try {
@@ -28,7 +28,7 @@ const TournamentsPage: React.FC = () => {
       const newTournament = result.data?.createTournament;
 
       // Redirect to tournament admin page
-      if(newTournament) {
+      if (newTournament) {
         navigate(`/tournaments/${newTournament.id}/admin`);
         refetch();
       }
@@ -44,10 +44,10 @@ const TournamentsPage: React.FC = () => {
       </Typography>
       <Grid container spacing={2}>
         {data.tournaments.map((tournament) => (
-          <Grid size={{xs: 12, sm: 6, md: 4}} key={tournament.id}>
-            <Card style={{background: '#fb8c00'}}>
+          <Grid size={{ xs: 12, sm: 6, md: 4 }} key={tournament.id}>
+            <Card style={{ background: '#fb8c00' }}>
               <CardActionArea onClick={() => navigate(`/tournaments/${tournament.id}`)}>
-                <CardContent sx={{minHeight: 60 }}>
+                <CardContent sx={{ minHeight: 60 }}>
                   <Typography variant="h6">{tournament.name}</Typography>
                   <Typography variant="body2">{tournament.isPublished ? '' : 'unveröffentlicht'}</Typography>
                 </CardContent>
@@ -58,7 +58,7 @@ const TournamentsPage: React.FC = () => {
 
         {/* Panel to add new tournament */}
         {currentUser && currentUser.isGlobalAdmin && (
-          <Grid size={{ xs: 12, sm: 6, md: 4}}>
+          <Grid size={{ xs: 12, sm: 6, md: 4 }}>
             <Card style={{ background: '#66bb6a' }}>
               <CardActionArea onClick={handleCreateTournament}>
                 <CardContent sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 60 }}>

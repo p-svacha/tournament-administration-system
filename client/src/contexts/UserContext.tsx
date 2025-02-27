@@ -8,7 +8,7 @@ export interface UserData {
 }
 
 interface UserContextType {
-  currentUser: UserData  | null;
+  currentUser: UserData | null;
   setCurrentUser: (user: UserData | null) => void;
 }
 
@@ -16,11 +16,7 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [currentUser, setCurrentUser] = useState<UserData | null>(null);
-  return (
-    <UserContext.Provider value={{ currentUser, setCurrentUser }}>
-      {children}
-    </UserContext.Provider>
-  );
+  return <UserContext.Provider value={{ currentUser, setCurrentUser }}>{children}</UserContext.Provider>;
 };
 
 export const useUser = (): UserContextType => {

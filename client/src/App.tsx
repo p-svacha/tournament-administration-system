@@ -25,9 +25,7 @@ const App: React.FC = () => {
           <Route index element={<Navigate to="details" replace />} />
           <Route path="details" element={<TournamentDetailsTab />} />
           <Route path="participants" element={<TournamentParticipantsTab />} />
-          {currentUser && currentUser.isGlobalAdmin && (
-            <Route path="admin" element={<TournamentAdminTab />} />
-          )}
+          {currentUser && currentUser.isGlobalAdmin && <Route path="admin" element={<TournamentAdminTab />} />}
           <Route path="*" element={<RedirectToDetails />} />
         </Route>
         <Route path="*" element={<Navigate to="/tournaments" />} />

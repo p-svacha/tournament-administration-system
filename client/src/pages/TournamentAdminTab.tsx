@@ -100,8 +100,8 @@ const TournamentAdminTab: React.FC = () => {
           variables: { id: tournamentId },
         });
         alert('Turnier gelöscht.');
-        await client.resetStore();
         navigate('/tournaments');
+        setTimeout(() => client.resetStore(), 100); // Reset cache so tournament doesn't appear in tournament overview anymore, but wait until navigate is done.
       } catch (err) {
         alert('Fehler beim Löschen.');
         console.error(err);
@@ -116,57 +116,25 @@ const TournamentAdminTab: React.FC = () => {
       </Typography>
       <Box component="form" noValidate autoComplete="off" sx={{ mt: 2 }}>
         <Grid container spacing={2}>
-          <Grid size={{xs: 12}}>
-            <TextField
-              fullWidth
-              label="Name"
-              value={formState.name}
-              onChange={handleChange('name')}
-            />
+          <Grid size={{ xs: 12 }}>
+            <TextField fullWidth label="Name" value={formState.name} onChange={handleChange('name')} />
           </Grid>
-          <Grid size={{xs: 12}}>
-            <TextField
-              fullWidth
-              label="Kategorie"
-              value={formState.category}
-              onChange={handleChange('category')}
-            />
+          <Grid size={{ xs: 12 }}>
+            <TextField fullWidth label="Kategorie" value={formState.category} onChange={handleChange('category')} />
           </Grid>
-          <Grid size={{xs: 12}}>
-            <TextField
-              fullWidth
-              label="Regeln"
-              multiline
-              minRows={3}
-              value={formState.rules}
-              onChange={handleChange('rules')}
-            />
+          <Grid size={{ xs: 12 }}>
+            <TextField fullWidth label="Regeln" multiline minRows={3} value={formState.rules} onChange={handleChange('rules')} />
           </Grid>
-          <Grid size={{xs: 12, sm: 4}}>
-            <TextField
-              fullWidth
-              label="Preis (1. Platz)"
-              value={formState.prize1}
-              onChange={handleChange('prize1')}
-            />
+          <Grid size={{ xs: 12, sm: 4 }}>
+            <TextField fullWidth label="Preis (1. Platz)" value={formState.prize1} onChange={handleChange('prize1')} />
           </Grid>
-          <Grid size={{xs: 12, sm: 4}}>
-            <TextField
-              fullWidth
-              label="Preis (2. Platz)"
-              value={formState.prize2}
-              onChange={handleChange('prize2')}
-            />
+          <Grid size={{ xs: 12, sm: 4 }}>
+            <TextField fullWidth label="Preis (2. Platz)" value={formState.prize2} onChange={handleChange('prize2')} />
           </Grid>
-          <Grid size={{xs: 12, sm: 4}}>
-            <TextField
-              fullWidth
-              label="Preis (3. Platz)"
-              value={formState.prize3}
-              onChange={handleChange('prize3')}
-            />
+          <Grid size={{ xs: 12, sm: 4 }}>
+            <TextField fullWidth label="Preis (3. Platz)" value={formState.prize3} onChange={handleChange('prize3')} />
           </Grid>
-          <Grid size={{xs: 12, sm: 4}}>
+          <Grid size={{ xs: 12, sm: 4 }}>
             <TextField
               fullWidth
               label="Spieler pro Team"
@@ -175,7 +143,7 @@ const TournamentAdminTab: React.FC = () => {
               onChange={handleNumberChange('numPlayersPerTeam')}
             />
           </Grid>
-          <Grid size={{xs: 12, sm: 4}}>
+          <Grid size={{ xs: 12, sm: 4 }}>
             <TextField
               fullWidth
               label="Min. Teilnehmer"
@@ -184,7 +152,7 @@ const TournamentAdminTab: React.FC = () => {
               onChange={handleNumberChange('minParticipants')}
             />
           </Grid>
-          <Grid size={{xs: 12, sm: 4}}>
+          <Grid size={{ xs: 12, sm: 4 }}>
             <TextField
               fullWidth
               label="Max. Teilnehmer"
@@ -193,20 +161,20 @@ const TournamentAdminTab: React.FC = () => {
               onChange={handleNumberChange('maxParticipants')}
             />
           </Grid>
-          <Grid size={{xs: 12}}>
+          <Grid size={{ xs: 12 }}>
             <FormControlLabel
-                control={
-                    <Checkbox
-                    checked={formState.isPublished}
-                    onChange={(e) =>
-                        setFormState({
-                        ...formState,
-                        isPublished: e.target.checked,
-                        })
-                    }
-                    />
-                }
-                label="Veröffentlicht"
+              control={
+                <Checkbox
+                  checked={formState.isPublished}
+                  onChange={(e) =>
+                    setFormState({
+                      ...formState,
+                      isPublished: e.target.checked,
+                    })
+                  }
+                />
+              }
+              label="Veröffentlicht"
             />
           </Grid>
         </Grid>

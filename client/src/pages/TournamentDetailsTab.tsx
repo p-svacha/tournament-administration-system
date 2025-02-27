@@ -10,7 +10,7 @@ const TournamentDetailsTab: React.FC = () => {
   const { currentUser } = useUser();
 
   const { loading, error, data, refetch } = useGetTournamentQuery({
-    variables: { id: tournamentId }
+    variables: { id: tournamentId },
   });
 
   const [registerParticipant] = useRegisterParticipantMutation();
@@ -21,9 +21,7 @@ const TournamentDetailsTab: React.FC = () => {
   if (!data || !data.tournament) return <Typography color="error">Error: Turnier nicht vorhanden</Typography>;
 
   const tournament = data.tournament;
-  const isRegistered = currentUser
-    ? tournament?.participants?.some((p: any) => p.user.id === currentUser.id)
-    : false;
+  const isRegistered = currentUser ? tournament?.participants?.some((p: any) => p.user.id === currentUser.id) : false;
 
   const handleRegister = async () => {
     if (!currentUser) return;
@@ -47,9 +45,7 @@ const TournamentDetailsTab: React.FC = () => {
       <Typography>Name: {tournament.name}</Typography>
       <Typography>Kategorie: {tournament.category || '-'}</Typography>
       <Typography>Regeln: {tournament.rules || '-'}</Typography>
-      <Typography>
-        Briefing: {tournament.briefingTime ? new Date(tournament.briefingTime).toLocaleString() : '-'}
-      </Typography>
+      <Typography>Briefing: {tournament.briefingTime ? new Date(tournament.briefingTime).toLocaleString() : '-'}</Typography>
       <Typography>
         Preise: 1. {tournament.prize1 || '-'}, 2. {tournament.prize2 || '-'}, 3. {tournament.prize3 || '-'}
       </Typography>

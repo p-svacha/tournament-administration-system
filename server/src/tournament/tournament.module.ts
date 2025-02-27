@@ -8,6 +8,6 @@ import { TournamentParticipantModule } from 'src/tournament-participant/tourname
 @Module({
   imports: [TypeOrmModule.forFeature([TournamentEntity]), TournamentParticipantModule],
   providers: [TournamentService, TournamentResolver],
-  exports: [TournamentService]
+  exports: [TournamentService],
 })
 export class TournamentModule {}

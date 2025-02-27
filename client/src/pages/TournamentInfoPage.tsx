@@ -15,32 +15,10 @@ const TournamentDetailsTabs: React.FC = () => {
   return (
     <Box>
       <Tabs value={currentTab} textColor="primary" indicatorColor="secondary">
-        <Tab
-          label="< Zur Turnierübersicht"
-          value="/overview"
-          component={Link}
-          to="/tournaments"
-        />
-        <Tab
-          label="Details/Regeln"
-          value="/details"
-          component={NavLink}
-          to={`${basePath}/details`}
-        />
-        <Tab
-          label="Teilnehmer"
-          value="/participants"
-          component={NavLink}
-          to={`${basePath}/participants`}
-        />
-        {currentUser && currentUser.isGlobalAdmin && (
-          <Tab
-            label="Admin"
-            value="/admin"
-            component={NavLink}
-            to={`${basePath}/admin`}
-          />
-        )}
+        <Tab label="< Zur Turnierübersicht" value="/overview" component={Link} to="/tournaments" />
+        <Tab label="Details/Regeln" value="/details" component={NavLink} to={`${basePath}/details`} />
+        <Tab label="Teilnehmer" value="/participants" component={NavLink} to={`${basePath}/participants`} />
+        {currentUser && currentUser.isGlobalAdmin && <Tab label="Admin" value="/admin" component={NavLink} to={`${basePath}/admin`} />}
       </Tabs>
       <Box sx={{ mt: 2 }}>
         <Outlet />

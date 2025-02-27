@@ -1,49 +1,67 @@
-import { Field, Int, ObjectType } from "@nestjs/graphql";
-import { TournamentEntity } from "../tournament.entity";
-import { TournamentParticipantModel } from "src/tournament-participant/dto/tournament-participant.model";
+import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { TournamentEntity } from '../tournament.entity';
+import { TournamentParticipantModel } from 'src/tournament-participant/dto/tournament-participant.model';
 
 /**
  * Data that can be requested from the API for a specific tournament.
  */
 @ObjectType()
 export class TournamentModel {
-  @Field(() => Int, { description: "Unique identifier of the tournament" })
+  @Field(() => Int, { description: 'Unique identifier of the tournament' })
   id: number;
 
-  @Field({ description: "Name of the tournament" })
+  @Field({ description: 'Name of the tournament' })
   name: string;
 
-  @Field(() => Boolean, { description: "Flag indicating whether the tournament is publicly displayed" })
+  @Field(() => Boolean, {
+    description: 'Flag indicating whether the tournament is publicly displayed',
+  })
   isPublished: boolean;
 
-  @Field({ nullable: true, description: "Tournament rules and regulations" })
+  @Field({ nullable: true, description: 'Tournament rules and regulations' })
   rules?: string;
 
-  @Field({ nullable: true, description: "Category of the tournament (used for grouping)" })
+  @Field({
+    nullable: true,
+    description: 'Category of the tournament (used for grouping)',
+  })
   category?: string;
 
-  @Field({ nullable: true, description: "Prize for the first place" })
+  @Field({ nullable: true, description: 'Prize for the first place' })
   prize1?: string;
 
-  @Field({ nullable: true, description: "Prize for the second place" })
+  @Field({ nullable: true, description: 'Prize for the second place' })
   prize2?: string;
 
-  @Field({ nullable: true, description: "Prize for the third place" })
+  @Field({ nullable: true, description: 'Prize for the third place' })
   prize3?: string;
 
-  @Field({ nullable: true, description: "Date and time of the tournament briefing" })
+  @Field({
+    nullable: true,
+    description: 'Date and time of the tournament briefing',
+  })
   briefingTime?: Date;
 
-  @Field(() => Int, { description: "Number of players per team (default 1 for solo tournaments)" })
+  @Field(() => Int, {
+    description: 'Number of players per team (default 1 for solo tournaments)',
+  })
   numPlayersPerTeam: number;
 
-  @Field(() => Int, { nullable: true, description: "Minimum number of participants required for the tournament to take place" })
+  @Field(() => Int, {
+    nullable: true,
+    description: 'Minimum number of participants required for the tournament to take place',
+  })
   minParticipants?: number;
 
-  @Field(() => Int, { nullable: true, description: "Maximum number of participants that can register for the tournament" })
+  @Field(() => Int, {
+    nullable: true,
+    description: 'Maximum number of participants that can register for the tournament',
+  })
   maxParticipants?: number;
 
-  @Field(() => [TournamentParticipantModel], { description: "List of participants registered for this tournament" })
+  @Field(() => [TournamentParticipantModel], {
+    description: 'List of participants registered for this tournament',
+  })
   participants: TournamentParticipantModel[];
 
   constructor(tournamentEntity?: TournamentEntity) {

@@ -2,12 +2,16 @@ import React from 'react';
 import { Container, Typography, List, ListItem, ListItemText, CircularProgress } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import { useGetTournamentQuery } from '../generated/graphql';
+import { useUser } from '../contexts/UserContext';
+import ParticipantListItem from '../components/ParticipantListItem';
+import AddParticipantForm from '../components/AddParticipantForm';
 
 const TournamentParticipantsTab: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const tournamentId = Number(id);
+  const { currentUser } = useUser();
 
-  const { loading, error, data } = useGetTournamentQuery({
+  const { loading, error, data, refetch } = useGetTournamentQuery({
     variables: { id: tournamentId },
   });
 
@@ -17,22 +21,23 @@ const TournamentParticipantsTab: React.FC = () => {
 
   const tournament = data.tournament;
 
+  const registeredUserIds = tournament.participants.map((p: any) => p.user.id);
+
   return (
     <Container>
       <Typography variant="h5">Teilnehmer</Typography>
       {tournament.participants.length > 0 ? (
         <List>
           {tournament.participants.map((p: any) => (
-            <ListItem key={p.user.id}>
-              <ListItemText
-                primary={p.user.name}
-                secondary={`Seat: ${p.user.seat} | Seed: ${p.initialSeed} | Rank: ${p.finalRank ?? '-'}`}
-              />
-            </ListItem>
+            <ParticipantListItem key={p.user.id} tournamentId={tournamentId} participant={p} onRemoved={refetch} />
           ))}
         </List>
       ) : (
         <Typography>Keine Teilnehmer registriert.</Typography>
+      )}
+
+      {currentUser && currentUser.isGlobalAdmin && (
+        <AddParticipantForm tournamentId={tournamentId} registeredUserIds={registeredUserIds} onAdded={refetch} />
       )}
     </Container>
   );
