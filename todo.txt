@@ -10,7 +10,7 @@
     > tournament overview page shows only tournaments with event in context
     > creating tournament creates in event in context
 
-- make it possible to change event in tournament admin settings (dropdown)
+(- make it possible to change event in tournament admin settings (dropdown)) --- probably unnecessary
 
 - group tournaments by category in main tournament overview
 - add quick selection dropdown to category input in tournament admin page, where it displays existing categories (from all tournaments or only same event?)

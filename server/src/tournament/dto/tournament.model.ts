@@ -1,6 +1,7 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { TournamentEntity } from '../tournament.entity';
 import { TournamentParticipantModel } from 'src/tournament-participant/dto/tournament-participant.model';
+import { EventModel } from 'src/event/dto/event.model';
 
 /**
  * Data that can be requested from the API for a specific tournament.
@@ -9,6 +10,9 @@ import { TournamentParticipantModel } from 'src/tournament-participant/dto/tourn
 export class TournamentModel {
   @Field(() => Int, { description: 'Unique identifier of the tournament.' })
   id: number;
+
+  @Field(() => EventModel)
+  event: EventModel;
 
   @Field({ description: 'Name of the tournament.' })
   name: string;
@@ -74,6 +78,7 @@ export class TournamentModel {
   constructor(tournamentEntity?: TournamentEntity) {
     if (tournamentEntity) {
       this.id = tournamentEntity.id;
+      this.event = new EventModel(tournamentEntity.event);
       this.name = tournamentEntity.name;
       this.isPublished = tournamentEntity.is_published;
       this.rules = tournamentEntity.rules;

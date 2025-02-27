@@ -135,6 +135,7 @@ export type QueryTournamentArgs = {
 
 
 export type QueryTournamentsArgs = {
+  eventId?: InputMaybe<Scalars['Int']['input']>;
   publishedOnly?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
@@ -250,19 +251,20 @@ export type GetEventsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetEventsQuery = { __typename?: 'Query', events: Array<{ __typename?: 'EventModel', id: number, name: string }> };
 
-export type GetTournamentsQueryVariables = Exact<{
-  publishedOnly?: InputMaybe<Scalars['Boolean']['input']>;
-}>;
-
-
-export type GetTournamentsQuery = { __typename?: 'Query', tournaments: Array<{ __typename?: 'TournamentModel', id: number, name: string, isPublished: boolean }> };
-
 export type GetTournamentQueryVariables = Exact<{
   id: Scalars['Int']['input'];
 }>;
 
 
 export type GetTournamentQuery = { __typename?: 'Query', tournament?: { __typename?: 'TournamentModel', id: number, name: string, category?: string | null, rules?: string | null, prize1?: string | null, prize2?: string | null, prize3?: string | null, numPlayersPerTeam: number, minParticipants?: number | null, maxParticipants?: number | null, isPublished: boolean, briefingTime?: any | null, participants: Array<{ __typename?: 'TournamentParticipantModel', initialSeed?: number | null, finalRank?: number | null, user: { __typename?: 'UserModel', id: number, name: string, seat: string, isGlobalAdmin: boolean } }> } | null };
+
+export type GetTournamentsQueryVariables = Exact<{
+  publishedOnly?: InputMaybe<Scalars['Boolean']['input']>;
+  eventId?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type GetTournamentsQuery = { __typename?: 'Query', tournaments: Array<{ __typename?: 'TournamentModel', id: number, name: string, isPublished: boolean }> };
 
 export type GetUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -421,48 +423,6 @@ export type GetEventsQueryHookResult = ReturnType<typeof useGetEventsQuery>;
 export type GetEventsLazyQueryHookResult = ReturnType<typeof useGetEventsLazyQuery>;
 export type GetEventsSuspenseQueryHookResult = ReturnType<typeof useGetEventsSuspenseQuery>;
 export type GetEventsQueryResult = Apollo.QueryResult<GetEventsQuery, GetEventsQueryVariables>;
-export const GetTournamentsDocument = gql`
-    query GetTournaments($publishedOnly: Boolean = true) {
-  tournaments(publishedOnly: $publishedOnly) {
-    id
-    name
-    isPublished
-  }
-}
-    `;
-
-/**
- * __useGetTournamentsQuery__
- *
- * To run a query within a React component, call `useGetTournamentsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetTournamentsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetTournamentsQuery({
- *   variables: {
- *      publishedOnly: // value for 'publishedOnly'
- *   },
- * });
- */
-export function useGetTournamentsQuery(baseOptions?: Apollo.QueryHookOptions<GetTournamentsQuery, GetTournamentsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetTournamentsQuery, GetTournamentsQueryVariables>(GetTournamentsDocument, options);
-      }
-export function useGetTournamentsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTournamentsQuery, GetTournamentsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetTournamentsQuery, GetTournamentsQueryVariables>(GetTournamentsDocument, options);
-        }
-export function useGetTournamentsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetTournamentsQuery, GetTournamentsQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<GetTournamentsQuery, GetTournamentsQueryVariables>(GetTournamentsDocument, options);
-        }
-export type GetTournamentsQueryHookResult = ReturnType<typeof useGetTournamentsQuery>;
-export type GetTournamentsLazyQueryHookResult = ReturnType<typeof useGetTournamentsLazyQuery>;
-export type GetTournamentsSuspenseQueryHookResult = ReturnType<typeof useGetTournamentsSuspenseQuery>;
-export type GetTournamentsQueryResult = Apollo.QueryResult<GetTournamentsQuery, GetTournamentsQueryVariables>;
 export const GetTournamentDocument = gql`
     query GetTournament($id: Int!) {
   tournament(id: $id) {
@@ -524,6 +484,49 @@ export type GetTournamentQueryHookResult = ReturnType<typeof useGetTournamentQue
 export type GetTournamentLazyQueryHookResult = ReturnType<typeof useGetTournamentLazyQuery>;
 export type GetTournamentSuspenseQueryHookResult = ReturnType<typeof useGetTournamentSuspenseQuery>;
 export type GetTournamentQueryResult = Apollo.QueryResult<GetTournamentQuery, GetTournamentQueryVariables>;
+export const GetTournamentsDocument = gql`
+    query GetTournaments($publishedOnly: Boolean = true, $eventId: Int) {
+  tournaments(publishedOnly: $publishedOnly, eventId: $eventId) {
+    id
+    name
+    isPublished
+  }
+}
+    `;
+
+/**
+ * __useGetTournamentsQuery__
+ *
+ * To run a query within a React component, call `useGetTournamentsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTournamentsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTournamentsQuery({
+ *   variables: {
+ *      publishedOnly: // value for 'publishedOnly'
+ *      eventId: // value for 'eventId'
+ *   },
+ * });
+ */
+export function useGetTournamentsQuery(baseOptions?: Apollo.QueryHookOptions<GetTournamentsQuery, GetTournamentsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetTournamentsQuery, GetTournamentsQueryVariables>(GetTournamentsDocument, options);
+      }
+export function useGetTournamentsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTournamentsQuery, GetTournamentsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetTournamentsQuery, GetTournamentsQueryVariables>(GetTournamentsDocument, options);
+        }
+export function useGetTournamentsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetTournamentsQuery, GetTournamentsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetTournamentsQuery, GetTournamentsQueryVariables>(GetTournamentsDocument, options);
+        }
+export type GetTournamentsQueryHookResult = ReturnType<typeof useGetTournamentsQuery>;
+export type GetTournamentsLazyQueryHookResult = ReturnType<typeof useGetTournamentsLazyQuery>;
+export type GetTournamentsSuspenseQueryHookResult = ReturnType<typeof useGetTournamentsSuspenseQuery>;
+export type GetTournamentsQueryResult = Apollo.QueryResult<GetTournamentsQuery, GetTournamentsQueryVariables>;
 export const GetUsersDocument = gql`
     query GetUsers {
   users {

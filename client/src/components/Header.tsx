@@ -29,8 +29,8 @@ const Header: React.FC = () => {
   };
 
   return (
-    <AppBar position="static">
-      <Toolbar>
+    <AppBar position="static" sx={{ width: '100vw', overflow: 'hidden' }}>
+      <Toolbar sx={{ display: 'flex', flexWrap: 'wrap' }}>
         {/* Title as a link to the tournament overview */}
         <Typography
           variant="h6"
@@ -41,7 +41,10 @@ const Header: React.FC = () => {
           Turnierverwaltung
         </Typography>
 
-        {/* Event Dropdown */}
+        {/* Event Context */}
+        <Box sx={{ mr: 1 }}>
+          <Typography variant="body1">Ausgewählter Event:</Typography>
+        </Box>
         <Box sx={{ mr: 4 }}>
           {loadingEvents ? (
             <Typography variant="body1">Loading events...</Typography>
@@ -67,7 +70,10 @@ const Header: React.FC = () => {
           )}
         </Box>
 
-        {/* User Dropdown */}
+        {/* User Context */}
+        <Box sx={{ mr: 1 }}>
+          <Typography variant="body1">Anmeldet als:</Typography>
+        </Box>
         <Box sx={{ minWidth: 120 }}>
           {loadingUsers ? (
             <Typography variant="body1">Loading users...</Typography>
@@ -97,7 +103,7 @@ const Header: React.FC = () => {
         </Box>
 
         {/* Display additional user info */}
-        <Box sx={{ ml: 2 }}>
+        <Box sx={{ ml: 2, minWidth: 90 }}>
           <Typography variant="body1">Seat: {currentUser ? currentUser.seat : ''}</Typography>
           <Typography variant="body1">
             Admin: {currentUser ? (currentUser.isGlobalAdmin ? 'Yes' : 'No') : ''}

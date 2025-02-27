@@ -1,7 +1,0 @@
-query GetTournaments($publishedOnly: Boolean = true) {
-    tournaments(publishedOnly: $publishedOnly) {
-        id
-        name
-        isPublished
-    }
-}

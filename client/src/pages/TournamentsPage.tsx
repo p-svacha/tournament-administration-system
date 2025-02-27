@@ -13,7 +13,7 @@ const TournamentsPage: React.FC = () => {
   const { loading, error, data, refetch } = useGetTournamentsQuery({
     variables: {
       publishedOnly: !isAdmin,
-      eventId: currentEvent.id,
+      eventId: currentEvent?.id,
     },
   });
   const [createTournament] = useCreateTournamentMutation();
