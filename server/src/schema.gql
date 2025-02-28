@@ -1,0 +1,152 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type UserModel {
+  id: Int!
+  name: String!
+  seat: String!
+  isGlobalAdmin: Boolean!
+  tournaments: [TournamentParticipantModel!]!
+}
+
+type TournamentParticipantModel {
+  tournament: TournamentModel!
+  user: UserModel!
+  initialSeed: Int
+  finalRank: Int
+}
+
+type EventModel {
+  id: Int!
+  name: String!
+  tournaments: [TournamentModel!]!
+}
+
+type TournamentModel {
+  """Unique identifier of the tournament."""
+  id: Int!
+  event: EventModel!
+
+  """Name of the tournament."""
+  name: String!
+
+  """Flag indicating whether the tournament is publicly displayed."""
+  isPublished: Boolean!
+
+  """Tournament rules."""
+  rules: String
+
+  """
+  Tournaments are grouped by this category when displayed in the tournament overview.
+  """
+  category: String
+
+  """
+  Users can only participate in one tournament within the same registration group.
+  """
+  registrationGroup: String
+
+  """Prize for the first place."""
+  prize1: String
+
+  """Prize for the second place."""
+  prize2: String
+
+  """Prize for the third place."""
+  prize3: String
+
+  """Date and time of the tournament briefing."""
+  briefingTime: DateTime
+
+  """Number of players per team (1 means solo tournaments)."""
+  numPlayersPerTeam: Int!
+
+  """
+  Minimum number of participants required for the tournament to take place.
+  """
+  minParticipants: Int
+
+  """
+  Maximum number of participants that can register for the tournament (0 means there is no upper limit).
+  """
+  maxParticipants: Int
+
+  """List of participants registered for this tournament."""
+  participants: [TournamentParticipantModel!]!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Query {
+  tournaments(publishedOnly: Boolean = true, eventId: Int): [TournamentModel!]!
+  tournament(id: Int!): TournamentModel
+  users: [UserModel!]!
+  user(id: Int!): UserModel!
+  events: [EventModel!]!
+  event(id: Int!): EventModel
+}
+
+type Mutation {
+  createTournament(data: CreateTournamentInput!): TournamentModel!
+  updateTournament(id: Int!, data: UpdateTournamentInput!): TournamentModel!
+  deleteTournament(id: Int!): Boolean!
+  registerParticipant(data: RegisterTournamentParticipantInput!): TournamentParticipantModel!
+  deregisterParticipant(data: RegisterTournamentParticipantInput!): Boolean!
+  createUser(data: CreateUserInput!): UserModel!
+  updateUser(id: Int!, data: UpdateUserInput!): UserModel!
+  deleteUser(id: Int!): Boolean!
+  createEvent(data: CreateEventInput!): EventModel!
+  updateEvent(id: Int!, data: UpdateEventInput!): EventModel!
+  deleteEvent(id: Int!): Boolean!
+}
+
+input CreateTournamentInput {
+  name: String!
+  eventId: Int!
+}
+
+input UpdateTournamentInput {
+  name: String
+  isPublished: Boolean
+  rules: String
+  category: String
+  registrationGroup: String
+  prize1: String
+  prize2: String
+  prize3: String
+  briefingTime: DateTime
+  numPlayersPerTeam: Int
+  minParticipants: Int
+  maxParticipants: Int
+}
+
+input RegisterTournamentParticipantInput {
+  tournamentId: Int!
+  userId: Int!
+}
+
+input CreateUserInput {
+  name: String!
+  seat: String!
+  isGlobalAdmin: Boolean! = false
+}
+
+input UpdateUserInput {
+  name: String
+  seat: String
+  isGlobalAdmin: Boolean
+}
+
+input CreateEventInput {
+  name: String!
+}
+
+input UpdateEventInput {
+  name: String
+  seat: String
+  isGlobalAdmin: Boolean
+}

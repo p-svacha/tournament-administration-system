@@ -2,7 +2,7 @@ import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn, Unique }
 import { TournamentEntity } from '../tournament/tournament.entity';
 import { UserEntity } from '../user/user.entity';
 
-@Entity('Tournament_Participant')
+@Entity('tournament_participant')
 @Unique(['tournament', 'user'])
 export class TournamentParticipantEntity {
   @PrimaryGeneratedColumn()

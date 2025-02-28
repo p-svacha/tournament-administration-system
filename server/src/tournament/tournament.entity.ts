@@ -2,7 +2,7 @@ import { EventEntity } from 'src/event/event.entity';
 import { TournamentParticipantEntity } from 'src/tournament-participant/tournament-participant.entity';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity('Tournament')
+@Entity('tournament')
 export class TournamentEntity {
   @PrimaryGeneratedColumn()
   id: number;
