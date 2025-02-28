@@ -8,6 +8,8 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { UserModule } from './user/user.module';
 import { TournamentParticipantModule } from './tournament-participant/tournament-participant.module';
 import { EventModule } from './event/event.module';
+import { TeamModule } from './team/team.module';
+import { TeamMemberModule } from './team-member/team-member.module';
 
 @Module({
   imports: [
@@ -35,6 +37,8 @@ import { EventModule } from './event/event.module';
     UserModule,
     TournamentParticipantModule,
     EventModule,
+    TeamModule,
+    TeamMemberModule,
   ],
   controllers: [],
   providers: [],

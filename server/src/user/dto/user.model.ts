@@ -1,6 +1,7 @@
-import { ObjectType, Field, Int } from '@nestjs/graphql';
-import { UserEntity } from '../user.entity';
-import { TournamentParticipantModel } from 'src/tournament-participant/dto/tournament-participant.model';
+import {Field, Int, ObjectType} from '@nestjs/graphql';
+import {UserEntity} from '../user.entity';
+import {TournamentParticipantModel} from 'src/tournament-participant/dto/tournament-participant.model';
+import {TeamMemberModel} from "../../team-member/dto/team-member.model";
 
 /**
  * Data that can be requested from the API for a specific user.
@@ -21,6 +22,9 @@ export class UserModel {
 
   @Field(() => [TournamentParticipantModel])
   tournaments: TournamentParticipantModel[];
+
+  @Field(() => [TeamMemberModel])
+  teams: TeamMemberModel[];
 
   constructor(userEntity?: UserEntity) {
     if (userEntity) {

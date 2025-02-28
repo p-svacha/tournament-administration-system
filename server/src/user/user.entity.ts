@@ -1,5 +1,6 @@
 import { TournamentParticipantEntity } from 'src/tournament-participant/tournament-participant.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { TeamMemberEntity } from '../team-member/team-member.entity';
 
 @Entity('user')
 export class UserEntity {
@@ -17,4 +18,7 @@ export class UserEntity {
 
   @OneToMany(() => TournamentParticipantEntity, (participant) => participant.user)
   tournamentParticipants: TournamentParticipantEntity[];
+
+  @OneToMany(() => TeamMemberEntity, (teamMember) => teamMember.user)
+  teams: TeamMemberEntity[];
 }
