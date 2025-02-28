@@ -1,0 +1,28 @@
+meta {
+  name: Get All Teams
+  type: graphql
+  seq: 2
+}
+
+post {
+  url: {{host}}
+  body: graphql
+  auth: none
+}
+
+body:graphql {
+  query
+  {
+    teams
+    {
+      name
+      users
+      {
+        user
+        {
+          name
+        }
+      }
+    }
+  }
+}

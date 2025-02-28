@@ -1,0 +1,23 @@
+meta {
+  name: Create Team
+  type: graphql
+  seq: 1
+}
+
+post {
+  url: {{host}}
+  body: graphql
+  auth: none
+}
+
+body:graphql {
+  mutation {
+    createTeam(data: {
+      name: "Arctic",
+      tag: "AG"
+    }) {
+      id
+      name
+    }
+  }
+}

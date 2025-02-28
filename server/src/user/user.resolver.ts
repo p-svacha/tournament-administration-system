@@ -1,16 +1,18 @@
-import { Resolver, Query, Mutation, Args, ResolveField, Parent, Int } from '@nestjs/graphql';
-import { UserService } from './user.service';
-import { UserModel } from './dto/user.model';
-import { CreateUserInput } from './dto/create-user.input';
-import { TournamentParticipantModel } from 'src/tournament-participant/dto/tournament-participant.model';
-import { TournamentParticipantService } from 'src/tournament-participant/tournament-participant.service';
-import { UpdateEventInput } from 'src/event/dto/update-event.input';
-import { UpdateUserInput } from './dto/update.user.input';
+import {Args, Int, Mutation, Parent, Query, ResolveField, Resolver} from '@nestjs/graphql';
+import {UserService} from './user.service';
+import {UserModel} from './dto/user.model';
+import {CreateUserInput} from './dto/create-user.input';
+import {TournamentParticipantModel} from 'src/tournament-participant/dto/tournament-participant.model';
+import {TournamentParticipantService} from 'src/tournament-participant/tournament-participant.service';
+import {UpdateUserInput} from './dto/update.user.input';
+import {TeamMemberModel} from "../team-member/dto/team-member.model";
+import {TeamMemberService} from "../team-member/team-member.service";
 
 @Resolver(() => UserModel)
 export class UserResolver {
   constructor(
     private readonly userService: UserService,
+    private readonly teamMemberService: TeamMemberService,
     private readonly tournamentParticipantService: TournamentParticipantService,
   ) {}
 
@@ -27,6 +29,11 @@ export class UserResolver {
   @ResolveField(() => [TournamentParticipantModel!]!)
   async tournaments(@Parent() user: UserModel): Promise<TournamentParticipantModel[]> {
     return this.tournamentParticipantService.findParticipantsByUser(user.id);
+  }
+
+  @ResolveField(() => [TeamMemberModel!]!)
+  async teams(@Parent() user: UserModel): Promise<TeamMemberModel[]> {
+    return this.teamMemberService.findTeamMembersByUser(user.id);
   }
 
   @Mutation(() => UserModel)

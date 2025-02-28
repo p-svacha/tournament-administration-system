@@ -2,12 +2,26 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type TeamModel {
+  id: Int!
+  name: String!
+  tag: String!
+  users: [TeamMemberModel!]!
+}
+
+type TeamMemberModel {
+  team: TeamModel!
+  user: UserModel!
+  isTeamCaptain: Boolean!
+}
+
 type UserModel {
   id: Int!
   name: String!
   seat: String!
   isGlobalAdmin: Boolean!
   tournaments: [TournamentParticipantModel!]!
+  teams: [TeamMemberModel!]!
 }
 
 type TournamentParticipantModel {
@@ -88,6 +102,8 @@ type Query {
   user(id: Int!): UserModel!
   events: [EventModel!]!
   event(id: Int!): EventModel
+  teams: [TeamModel!]!
+  team(id: Int!): TeamModel!
 }
 
 type Mutation {
@@ -102,6 +118,9 @@ type Mutation {
   createEvent(data: CreateEventInput!): EventModel!
   updateEvent(id: Int!, data: UpdateEventInput!): EventModel!
   deleteEvent(id: Int!): Boolean!
+  createTeam(data: CreateTeamInput!): TeamModel!
+  updateTeam(id: Int!, data: UpdateTeamInput!): TeamModel!
+  deleteTeam(id: Int!): Boolean!
 }
 
 input CreateTournamentInput {
@@ -149,4 +168,14 @@ input UpdateEventInput {
   name: String
   seat: String
   isGlobalAdmin: Boolean
+}
+
+input CreateTeamInput {
+  name: String!
+  tag: String!
+}
+
+input UpdateTeamInput {
+  name: String
+  tag: String
 }
