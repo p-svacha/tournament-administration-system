@@ -2,8 +2,14 @@ import React from 'react';
 import { Container, Typography, Grid2 as Grid, Card, CardActionArea, CardContent } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../contexts/UserContext';
-import { useCreateTournamentMutation, useGetTournamentsQuery } from '../generated/graphql';
+import {
+  TournamentBasicFieldsFragment,
+  TournamentModel,
+  useCreateTournamentMutation,
+  useGetTournamentsQuery,
+} from '../generated/graphql';
 import { useEvent } from '../contexts/EventContext';
+import TournamentSection from '../components/TournamentSection';
 
 const TournamentsPage: React.FC = () => {
   const { currentUser } = useUser();
@@ -27,7 +33,12 @@ const TournamentsPage: React.FC = () => {
   const handleCreateTournament = async () => {
     try {
       const result = await createTournament({
-        variables: { data: { name: 'Neues Turnier', eventId: currentEvent.id } },
+        variables: {
+          data: {
+            name: 'Neues Turnier',
+            eventId: currentEvent.id,
+          },
+        },
       });
       const newTournament = result.data?.createTournament;
 
@@ -41,40 +52,61 @@ const TournamentsPage: React.FC = () => {
     }
   };
 
+  // Group tournaments by category. If category is missing or empty, use "Uncategorized".
+  const groupedTournaments = data.tournaments.reduce((acc, tournament) => {
+    const category = tournament.category && tournament.category.trim() !== '' ? tournament.category : 'Uncategorized';
+    if (!acc[category]) {
+      acc[category] = [];
+    }
+    acc[category].push(tournament);
+    return acc;
+  }, {} as Record<string, TournamentBasicFieldsFragment[]>);
+
+  // Convert grouped object into an array of sections.
+  const sections = Object.keys(groupedTournaments)
+    .sort()
+    .map((category) => ({
+      category,
+      tournaments: groupedTournaments[category],
+    }));
+
   return (
     <Container sx={{ mt: 4 }}>
       <Typography variant="h4" gutterBottom>
-        Turniere
+        Tournaments
       </Typography>
-      <Grid container spacing={2}>
-        {data.tournaments.map((tournament) => (
-          <Grid size={{ xs: 12, sm: 6, md: 4 }} key={tournament.id}>
-            <Card style={{ background: '#fb8c00' }}>
-              <CardActionArea onClick={() => navigate(`/tournaments/${tournament.id}`)}>
-                <CardContent sx={{ minHeight: 60 }}>
-                  <Typography variant="h6">{tournament.name}</Typography>
-                  <Typography variant="body2">{tournament.isPublished ? '' : 'unveröffentlicht'}</Typography>
-                </CardContent>
-              </CardActionArea>
-            </Card>
-          </Grid>
-        ))}
 
-        {/* Panel to add new tournament */}
-        {currentUser && currentUser.isGlobalAdmin && (
-          <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-            <Card style={{ background: '#66bb6a' }}>
-              <CardActionArea onClick={handleCreateTournament}>
-                <CardContent sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 60 }}>
-                  <Typography variant="h3" color="white">
-                    +
-                  </Typography>
-                </CardContent>
-              </CardActionArea>
-            </Card>
+      {sections.map((section) => (
+        <TournamentSection key={section.category} category={section.category} tournaments={section.tournaments} />
+      ))}
+
+      {currentUser && currentUser.isGlobalAdmin && (
+        <>
+          <Typography variant="h5" sx={{ mt: 4, mb: 2 }}>
+            Create New
+          </Typography>
+          <Grid container spacing={2}>
+            <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+              <Card style={{ background: '#66bb6a' }}>
+                <CardActionArea onClick={handleCreateTournament}>
+                  <CardContent
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      minHeight: 60,
+                    }}
+                  >
+                    <Typography variant="h3" color="white">
+                      +
+                    </Typography>
+                  </CardContent>
+                </CardActionArea>
+              </Card>
+            </Grid>
           </Grid>
-        )}
-      </Grid>
+        </>
+      )}
     </Container>
   );
 };

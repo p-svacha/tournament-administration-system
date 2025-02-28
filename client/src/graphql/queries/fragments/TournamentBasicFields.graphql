@@ -1,0 +1,7 @@
+fragment TournamentBasicFields on TournamentModel
+{
+    id
+    name
+    category
+    isPublished
+}

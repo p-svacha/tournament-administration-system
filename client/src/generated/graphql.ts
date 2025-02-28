@@ -155,6 +155,7 @@ export type TournamentModel = {
   briefingTime?: Maybe<Scalars['DateTime']['output']>;
   /** Tournaments are grouped by this category when displayed in the tournament overview. */
   category?: Maybe<Scalars['String']['output']>;
+  event: EventModel;
   /** Unique identifier of the tournament. */
   id: Scalars['Int']['output'];
   /** Flag indicating whether the tournament is publicly displayed. */
@@ -246,6 +247,21 @@ export type DeregisterParticipantMutationVariables = Exact<{
 
 export type DeregisterParticipantMutation = { __typename?: 'Mutation', deregisterParticipant: boolean };
 
+export type RegisterParticipantMutationVariables = Exact<{
+  data: RegisterTournamentParticipantInput;
+}>;
+
+
+export type RegisterParticipantMutation = { __typename?: 'Mutation', registerParticipant: { __typename?: 'TournamentParticipantModel', initialSeed?: number | null, finalRank?: number | null, tournament: { __typename?: 'TournamentModel', id: number }, user: { __typename?: 'UserModel', id: number } } };
+
+export type UpdateTournamentMutationVariables = Exact<{
+  id: Scalars['Int']['input'];
+  data: UpdateTournamentInput;
+}>;
+
+
+export type UpdateTournamentMutation = { __typename?: 'Mutation', updateTournament: { __typename?: 'TournamentModel', id: number, name: string, category?: string | null, rules?: string | null, prize1?: string | null, prize2?: string | null, prize3?: string | null, numPlayersPerTeam: number, minParticipants?: number | null, maxParticipants?: number | null, isPublished: boolean } };
+
 export type GetEventsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -264,29 +280,23 @@ export type GetTournamentsQueryVariables = Exact<{
 }>;
 
 
-export type GetTournamentsQuery = { __typename?: 'Query', tournaments: Array<{ __typename?: 'TournamentModel', id: number, name: string, isPublished: boolean }> };
+export type GetTournamentsQuery = { __typename?: 'Query', tournaments: Array<{ __typename?: 'TournamentModel', id: number, name: string, category?: string | null, isPublished: boolean }> };
 
 export type GetUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetUsersQuery = { __typename?: 'Query', users: Array<{ __typename?: 'UserModel', id: number, name: string, seat: string, isGlobalAdmin: boolean }> };
 
-export type RegisterParticipantMutationVariables = Exact<{
-  data: RegisterTournamentParticipantInput;
-}>;
+export type TournamentBasicFieldsFragment = { __typename?: 'TournamentModel', id: number, name: string, category?: string | null, isPublished: boolean };
 
-
-export type RegisterParticipantMutation = { __typename?: 'Mutation', registerParticipant: { __typename?: 'TournamentParticipantModel', initialSeed?: number | null, finalRank?: number | null, tournament: { __typename?: 'TournamentModel', id: number }, user: { __typename?: 'UserModel', id: number } } };
-
-export type UpdateTournamentMutationVariables = Exact<{
-  id: Scalars['Int']['input'];
-  data: UpdateTournamentInput;
-}>;
-
-
-export type UpdateTournamentMutation = { __typename?: 'Mutation', updateTournament: { __typename?: 'TournamentModel', id: number, name: string, category?: string | null, rules?: string | null, prize1?: string | null, prize2?: string | null, prize3?: string | null, numPlayersPerTeam: number, minParticipants?: number | null, maxParticipants?: number | null, isPublished: boolean } };
-
-
+export const TournamentBasicFieldsFragmentDoc = gql`
+    fragment TournamentBasicFields on TournamentModel {
+  id
+  name
+  category
+  isPublished
+}
+    `;
 export const CreateTournamentDocument = gql`
     mutation CreateTournament($data: CreateTournamentInput!) {
   createTournament(data: $data) {
@@ -383,6 +393,90 @@ export function useDeregisterParticipantMutation(baseOptions?: Apollo.MutationHo
 export type DeregisterParticipantMutationHookResult = ReturnType<typeof useDeregisterParticipantMutation>;
 export type DeregisterParticipantMutationResult = Apollo.MutationResult<DeregisterParticipantMutation>;
 export type DeregisterParticipantMutationOptions = Apollo.BaseMutationOptions<DeregisterParticipantMutation, DeregisterParticipantMutationVariables>;
+export const RegisterParticipantDocument = gql`
+    mutation RegisterParticipant($data: RegisterTournamentParticipantInput!) {
+  registerParticipant(data: $data) {
+    tournament {
+      id
+    }
+    user {
+      id
+    }
+    initialSeed
+    finalRank
+  }
+}
+    `;
+export type RegisterParticipantMutationFn = Apollo.MutationFunction<RegisterParticipantMutation, RegisterParticipantMutationVariables>;
+
+/**
+ * __useRegisterParticipantMutation__
+ *
+ * To run a mutation, you first call `useRegisterParticipantMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRegisterParticipantMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [registerParticipantMutation, { data, loading, error }] = useRegisterParticipantMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useRegisterParticipantMutation(baseOptions?: Apollo.MutationHookOptions<RegisterParticipantMutation, RegisterParticipantMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RegisterParticipantMutation, RegisterParticipantMutationVariables>(RegisterParticipantDocument, options);
+      }
+export type RegisterParticipantMutationHookResult = ReturnType<typeof useRegisterParticipantMutation>;
+export type RegisterParticipantMutationResult = Apollo.MutationResult<RegisterParticipantMutation>;
+export type RegisterParticipantMutationOptions = Apollo.BaseMutationOptions<RegisterParticipantMutation, RegisterParticipantMutationVariables>;
+export const UpdateTournamentDocument = gql`
+    mutation UpdateTournament($id: Int!, $data: UpdateTournamentInput!) {
+  updateTournament(id: $id, data: $data) {
+    id
+    name
+    category
+    rules
+    prize1
+    prize2
+    prize3
+    numPlayersPerTeam
+    minParticipants
+    maxParticipants
+    isPublished
+  }
+}
+    `;
+export type UpdateTournamentMutationFn = Apollo.MutationFunction<UpdateTournamentMutation, UpdateTournamentMutationVariables>;
+
+/**
+ * __useUpdateTournamentMutation__
+ *
+ * To run a mutation, you first call `useUpdateTournamentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateTournamentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateTournamentMutation, { data, loading, error }] = useUpdateTournamentMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateTournamentMutation(baseOptions?: Apollo.MutationHookOptions<UpdateTournamentMutation, UpdateTournamentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateTournamentMutation, UpdateTournamentMutationVariables>(UpdateTournamentDocument, options);
+      }
+export type UpdateTournamentMutationHookResult = ReturnType<typeof useUpdateTournamentMutation>;
+export type UpdateTournamentMutationResult = Apollo.MutationResult<UpdateTournamentMutation>;
+export type UpdateTournamentMutationOptions = Apollo.BaseMutationOptions<UpdateTournamentMutation, UpdateTournamentMutationVariables>;
 export const GetEventsDocument = gql`
     query GetEvents {
   events {
@@ -487,12 +581,10 @@ export type GetTournamentQueryResult = Apollo.QueryResult<GetTournamentQuery, Ge
 export const GetTournamentsDocument = gql`
     query GetTournaments($publishedOnly: Boolean = true, $eventId: Int) {
   tournaments(publishedOnly: $publishedOnly, eventId: $eventId) {
-    id
-    name
-    isPublished
+    ...TournamentBasicFields
   }
 }
-    `;
+    ${TournamentBasicFieldsFragmentDoc}`;
 
 /**
  * __useGetTournamentsQuery__
@@ -569,87 +661,3 @@ export type GetUsersQueryHookResult = ReturnType<typeof useGetUsersQuery>;
 export type GetUsersLazyQueryHookResult = ReturnType<typeof useGetUsersLazyQuery>;
 export type GetUsersSuspenseQueryHookResult = ReturnType<typeof useGetUsersSuspenseQuery>;
 export type GetUsersQueryResult = Apollo.QueryResult<GetUsersQuery, GetUsersQueryVariables>;
-export const RegisterParticipantDocument = gql`
-    mutation RegisterParticipant($data: RegisterTournamentParticipantInput!) {
-  registerParticipant(data: $data) {
-    tournament {
-      id
-    }
-    user {
-      id
-    }
-    initialSeed
-    finalRank
-  }
-}
-    `;
-export type RegisterParticipantMutationFn = Apollo.MutationFunction<RegisterParticipantMutation, RegisterParticipantMutationVariables>;
-
-/**
- * __useRegisterParticipantMutation__
- *
- * To run a mutation, you first call `useRegisterParticipantMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useRegisterParticipantMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [registerParticipantMutation, { data, loading, error }] = useRegisterParticipantMutation({
- *   variables: {
- *      data: // value for 'data'
- *   },
- * });
- */
-export function useRegisterParticipantMutation(baseOptions?: Apollo.MutationHookOptions<RegisterParticipantMutation, RegisterParticipantMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<RegisterParticipantMutation, RegisterParticipantMutationVariables>(RegisterParticipantDocument, options);
-      }
-export type RegisterParticipantMutationHookResult = ReturnType<typeof useRegisterParticipantMutation>;
-export type RegisterParticipantMutationResult = Apollo.MutationResult<RegisterParticipantMutation>;
-export type RegisterParticipantMutationOptions = Apollo.BaseMutationOptions<RegisterParticipantMutation, RegisterParticipantMutationVariables>;
-export const UpdateTournamentDocument = gql`
-    mutation UpdateTournament($id: Int!, $data: UpdateTournamentInput!) {
-  updateTournament(id: $id, data: $data) {
-    id
-    name
-    category
-    rules
-    prize1
-    prize2
-    prize3
-    numPlayersPerTeam
-    minParticipants
-    maxParticipants
-    isPublished
-  }
-}
-    `;
-export type UpdateTournamentMutationFn = Apollo.MutationFunction<UpdateTournamentMutation, UpdateTournamentMutationVariables>;
-
-/**
- * __useUpdateTournamentMutation__
- *
- * To run a mutation, you first call `useUpdateTournamentMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateTournamentMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateTournamentMutation, { data, loading, error }] = useUpdateTournamentMutation({
- *   variables: {
- *      id: // value for 'id'
- *      data: // value for 'data'
- *   },
- * });
- */
-export function useUpdateTournamentMutation(baseOptions?: Apollo.MutationHookOptions<UpdateTournamentMutation, UpdateTournamentMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateTournamentMutation, UpdateTournamentMutationVariables>(UpdateTournamentDocument, options);
-      }
-export type UpdateTournamentMutationHookResult = ReturnType<typeof useUpdateTournamentMutation>;
-export type UpdateTournamentMutationResult = Apollo.MutationResult<UpdateTournamentMutation>;
-export type UpdateTournamentMutationOptions = Apollo.BaseMutationOptions<UpdateTournamentMutation, UpdateTournamentMutationVariables>;

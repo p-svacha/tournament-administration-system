@@ -1,3 +1,5 @@
+- page doesn't refresh when manually adding participant as admin
+
 - admins can manually add participants
 - admins can remove participants
 
@@ -13,9 +15,11 @@
 (- make it possible to change event in tournament admin settings (dropdown)) --- probably unnecessary
 
 - group tournaments by category in main tournament overview
-- add quick selection dropdown to category input in tournament admin page, where it displays existing categories (from all tournaments or only same event?)
+    > add quick selection dropdown to category input in tournament admin page, where it displays existing categories (from all tournaments or only same event?)
 
 - normal users should be able to go to unpublished tournament pages (tournaments/14/details etc.)
+
+- add feedback when registering / deregistering / adding participant as admin / removing participant as admin
 
 
 - tournament admins
@@ -40,6 +44,15 @@
     > add new section to tournament admin page where you can:
         > add tournament new admins (with quick selection à la adding participants)
         > remove tournament admins
+
+- rework tournament admin page
+    > new section "tournament admins"
+        > add tournament new admins (with quick selection à la adding participants)
+        > remove tournament admins
+    > add registrationGroup input to admin page
+        > with quick selection dropdown showing existing registrationGroups in same event
+    > add quick selection dropdown to category input, where it displays existing categories (from all tournaments or only same event?)
+
 
 - show tournament name title as fixed element overarching all tabs in tournament
 

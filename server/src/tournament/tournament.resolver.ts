@@ -5,6 +5,7 @@ import { CreateTournamentInput } from './dto/create-tournament.input';
 import { TournamentParticipantService } from 'src/tournament-participant/tournament-participant.service';
 import { TournamentParticipantModel } from 'src/tournament-participant/dto/tournament-participant.model';
 import { UpdateTournamentInput } from './dto/update-tournament-input';
+import { EventModel } from 'src/event/dto/event.model';
 
 @Resolver(() => TournamentModel)
 export class TournamentResolver {
@@ -34,6 +35,11 @@ export class TournamentResolver {
   @ResolveField(() => [TournamentParticipantModel!]!)
   async participants(@Parent() tournament: TournamentModel): Promise<TournamentParticipantModel[]> {
     return this.tournamentParticipantService.findParticipantsByTournament(tournament.id);
+  }
+
+  @ResolveField(() => EventModel)
+  async event(@Parent() tournament: TournamentModel): Promise<EventModel> {
+    return this.tournamentService.getTournamentEvent(tournament.id);
   }
 
   @Mutation(() => TournamentModel)

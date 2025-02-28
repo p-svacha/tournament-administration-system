@@ -6,10 +6,10 @@ import { useGetUsersQuery, useRegisterParticipantMutation } from '../generated/g
 interface AddParticipantFormProps {
   tournamentId: number;
   registeredUserIds: number[];
-  onAdded?: () => void; // Callback
+  onAdded?: () => void;
 }
 
-const AddParticipantForm: React.FC<AddParticipantFormProps> = ({ tournamentId, registeredUserIds, onAdded }) => {
+const AddParticipantForm: React.FC<AddParticipantFormProps> = (props: AddParticipantFormProps) => {
   const { loading, error, data } = useGetUsersQuery();
   const [registerParticipant] = useRegisterParticipantMutation();
   const [selectedUser, setSelectedUser] = useState<{ id: number; name: string } | null>(null);
@@ -18,18 +18,21 @@ const AddParticipantForm: React.FC<AddParticipantFormProps> = ({ tournamentId, r
   if (error) return <Typography color="error">Fehler beim Laden der Benutzer: {error.message}</Typography>;
   if (!data) return <Typography color="error">Keine Benutzer gefunden.</Typography>;
 
-  const availableUsers = data.users.filter((user) => !registeredUserIds.includes(user.id));
+  const availableUsers = data.users.filter((user) => !props.registeredUserIds.includes(user.id));
 
   const handleAdd = async () => {
     if (!selectedUser) return;
     try {
       await registerParticipant({
         variables: {
-          data: { tournamentId, userId: selectedUser.id },
+          data: {
+            tournamentId: props.tournamentId,
+            userId: selectedUser.id,
+          },
         },
       });
       setSelectedUser(null);
-      if (onAdded) onAdded();
+      if (props.onAdded) props.onAdded();
     } catch (err) {
       console.error('Fehler beim Hinzufügen des Teilnehmers', err);
     }

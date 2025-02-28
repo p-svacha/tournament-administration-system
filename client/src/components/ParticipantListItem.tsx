@@ -10,10 +10,10 @@ export interface ParticipantProps {
     initialSeed: number;
     finalRank: number | null;
   };
-  onRemoved?: () => void; // Callback, um z. B. die Liste zu aktualisieren
+  onRemoved?: () => void;
 }
 
-const ParticipantListItem: React.FC<ParticipantProps> = ({ tournamentId, participant, onRemoved }) => {
+const ParticipantListItem: React.FC<ParticipantProps> = (props: ParticipantProps) => {
   const { currentUser } = useUser();
   const [deregisterParticipant] = useDeregisterParticipantMutation();
 
@@ -21,10 +21,13 @@ const ParticipantListItem: React.FC<ParticipantProps> = ({ tournamentId, partici
     try {
       await deregisterParticipant({
         variables: {
-          data: { tournamentId, userId: participant.user.id },
+          data: {
+            tournamentId: props.tournamentId,
+            userId: props.participant.user.id,
+          },
         },
       });
-      if (onRemoved) onRemoved();
+      if (props.onRemoved) props.onRemoved();
     } catch (err) {
       console.error('Fehler beim Entfernen des Teilnehmers', err);
     }
@@ -33,8 +36,10 @@ const ParticipantListItem: React.FC<ParticipantProps> = ({ tournamentId, partici
   return (
     <ListItem>
       <ListItemText
-        primary={participant.user.name}
-        secondary={`Seat: ${participant.user.seat} | Seed: ${participant.initialSeed} | Rank: ${participant.finalRank ?? '-'}`}
+        primary={props.participant.user.name}
+        secondary={`Sitzplatz: ${props.participant.user.seat} | Seed: ${props.participant.initialSeed} | Rang: ${
+          props.participant.finalRank ?? '-'
+        }`}
       />
       {currentUser && currentUser.isGlobalAdmin && (
         <Box ml={2}>

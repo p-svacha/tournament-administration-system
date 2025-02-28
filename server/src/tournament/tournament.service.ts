@@ -5,6 +5,7 @@ import { TournamentEntity } from './tournament.entity';
 import { TournamentModel } from './dto/tournament.model';
 import { CreateTournamentInput } from './dto/create-tournament.input';
 import { UpdateTournamentInput } from './dto/update-tournament-input';
+import { EventModel } from 'src/event/dto/event.model';
 
 @Injectable()
 export class TournamentService {
@@ -67,6 +68,17 @@ export class TournamentService {
 
     // Return saved entity as model (output DTO)
     return new TournamentModel(savedTournament);
+  }
+
+  async getTournamentEvent(tournamentId: number): Promise<EventModel> {
+    const tournament = await this.tournamentRepository.findOne({
+      where: { id: tournamentId },
+      relations: ['event'],
+    });
+    if (!tournament || !tournament.event) {
+      throw new Error('Event not found for tournament');
+    }
+    return new EventModel(tournament.event);
   }
 
   async updateTournament(id: number, input: UpdateTournamentInput): Promise<TournamentModel> {

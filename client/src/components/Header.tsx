@@ -1,6 +1,6 @@
 import React from 'react';
 import { AppBar, Toolbar, Typography, FormControl, Select, MenuItem, Box, SelectChangeEvent } from '@mui/material';
-import { UserData, useUser } from '../contexts/UserContext';
+import { useUser } from '../contexts/UserContext';
 import { Link } from 'react-router-dom';
 import { useGetEventsQuery, useGetUsersQuery } from '../generated/graphql';
 import { useEvent } from '../contexts/EventContext';

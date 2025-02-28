@@ -2,8 +2,6 @@ query GetTournaments($publishedOnly: Boolean = true, $eventId: Int)
 {
     tournaments(publishedOnly: $publishedOnly, eventId: $eventId)
     {
-        id
-        name
-        isPublished
+        ...TournamentBasicFields
     }
 }

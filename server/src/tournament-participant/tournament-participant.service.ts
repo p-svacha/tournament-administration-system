@@ -43,7 +43,7 @@ export class TournamentParticipantService {
   async findParticipantsByTournament(tournamentId: number): Promise<TournamentParticipantModel[]> {
     const participants: TournamentParticipantEntity[] = await this.participantRepository.find({
       where: { tournament: { id: tournamentId } },
-      relations: ['user', 'tournament', 'tournament.event'],
+      relations: ['user', 'tournament'],
     });
 
     return participants.map((p) => new TournamentParticipantModel(p));
@@ -55,7 +55,7 @@ export class TournamentParticipantService {
   async findParticipantsByUser(userId: number): Promise<TournamentParticipantModel[]> {
     const participants: TournamentParticipantEntity[] = await this.participantRepository.find({
       where: { user: { id: userId } },
-      relations: ['user', 'tournament', 'tournament.event'],
+      relations: ['user', 'tournament'],
     });
 
     return participants.map((p) => new TournamentParticipantModel(p));

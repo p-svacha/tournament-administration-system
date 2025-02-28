@@ -13,10 +13,11 @@ post {
 body:graphql {
   query
   {
-    tournaments
+    tournaments(publishedOnly: false)
     {
       id
       name
+      isPublished
       participants
       {
         user
@@ -28,6 +29,10 @@ body:graphql {
         }
         initialSeed
         finalRank
+      }
+      event
+      {
+        name
       }
     }
   }

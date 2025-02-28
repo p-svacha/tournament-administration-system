@@ -78,7 +78,6 @@ export class TournamentModel {
   constructor(tournamentEntity?: TournamentEntity) {
     if (tournamentEntity) {
       this.id = tournamentEntity.id;
-      this.event = new EventModel(tournamentEntity.event);
       this.name = tournamentEntity.name;
       this.isPublished = tournamentEntity.is_published;
       this.rules = tournamentEntity.rules;

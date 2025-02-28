@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Typography, List, ListItem, ListItemText, CircularProgress } from '@mui/material';
+import { Container, Typography, List, CircularProgress } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import { useGetTournamentQuery } from '../generated/graphql';
 import { useUser } from '../contexts/UserContext';
@@ -25,6 +25,7 @@ const TournamentParticipantsTab: React.FC = () => {
 
   return (
     <Container>
+      {/* Participant list*/}
       <Typography variant="h5">Teilnehmer</Typography>
       {tournament.participants.length > 0 ? (
         <List>
@@ -36,6 +37,7 @@ const TournamentParticipantsTab: React.FC = () => {
         <Typography>Keine Teilnehmer registriert.</Typography>
       )}
 
+      {/* Form to manually add participants (admins only)*/}
       {currentUser && currentUser.isGlobalAdmin && (
         <AddParticipantForm tournamentId={tournamentId} registeredUserIds={registeredUserIds} onAdded={refetch} />
       )}
