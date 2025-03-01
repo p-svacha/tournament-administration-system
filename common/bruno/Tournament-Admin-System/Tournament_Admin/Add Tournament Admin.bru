@@ -1,0 +1,31 @@
+meta {
+  name: Add Tournament Admin
+  type: graphql
+  seq: 1
+}
+
+post {
+  url: {{host}}
+  body: graphql
+  auth: none
+}
+
+body:graphql {
+  mutation
+  {
+    addTournamentAdmin(
+      tournamentId: 1,
+      userId: 2,
+    )
+    {
+      tournament
+      {
+        id
+      }
+      user
+      {
+        id
+      }
+    }
+  }
+}

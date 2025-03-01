@@ -1,4 +1,5 @@
 import { EventEntity } from 'src/event/event.entity';
+import { TournamentAdminEntity } from 'src/tournament-admin/tournament-admin.entity';
 import { TournamentParticipantEntity } from 'src/tournament-participant/tournament-participant.entity';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
@@ -60,4 +61,7 @@ export class TournamentEntity {
 
   @OneToMany(() => TournamentParticipantEntity, (participant) => participant.tournament)
   tournamentParticipants: TournamentParticipantEntity[];
+
+  @OneToMany(() => TournamentAdminEntity, (tournamentAdminEntity) => tournamentAdminEntity.tournament)
+  admins: TournamentAdminEntity[];
 }

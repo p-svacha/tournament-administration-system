@@ -1,5 +1,5 @@
 meta {
-  name: RegisterTournamentParticipant
+  name: Register Tournament Participant
   type: graphql
   seq: 1
 }
@@ -16,7 +16,8 @@ body:graphql {
     registerParticipant(data: {
       tournamentId: 1,
       userId: 3,
-    }) {
+    })
+    {
       initialSeed,
       finalRank
     }

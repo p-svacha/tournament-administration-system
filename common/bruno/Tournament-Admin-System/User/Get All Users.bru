@@ -30,11 +30,25 @@ body:graphql {
       {
         tournament
         {
-          id
           name
         }
         initialSeed
         finalRank
+      }
+      adminTournaments
+      {
+        tournament
+        {
+          name
+        }
+      }
+      teams
+      {
+        team
+        {
+          name
+        }
+        isTeamCaptain
       }
     }
   }

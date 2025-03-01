@@ -70,7 +70,7 @@ export class TournamentService {
     return new TournamentModel(savedTournament);
   }
 
-  async getTournamentEvent(tournamentId: number): Promise<EventModel> {
+  async findTournamentEvent(tournamentId: number): Promise<EventModel> {
     const tournament = await this.tournamentRepository.findOne({
       where: { id: tournamentId },
       relations: ['event'],

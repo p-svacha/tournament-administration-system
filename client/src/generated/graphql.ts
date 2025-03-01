@@ -22,6 +22,11 @@ export type CreateEventInput = {
   name: Scalars['String']['input'];
 };
 
+export type CreateTeamInput = {
+  name: Scalars['String']['input'];
+  tag: Scalars['String']['input'];
+};
+
 export type CreateTournamentInput = {
   eventId: Scalars['Int']['input'];
   name: Scalars['String']['input'];
@@ -43,14 +48,17 @@ export type EventModel = {
 export type Mutation = {
   __typename?: 'Mutation';
   createEvent: EventModel;
+  createTeam: TeamModel;
   createTournament: TournamentModel;
   createUser: UserModel;
   deleteEvent: Scalars['Boolean']['output'];
+  deleteTeam: Scalars['Boolean']['output'];
   deleteTournament: Scalars['Boolean']['output'];
   deleteUser: Scalars['Boolean']['output'];
   deregisterParticipant: Scalars['Boolean']['output'];
   registerParticipant: TournamentParticipantModel;
   updateEvent: EventModel;
+  updateTeam: TeamModel;
   updateTournament: TournamentModel;
   updateUser: UserModel;
 };
@@ -58,6 +66,11 @@ export type Mutation = {
 
 export type MutationCreateEventArgs = {
   data: CreateEventInput;
+};
+
+
+export type MutationCreateTeamArgs = {
+  data: CreateTeamInput;
 };
 
 
@@ -72,6 +85,11 @@ export type MutationCreateUserArgs = {
 
 
 export type MutationDeleteEventArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
+export type MutationDeleteTeamArgs = {
   id: Scalars['Int']['input'];
 };
 
@@ -102,6 +120,12 @@ export type MutationUpdateEventArgs = {
 };
 
 
+export type MutationUpdateTeamArgs = {
+  data: UpdateTeamInput;
+  id: Scalars['Int']['input'];
+};
+
+
 export type MutationUpdateTournamentArgs = {
   data: UpdateTournamentInput;
   id: Scalars['Int']['input'];
@@ -117,6 +141,8 @@ export type Query = {
   __typename?: 'Query';
   event?: Maybe<EventModel>;
   events: Array<EventModel>;
+  team: TeamModel;
+  teams: Array<TeamModel>;
   tournament?: Maybe<TournamentModel>;
   tournaments: Array<TournamentModel>;
   user: UserModel;
@@ -125,6 +151,11 @@ export type Query = {
 
 
 export type QueryEventArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
+export type QueryTeamArgs = {
   id: Scalars['Int']['input'];
 };
 
@@ -147,6 +178,21 @@ export type QueryUserArgs = {
 export type RegisterTournamentParticipantInput = {
   tournamentId: Scalars['Int']['input'];
   userId: Scalars['Int']['input'];
+};
+
+export type TeamMemberModel = {
+  __typename?: 'TeamMemberModel';
+  isTeamCaptain: Scalars['Boolean']['output'];
+  team: TeamModel;
+  user: UserModel;
+};
+
+export type TeamModel = {
+  __typename?: 'TeamModel';
+  id: Scalars['Int']['output'];
+  name: Scalars['String']['output'];
+  tag: Scalars['String']['output'];
+  users: Array<TeamMemberModel>;
 };
 
 export type TournamentModel = {
@@ -196,6 +242,11 @@ export type UpdateEventInput = {
   seat?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type UpdateTeamInput = {
+  name?: InputMaybe<Scalars['String']['input']>;
+  tag?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type UpdateTournamentInput = {
   briefingTime?: InputMaybe<Scalars['DateTime']['input']>;
   category?: InputMaybe<Scalars['String']['input']>;
@@ -223,6 +274,7 @@ export type UserModel = {
   isGlobalAdmin: Scalars['Boolean']['output'];
   name: Scalars['String']['output'];
   seat: Scalars['String']['output'];
+  teams: Array<TeamMemberModel>;
   tournaments: Array<TournamentParticipantModel>;
 };
 

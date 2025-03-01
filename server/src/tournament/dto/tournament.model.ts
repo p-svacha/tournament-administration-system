@@ -2,6 +2,7 @@ import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { TournamentEntity } from '../tournament.entity';
 import { TournamentParticipantModel } from 'src/tournament-participant/dto/tournament-participant.model';
 import { EventModel } from 'src/event/dto/event.model';
+import { TournamentAdminModel } from 'src/tournament-admin/dto/tournament-admin.model';
 
 /**
  * Data that can be requested from the API for a specific tournament.
@@ -74,6 +75,9 @@ export class TournamentModel {
     description: 'List of participants registered for this tournament.',
   })
   participants: TournamentParticipantModel[];
+
+  @Field(() => [TournamentAdminModel])
+  admins: TournamentAdminModel[];
 
   constructor(tournamentEntity?: TournamentEntity) {
     if (tournamentEntity) {

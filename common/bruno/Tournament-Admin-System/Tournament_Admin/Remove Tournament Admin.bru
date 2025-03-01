@@ -1,0 +1,21 @@
+meta {
+  name: Remove Tournament Admin
+  type: graphql
+  seq: 2
+}
+
+post {
+  url: {{host}}
+  body: graphql
+  auth: none
+}
+
+body:graphql {
+  mutation
+  {
+    removeTournamentAdmin(
+      tournamentId: 1,
+      userId: 3,
+    )
+  }
+}
