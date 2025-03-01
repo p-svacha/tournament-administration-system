@@ -1,12 +1,14 @@
-import {Args, Int, Mutation, Parent, Query, ResolveField, Resolver} from '@nestjs/graphql';
-import {UserService} from './user.service';
-import {UserModel} from './dto/user.model';
-import {CreateUserInput} from './dto/create-user.input';
-import {TournamentParticipantModel} from 'src/tournament-participant/dto/tournament-participant.model';
-import {TournamentParticipantService} from 'src/tournament-participant/tournament-participant.service';
-import {UpdateUserInput} from './dto/update.user.input';
-import {TeamMemberModel} from "../team-member/dto/team-member.model";
-import {TeamMemberService} from "../team-member/team-member.service";
+import { Args, Int, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
+import { UserService } from './user.service';
+import { UserModel } from './dto/user.model';
+import { CreateUserInput } from './dto/create-user.input';
+import { TournamentParticipantModel } from 'src/tournament-participant/dto/tournament-participant.model';
+import { TournamentParticipantService } from 'src/tournament-participant/tournament-participant.service';
+import { UpdateUserInput } from './dto/update.user.input';
+import { TeamMemberModel } from '../team-member/dto/team-member.model';
+import { TeamMemberService } from '../team-member/team-member.service';
+import { TournamentAdminModel } from 'src/tournament-admin/dto/tournament-admin.model';
+import { TournamentAdminService } from 'src/tournament-admin/tournament-admin.service';
 
 @Resolver(() => UserModel)
 export class UserResolver {
@@ -14,9 +16,10 @@ export class UserResolver {
     private readonly userService: UserService,
     private readonly teamMemberService: TeamMemberService,
     private readonly tournamentParticipantService: TournamentParticipantService,
+    private readonly tournamentAdminService: TournamentAdminService,
   ) {}
 
-  @Query(() => [UserModel!]!)
+  @Query(() => [UserModel])
   async users(): Promise<UserModel[]> {
     return this.userService.findAllUsers();
   }
@@ -26,14 +29,19 @@ export class UserResolver {
     return this.userService.findUserById(id);
   }
 
-  @ResolveField(() => [TournamentParticipantModel!]!)
+  @ResolveField(() => [TournamentParticipantModel])
   async tournaments(@Parent() user: UserModel): Promise<TournamentParticipantModel[]> {
     return this.tournamentParticipantService.findParticipantsByUser(user.id);
   }
 
-  @ResolveField(() => [TeamMemberModel!]!)
+  @ResolveField(() => [TeamMemberModel])
   async teams(@Parent() user: UserModel): Promise<TeamMemberModel[]> {
     return this.teamMemberService.findTeamMembersByUser(user.id);
+  }
+
+  @ResolveField(() => [TournamentAdminModel])
+  async adminTournaments(@Parent() user: UserModel): Promise<TournamentAdminModel[]> {
+    return this.tournamentAdminService.findTournamentAdminsByUser(user.id);
   }
 
   @Mutation(() => UserModel)

@@ -6,15 +6,18 @@ import { TournamentParticipantService } from 'src/tournament-participant/tournam
 import { TournamentParticipantModel } from 'src/tournament-participant/dto/tournament-participant.model';
 import { UpdateTournamentInput } from './dto/update-tournament-input';
 import { EventModel } from 'src/event/dto/event.model';
+import { TournamentAdminService } from 'src/tournament-admin/tournament-admin.service';
+import { TournamentAdminModel } from 'src/tournament-admin/dto/tournament-admin.model';
 
 @Resolver(() => TournamentModel)
 export class TournamentResolver {
   constructor(
     private readonly tournamentService: TournamentService,
     private readonly tournamentParticipantService: TournamentParticipantService,
+    private readonly tournamentAdminService: TournamentAdminService,
   ) {}
 
-  @Query(() => [TournamentModel!]!)
+  @Query(() => [TournamentModel])
   async tournaments(
     @Args('publishedOnly', {
       type: () => Boolean,
@@ -32,14 +35,19 @@ export class TournamentResolver {
     return this.tournamentService.findTournamentById(id);
   }
 
-  @ResolveField(() => [TournamentParticipantModel!]!)
+  @ResolveField(() => [TournamentParticipantModel])
   async participants(@Parent() tournament: TournamentModel): Promise<TournamentParticipantModel[]> {
     return this.tournamentParticipantService.findParticipantsByTournament(tournament.id);
   }
 
   @ResolveField(() => EventModel)
   async event(@Parent() tournament: TournamentModel): Promise<EventModel> {
-    return this.tournamentService.getTournamentEvent(tournament.id);
+    return this.tournamentService.findTournamentEvent(tournament.id);
+  }
+
+  @ResolveField(() => [TournamentAdminModel])
+  async admins(@Parent() tournament: TournamentModel): Promise<TournamentAdminModel[]> {
+    return this.tournamentAdminService.findTournamentAdminsByTournament(tournament.id);
   }
 
   @Mutation(() => TournamentModel)

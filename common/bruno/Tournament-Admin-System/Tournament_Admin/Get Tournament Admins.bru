@@ -1,5 +1,5 @@
 meta {
-  name: Get Tournament
+  name: Get Tournament Admins
   type: graphql
   seq: 3
 }
@@ -15,17 +15,16 @@ body:graphql {
   {
     tournament(id: 1)
     {
-      id
-      name
-      participants
+      event
       {
-        initialSeed
-        finalRank
+        name
+      }
+      name
+      admins
+      {
         user
         {
-          id
           name
-          seat
         }
       }
     }

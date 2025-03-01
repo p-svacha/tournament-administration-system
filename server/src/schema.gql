@@ -15,6 +15,12 @@ type TeamMemberModel {
   isTeamCaptain: Boolean!
 }
 
+type TournamentAdminModel {
+  id: Int!
+  tournament: TournamentModel!
+  user: UserModel!
+}
+
 type UserModel {
   id: Int!
   name: String!
@@ -22,6 +28,7 @@ type UserModel {
   isGlobalAdmin: Boolean!
   tournaments: [TournamentParticipantModel!]!
   teams: [TeamMemberModel!]!
+  adminTournaments: [TournamentAdminModel!]!
 }
 
 type TournamentParticipantModel {
@@ -88,6 +95,7 @@ type TournamentModel {
 
   """List of participants registered for this tournament."""
   participants: [TournamentParticipantModel!]!
+  admins: [TournamentAdminModel!]!
 }
 
 """
@@ -112,6 +120,8 @@ type Mutation {
   deleteTournament(id: Int!): Boolean!
   registerParticipant(data: RegisterTournamentParticipantInput!): TournamentParticipantModel!
   deregisterParticipant(data: RegisterTournamentParticipantInput!): Boolean!
+  addTournamentAdmin(tournamentId: Int!, userId: Int!): TournamentAdminModel!
+  removeTournamentAdmin(tournamentId: Int!, userId: Int!): Boolean!
   createUser(data: CreateUserInput!): UserModel!
   updateUser(id: Int!, data: UpdateUserInput!): UserModel!
   deleteUser(id: Int!): Boolean!
