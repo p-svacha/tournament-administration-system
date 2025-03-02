@@ -32,7 +32,7 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: client/build
-          remote-dir: /path/to/your/remote/folder
+          remote-dir: tournament-module
 
   deploy-backend:
     name: Deploy Backend
@@ -60,7 +60,7 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
-            cd /path/to/your/app
+            cd tournament-administration-system
             git pull origin main
             npm install
             npm run build
