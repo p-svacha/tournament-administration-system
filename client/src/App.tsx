@@ -3,10 +3,10 @@ import { Routes, Route, Navigate, useParams } from 'react-router-dom';
 import Header from './components/Header';
 import TournamentsPage from './pages/TournamentsPage';
 import { useUser } from './contexts/UserContext';
-import TournamentAdminTab from './pages/TournamentAdminTab';
-import TournamentDetailsTab from './pages/TournamentDetailsTab';
-import TournamentDetailsTabs from './pages/TournamentInfoPage';
-import TournamentParticipantsTab from './pages/TournamentParticipantsTab';
+import TournamentDetailsTab from './pages/tournaments/TournamentDetailsTab';
+import TournamentDetailsTabs from './pages/tournaments/TournamentInfoPage';
+import TournamentParticipantsTab from './pages/tournaments/TournamentParticipantsTab';
+import TournamentAdminWrapper from './pages/tournaments/TournamentAdminTabWrapper';
 
 const RedirectToDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -25,7 +25,7 @@ const App: React.FC = () => {
           <Route index element={<Navigate to="details" replace />} />
           <Route path="details" element={<TournamentDetailsTab />} />
           <Route path="participants" element={<TournamentParticipantsTab />} />
-          {currentUser && currentUser.isGlobalAdmin && <Route path="admin" element={<TournamentAdminTab />} />}
+          <Route path="admin" element={<TournamentAdminWrapper />} />
           <Route path="*" element={<RedirectToDetails />} />
         </Route>
         <Route path="*" element={<Navigate to="/tournaments" />} />

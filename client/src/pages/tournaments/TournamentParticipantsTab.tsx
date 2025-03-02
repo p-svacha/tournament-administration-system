@@ -1,16 +1,15 @@
 import React from 'react';
 import { Container, Typography, List, CircularProgress } from '@mui/material';
 import { useParams } from 'react-router-dom';
-import { useGetTournamentQuery } from '../generated/graphql';
-import { useUser } from '../contexts/UserContext';
-import ParticipantListItem from '../components/ParticipantListItem';
-import AddParticipantForm from '../components/AddParticipantForm';
+import { useGetTournamentQuery } from '../../generated/graphql';
+import ParticipantListItem from '../../components/ParticipantListItem';
+import AddParticipantForm from '../../components/AddParticipantForm';
+import { useTournamentAdminAccess } from '../../hooks/useTournamentAdminAccess';
 
 const TournamentParticipantsTab: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const tournamentId = Number(id);
-  const { currentUser } = useUser();
-
+  const { hasAdminAccess } = useTournamentAdminAccess(Number(id));
   const { loading, error, data, refetch } = useGetTournamentQuery({
     variables: { id: tournamentId },
   });
@@ -19,17 +18,15 @@ const TournamentParticipantsTab: React.FC = () => {
   if (error) return <Typography color="error">Error: {error.message}</Typography>;
   if (!data || !data.tournament) return <Typography color="error">Error: Turnier nicht vorhanden</Typography>;
 
-  const tournament = data.tournament;
-
-  const registeredUserIds = tournament.participants.map((p: any) => p.user.id);
+  const registeredUserIds = data.tournament.participants.map((p: any) => p.user.id);
 
   return (
     <Container>
       {/* Participant list*/}
       <Typography variant="h5">Teilnehmer</Typography>
-      {tournament.participants.length > 0 ? (
+      {data.tournament.participants.length > 0 ? (
         <List>
-          {tournament.participants.map((p: any) => (
+          {data.tournament.participants.map((p: any) => (
             <ParticipantListItem key={p.user.id} tournamentId={tournamentId} participant={p} onRemoved={refetch} />
           ))}
         </List>
@@ -38,7 +35,7 @@ const TournamentParticipantsTab: React.FC = () => {
       )}
 
       {/* Form to manually add participants (admins only)*/}
-      {currentUser && currentUser.isGlobalAdmin && (
+      {hasAdminAccess && (
         <AddParticipantForm tournamentId={tournamentId} registeredUserIds={registeredUserIds} onAdded={refetch} />
       )}
     </Container>

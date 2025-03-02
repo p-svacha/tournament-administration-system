@@ -1,17 +1,19 @@
 import React from 'react';
 import { Container, Typography, Box, Button, CircularProgress } from '@mui/material';
 import { useParams } from 'react-router-dom';
-import { useUser } from '../contexts/UserContext';
-import { useDeregisterParticipantMutation, useGetTournamentQuery, useRegisterParticipantMutation } from '../generated/graphql';
+import { useUser } from '../../contexts/UserContext';
+import {
+  useDeregisterParticipantMutation,
+  useGetTournamentQuery,
+  useRegisterParticipantMutation,
+} from '../../generated/graphql';
 
 const TournamentDetailsTab: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const tournamentId = Number(id);
   const { currentUser } = useUser();
 
-  const { loading, error, data, refetch } = useGetTournamentQuery({
-    variables: { id: tournamentId },
-  });
+  const { loading, error, data, refetch } = useGetTournamentQuery({ variables: { id: tournamentId } });
 
   const [registerParticipant] = useRegisterParticipantMutation();
   const [deregisterParticipant] = useDeregisterParticipantMutation();
@@ -45,7 +47,9 @@ const TournamentDetailsTab: React.FC = () => {
       <Typography>Name: {tournament.name}</Typography>
       <Typography>Kategorie: {tournament.category || '-'}</Typography>
       <Typography>Regeln: {tournament.rules || '-'}</Typography>
-      <Typography>Briefing: {tournament.briefingTime ? new Date(tournament.briefingTime).toLocaleString() : '-'}</Typography>
+      <Typography>
+        Briefing: {tournament.briefingTime ? new Date(tournament.briefingTime).toLocaleString() : '-'}
+      </Typography>
       <Typography>
         Preise: 1. {tournament.prize1 || '-'}, 2. {tournament.prize2 || '-'}, 3. {tournament.prize3 || '-'}
       </Typography>

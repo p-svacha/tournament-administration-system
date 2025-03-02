@@ -1,5 +1,6 @@
 mutation CreateTournament($data: CreateTournamentInput!) {
-    createTournament(data: $data) {
+    createTournament(data: $data)
+    {
         id
         name
     }

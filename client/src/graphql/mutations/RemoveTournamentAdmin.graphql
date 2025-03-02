@@ -1,0 +1,4 @@
+mutation RemoveTournamentAdmin($tournamentId: Int!, $userId: Int!)
+{
+    removeTournamentAdmin(tournamentId: $tournamentId, userId: $userId)
+}
