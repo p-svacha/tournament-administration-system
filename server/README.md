@@ -45,6 +45,28 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
+## Generate schematics with Nest CLI
+
+In case it isn't installed yet, get Nest CLI like this:
+```bash
+$ npm install -g @nestjs/cli
+```
+Then, from the `server` directory, you can create the schematics `Module`, `Resolver` and `Service` for a new entity:
+```bash
+$ nest generate <schematic> <name> [options]
+$ nest g <schematic> <name> [options] 
+```
+For example, to create a new module for an entity called "game":
+```bash
+#./tournament-administration-system/server
+$ nest generate module game
+```
+The file will be created and the `app.module.ts` will be updated accordingly:
+```bash
+CREATE src/game/game.module.ts (85 bytes)
+UPDATE src/app.module.ts (1697 bytes)
+```
+
 ## Run tests
 
 ```bash
