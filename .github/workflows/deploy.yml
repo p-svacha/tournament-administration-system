@@ -65,9 +65,16 @@ jobs:
           script: |
             cd tournament-administration-system
             rm -f server/src/schema.gql
-            source ~/.bash_profile || source ~/.profile
-            export NVM_DIR="$HOME/.nvm
-            [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh
+            # Source shell profile if exists to load environment variables (if needed)
+            if [ -f "$HOME/.bash_profile" ]; then
+              source "$HOME/.bash_profile"
+            elif [ -f "$HOME/.profile" ]; then
+              source "$HOME/.profile"
+            fi
+            # Initialize NVM (if using NVM to manage Node versions)
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+            nvm use 16
             git pull origin main
             npm install
             npm run build
