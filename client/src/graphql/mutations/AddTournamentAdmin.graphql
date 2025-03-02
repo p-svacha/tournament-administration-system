@@ -1,0 +1,7 @@
+mutation AddTournamentAdmin($tournamentId: Int!, $userId: Int!)
+{
+    addTournamentAdmin(tournamentId: $tournamentId, userId: $userId)
+    {
+        id
+    }
+}

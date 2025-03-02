@@ -4,31 +4,56 @@ import { useNavigate } from 'react-router-dom';
 import { useUser } from '../contexts/UserContext';
 import {
   TournamentBasicFieldsFragment,
-  TournamentModel,
   useCreateTournamentMutation,
   useGetTournamentsQuery,
 } from '../generated/graphql';
 import { useEvent } from '../contexts/EventContext';
 import TournamentSection from '../components/TournamentSection';
+import { hasTournamentAdminAccess, isGlobalAdmin } from '../utils/permissions';
+import CreateTournamentCard from '../components/CreateTournamentCard';
 
 const TournamentsPage: React.FC = () => {
   const { currentUser } = useUser();
   const { currentEvent } = useEvent();
-  const isAdmin = currentUser && currentUser.isGlobalAdmin;
+  const navigate = useNavigate();
+  const [createTournament] = useCreateTournamentMutation();
 
+  // Get data of all tournaments in selected event
   const { loading, error, data, refetch } = useGetTournamentsQuery({
     variables: {
-      publishedOnly: !isAdmin,
+      publishedOnly: false,
       eventId: currentEvent?.id,
     },
   });
-  const [createTournament] = useCreateTournamentMutation();
-  const navigate = useNavigate();
 
   if (loading) return <Typography>Loading...</Typography>;
   if (error) return <Typography color="error">Error: {error.message}</Typography>;
   if (!data) return <Typography color="error">Fehler beim Laden der Turniere</Typography>;
   if (!currentEvent) return <Typography color="error">Fehler beim Laden des Events</Typography>;
+
+  // Filter tournaments:
+  // Show all published tournaments, and unpublished only if the current user has access.
+  const filteredTournaments = data.tournaments.filter((tournament) => {
+    return tournament.isPublished || hasTournamentAdminAccess(tournament, currentUser);
+  });
+
+  // Group tournaments by category. If category is missing or empty, use "Uncategorized".
+  const groupedTournaments = filteredTournaments.reduce((acc, tournament) => {
+    const category = tournament.category && tournament.category.trim() !== '' ? tournament.category : 'Uncategorized';
+    if (!acc[category]) {
+      acc[category] = [];
+    }
+    acc[category].push(tournament);
+    return acc;
+  }, {} as Record<string, TournamentBasicFieldsFragment[]>);
+
+  // Convert grouped object into an array of sections.
+  const sections = Object.keys(groupedTournaments)
+    .sort()
+    .map((category) => ({
+      category,
+      tournaments: groupedTournaments[category],
+    }));
 
   const handleCreateTournament = async () => {
     try {
@@ -52,24 +77,6 @@ const TournamentsPage: React.FC = () => {
     }
   };
 
-  // Group tournaments by category. If category is missing or empty, use "Uncategorized".
-  const groupedTournaments = data.tournaments.reduce((acc, tournament) => {
-    const category = tournament.category && tournament.category.trim() !== '' ? tournament.category : 'Uncategorized';
-    if (!acc[category]) {
-      acc[category] = [];
-    }
-    acc[category].push(tournament);
-    return acc;
-  }, {} as Record<string, TournamentBasicFieldsFragment[]>);
-
-  // Convert grouped object into an array of sections.
-  const sections = Object.keys(groupedTournaments)
-    .sort()
-    .map((category) => ({
-      category,
-      tournaments: groupedTournaments[category],
-    }));
-
   return (
     <Container sx={{ mt: 4 }}>
       <Typography variant="h4" gutterBottom>
@@ -80,33 +87,7 @@ const TournamentsPage: React.FC = () => {
         <TournamentSection key={section.category} category={section.category} tournaments={section.tournaments} />
       ))}
 
-      {currentUser && currentUser.isGlobalAdmin && (
-        <>
-          <Typography variant="h5" sx={{ mt: 4, mb: 2 }}>
-            Create New
-          </Typography>
-          <Grid container spacing={2}>
-            <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-              <Card style={{ background: '#66bb6a' }}>
-                <CardActionArea onClick={handleCreateTournament}>
-                  <CardContent
-                    sx={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      minHeight: 60,
-                    }}
-                  >
-                    <Typography variant="h3" color="white">
-                      +
-                    </Typography>
-                  </CardContent>
-                </CardActionArea>
-              </Card>
-            </Grid>
-          </Grid>
-        </>
-      )}
+      {isGlobalAdmin(currentUser) && <CreateTournamentCard onCreate={handleCreateTournament} />}
     </Container>
   );
 };

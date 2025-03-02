@@ -1,16 +1,16 @@
 import React from 'react';
 import { Tabs, Tab, Box } from '@mui/material';
 import { NavLink, Outlet, useParams, useLocation, Link } from 'react-router-dom';
-import { useUser } from '../contexts/UserContext';
+import { useTournamentAdminAccess } from '../../hooks/useTournamentAdminAccess';
 
 const TournamentDetailsTabs: React.FC = () => {
   const { id } = useParams();
   const location = useLocation();
-  const { currentUser } = useUser();
   const basePath = `/tournaments/${id}`;
 
   let currentTab = location.pathname.replace(basePath, '');
   if (!currentTab || currentTab === '/') currentTab = '/details';
+  const { hasAdminAccess } = useTournamentAdminAccess(Number(id));
 
   return (
     <Box>
@@ -18,9 +18,7 @@ const TournamentDetailsTabs: React.FC = () => {
         <Tab label="< Zur Turnierübersicht" value="/overview" component={Link} to="/tournaments" />
         <Tab label="Details/Regeln" value="/details" component={NavLink} to={`${basePath}/details`} />
         <Tab label="Teilnehmer" value="/participants" component={NavLink} to={`${basePath}/participants`} />
-        {currentUser && currentUser.isGlobalAdmin && (
-          <Tab label="Admin" value="/admin" component={NavLink} to={`${basePath}/admin`} />
-        )}
+        {hasAdminAccess && <Tab label="Admin" value="/admin" component={NavLink} to={`${basePath}/admin`} />}
       </Tabs>
       <Box sx={{ mt: 2 }}>
         <Outlet />

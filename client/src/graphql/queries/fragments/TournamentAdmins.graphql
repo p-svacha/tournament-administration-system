@@ -1,0 +1,11 @@
+fragment TournamentAdmins on TournamentModel
+{
+    admins
+    {
+        user
+        {
+            id
+            name
+        }
+    }
+}

@@ -1,8 +1,8 @@
-query GetTournament($id: Int!) {
-    tournament(id: $id) {
-        id
-        name
-        category
+query GetTournament($id: Int!)
+{
+    tournament(id: $id)
+    {
+        ...TournamentBasicFields
         rules
         prize1
         prize2
@@ -10,17 +10,19 @@ query GetTournament($id: Int!) {
         numPlayersPerTeam
         minParticipants
         maxParticipants
-        isPublished
         briefingTime
-        participants {
+        participants
+        {
             initialSeed
             finalRank
-            user {
+            user
+            {
                 id
                 name
                 seat
                 isGlobalAdmin
             }
         }
+        ...TournamentAdmins
     }
 }
