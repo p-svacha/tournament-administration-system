@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, CardActionArea, CardContent, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { TournamentBasicFieldsFragment, TournamentModel } from '../generated/graphql';
+import { TournamentBasicFieldsFragment } from '../generated/graphql';
 
 interface TournamentCardProps {
   tournament: TournamentBasicFieldsFragment;

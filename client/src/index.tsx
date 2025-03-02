@@ -6,7 +6,7 @@ import reportWebVitals from './reportWebVitals';
 import { ApolloProvider } from '@apollo/client';
 import client from './apollo-client';
 import { UserProvider } from './contexts/UserContext';
-import { BrowserRouter, HashRouter } from 'react-router-dom';
+import { HashRouter } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material';
 import { EventProvider } from './contexts/EventContext';
 

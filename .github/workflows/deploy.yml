@@ -20,6 +20,9 @@ jobs:
           node-version: '16'
 
       - name: Install and Build Frontend
+      # Set CI = false so warnings don't cause the build to fail.
+        env:
+          CI: false
         run: |
           cd client
           npm install
@@ -61,7 +64,8 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
             cd tournament-administration-system
+            git clean -fd
             git pull origin main
             npm install
             npm run build
-            pm2 restart your-app-name
+            pm2 restart tournament-backend

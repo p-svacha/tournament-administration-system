@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Typography, Grid2 as Grid, Card, CardActionArea, CardContent } from '@mui/material';
+import { Container, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../contexts/UserContext';
 import {

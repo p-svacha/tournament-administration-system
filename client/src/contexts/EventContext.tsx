@@ -18,7 +18,7 @@ export const EventProvider = ({ children }: { children: ReactNode }) => {
   const [currentEvent, setCurrentEvent] = useState<EventData | null>(null);
 
   // Use the generated hook to load events from the backend.
-  const { data, loading, error } = useGetEventsQuery();
+  const { data, loading } = useGetEventsQuery();
 
   // When events are loaded and there's no current event yet, set the first event.
   useEffect(() => {

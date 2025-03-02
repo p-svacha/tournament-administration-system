@@ -22,7 +22,7 @@ const TournamentAdminTab: React.FC = () => {
   const { loading, error, data, refetch } = useGetTournamentQuery({
     variables: { id: tournamentId },
   });
-  const { loading: loadingUsers, error: errorUsers, data: usersData } = useGetUsersQuery();
+  const { data: usersData } = useGetUsersQuery();
 
   const [updateTournament] = useUpdateTournamentMutation();
   const [deleteTournament] = useDeleteTournamentMutation();
