@@ -2,7 +2,7 @@ import { TournamentEntity } from 'src/tournament/tournament.entity';
 import { UserEntity } from 'src/user/user.entity';
 import { Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Unique } from 'typeorm';
 
-@Entity('tournament-admin')
+@Entity('tournament_admin')
 @Unique(['user', 'tournament'])
 export class TournamentAdminEntity {
   @PrimaryGeneratedColumn()
