@@ -1,0 +1,67 @@
+name: CI/CD Pipeline
+
+# Trigger on pushes to main branch
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy-frontend:
+    name: Deploy Frontend
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js for Frontend
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install and Build Frontend
+        run: |
+          cd client
+          npm install
+          npm run build
+
+      - name: Deploy Frontend via FTP
+        uses: SamKirkland/FTP-Deploy-Action@4.3.0
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: client/build
+          remote-dir: /path/to/your/remote/folder
+
+  deploy-backend:
+    name: Deploy Backend
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js for Backend
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install and Build Backend
+        run: |
+          cd server
+          npm install
+          npm run build
+
+      - name: Deploy Backend via SSH
+        # This step connects to the VPS and runs deployment commands.
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            cd /path/to/your/app
+            git pull origin main
+            npm install
+            npm run build
+            pm2 restart your-app-name
