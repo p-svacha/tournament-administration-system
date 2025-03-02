@@ -9,7 +9,7 @@ interface CreateTournamentCardProps {
  * A card component to create a new tournament.
  * When clicked, it calls the provided `onCreate` callback to trigger the tournament creation process.
  */
-const CreateTournamentCard: React.FC<CreateTournamentCardProps> = ({ onCreate }) => {
+const CreateTournamentCard: React.FC<CreateTournamentCardProps> = (props: CreateTournamentCardProps) => {
   return (
     <>
       <Typography variant="h5" sx={{ mt: 4, mb: 2 }}>
@@ -18,7 +18,7 @@ const CreateTournamentCard: React.FC<CreateTournamentCardProps> = ({ onCreate })
       <Grid container spacing={2}>
         <Grid size={{ xs: 12, sm: 6, md: 4 }}>
           <Card style={{ background: '#66bb6a' }}>
-            <CardActionArea onClick={onCreate}>
+            <CardActionArea onClick={props.onCreate}>
               <CardContent
                 sx={{
                   display: 'flex',

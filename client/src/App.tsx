@@ -6,7 +6,7 @@ import { useUser } from './contexts/UserContext';
 import TournamentDetailsTab from './pages/tournaments/TournamentDetailsTab';
 import TournamentDetailsTabs from './pages/tournaments/TournamentInfoPage';
 import TournamentParticipantsTab from './pages/tournaments/TournamentParticipantsTab';
-import TournamentAdminWrapper from './pages/tournaments/TournamentAdminTabWrapper';
+import TournamentAdminTabWrapper from './pages/tournaments/TournamentAdminTabWrapper';
 
 const RedirectToDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -25,7 +25,7 @@ const App: React.FC = () => {
           <Route index element={<Navigate to="details" replace />} />
           <Route path="details" element={<TournamentDetailsTab />} />
           <Route path="participants" element={<TournamentParticipantsTab />} />
-          <Route path="admin" element={<TournamentAdminWrapper />} />
+          <Route path="admin" element={<TournamentAdminTabWrapper />} />
           <Route path="*" element={<RedirectToDetails />} />
         </Route>
         <Route path="*" element={<Navigate to="/tournaments" />} />

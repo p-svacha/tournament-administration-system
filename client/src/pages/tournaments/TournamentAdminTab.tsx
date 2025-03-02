@@ -10,21 +10,9 @@ import {
   useRemoveTournamentAdminMutation,
   useUpdateTournamentMutation,
 } from '../../generated/graphql';
-import TournamentEditForm from '../../components/TournamentEditForm';
 import TournamentAdminManagement from '../../components/TournamentAdminManagement';
-
-interface FormState {
-  name: string;
-  category?: string;
-  rules?: string;
-  prize1?: string;
-  prize2?: string;
-  prize3?: string;
-  numPlayersPerTeam: number;
-  minParticipants?: number;
-  maxParticipants?: number;
-  isPublished: boolean;
-}
+import TournamentEditFormState from '../../components/TournamentEditForm/TournamentEditFormState';
+import TournamentEditForm from '../../components/TournamentEditForm/TournamentEditForm';
 
 const TournamentAdminTab: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -41,7 +29,7 @@ const TournamentAdminTab: React.FC = () => {
   const [addTournamentAdmin] = useAddTournamentAdminMutation();
   const [removeTournamentAdmin] = useRemoveTournamentAdminMutation();
 
-  const [formState, setFormState] = useState<FormState | null>(null);
+  const [formState, setFormState] = useState<TournamentEditFormState | null>(null);
   const [selectedNewAdmin, setSelectedNewAdmin] = useState<{ id: number; name: string } | null>(null);
 
   // Initialize formState when tournament data is loaded, only if formState is not yet set.
@@ -66,7 +54,7 @@ const TournamentAdminTab: React.FC = () => {
   if (error) return <Typography color="error">Error: {error.message}</Typography>;
   if (!data || !data.tournament) return <Typography color="error">Fehler beim Laden der Turnierdaten</Typography>;
 
-  const handleFieldChange = (field: keyof FormState, value: string | number | boolean) => {
+  const handleFieldChange = (field: keyof TournamentEditFormState, value: string | number | boolean) => {
     setFormState({
       ...formState,
       [field]: value,

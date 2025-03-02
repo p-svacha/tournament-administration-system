@@ -7,7 +7,7 @@ import { CircularProgress } from '@mui/material';
 /**
  * Wrapper containing the TournamentAdminTab. Depending on user rights, it either shows the tab or redirects back to the details page.
  */
-const TournamentAdminWrapper: React.FC = () => {
+const TournamentAdminTabWrapper: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const tournamentId = Number(id);
   const { loading, hasAdminAccess } = useTournamentAdminAccess(tournamentId);
@@ -26,4 +26,4 @@ const TournamentAdminWrapper: React.FC = () => {
   return <TournamentAdminTab />;
 };
 
-export default TournamentAdminWrapper;
+export default TournamentAdminTabWrapper;
