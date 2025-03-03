@@ -1,5 +1,5 @@
 meta {
-  name: Deregister Tournament Participant
+  name: Deregister User-Participant
   type: graphql
   seq: 2
 }
@@ -13,9 +13,9 @@ post {
 body:graphql {
   mutation
   {
-    deregisterParticipant(data: {
+    deregisterUserParticipant(
       tournamentId: 1,
-      userId: 3,
-    })
+      userId: 1,
+    )
   }
 }

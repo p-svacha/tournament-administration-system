@@ -1,7 +1,7 @@
 meta {
-  name: Delete User
+  name: Deregister & Delete Team
   type: graphql
-  seq: 5
+  seq: 4
 }
 
 post {
@@ -12,6 +12,6 @@ post {
 
 body:graphql {
   mutation {
-      deleteUser(id: 1)
-    }
+    deregisterTeam(id: 3)
+  }
 }

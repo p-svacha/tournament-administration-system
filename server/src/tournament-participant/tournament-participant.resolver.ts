@@ -1,5 +1,4 @@
-import { Args, Mutation, Resolver } from '@nestjs/graphql';
-import { RegisterTournamentParticipantInput } from './dto/register-tournament-participant.input';
+import { Args, Int, Mutation, Resolver } from '@nestjs/graphql';
 import { TournamentParticipantModel } from './dto/tournament-participant.model';
 import { TournamentParticipantService } from './tournament-participant.service';
 
@@ -8,16 +7,18 @@ export class TournamentParticipantResolver {
   constructor(private readonly participantService: TournamentParticipantService) {}
 
   @Mutation(() => TournamentParticipantModel)
-  async registerParticipant(
-    @Args('data') registerParticipantData: RegisterTournamentParticipantInput,
+  async registerUserParticipant(
+    @Args('tournamentId', { type: () => Int }) tournamentId: number,
+    @Args('userId', { type: () => Int }) userId: number,
   ): Promise<TournamentParticipantModel> {
-    return this.participantService.registerParticipant(registerParticipantData);
+    return this.participantService.registerUserParticipant(tournamentId, userId);
   }
 
   @Mutation(() => Boolean)
-  async deregisterParticipant(
-    @Args('data') registerParticipantData: RegisterTournamentParticipantInput,
+  async deregisterUserParticipant(
+    @Args('tournamentId', { type: () => Int }) tournamentId: number,
+    @Args('userId', { type: () => Int }) userId: number,
   ): Promise<boolean> {
-    return this.participantService.deregisterParticipant(registerParticipantData);
+    return this.participantService.deregisterUserParticipant(tournamentId, userId);
   }
 }

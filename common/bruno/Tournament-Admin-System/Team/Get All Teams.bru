@@ -16,10 +16,21 @@ body:graphql {
     teams
     {
       name
-      users
+      tag
+      members
       {
         user
         {
+          id
+          name
+        }
+        isTeamCaptain
+      }
+      tournaments
+      {
+        tournament
+        {
+          id
           name
         }
       }

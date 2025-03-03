@@ -1,7 +1,7 @@
 meta {
-  name: Get All Users
+  name: Get User
   type: graphql
-  seq: 2
+  seq: 3
 }
 
 post {
@@ -13,7 +13,7 @@ post {
 body:graphql {
   query
   {
-    users
+    user(id:4)
     {
       id
       name
