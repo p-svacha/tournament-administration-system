@@ -2,7 +2,7 @@ import { Args, Int, Mutation, Parent, Query, ResolveField, Resolver } from '@nes
 import { TeamModel } from './dto/team.model';
 import { TeamService } from './team.service';
 import { CreateTeamInput } from './dto/create-team.input';
-import { UpdateTeamInput } from './dto/update-team-input';
+import { UpdateTeamInput } from './dto/update-team.input';
 import { TeamMemberModel } from '../team-member/dto/team-member.model';
 import { TeamMemberService } from '../team-member/team-member.service';
 

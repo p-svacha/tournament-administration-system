@@ -4,7 +4,7 @@ import { TeamEntity } from './team.entity';
 import { Repository } from 'typeorm';
 import { TeamModel } from './dto/team.model';
 import { CreateTeamInput } from './dto/create-team.input';
-import { UpdateTeamInput } from './dto/update-team-input';
+import { UpdateTeamInput } from './dto/update-team.input';
 
 @Injectable()
 export class TeamService {
