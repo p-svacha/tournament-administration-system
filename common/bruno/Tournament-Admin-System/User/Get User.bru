@@ -1,7 +1,7 @@
 meta {
-  name: Get All Tournaments
+  name: Get User
   type: graphql
-  seq: 2
+  seq: 3
 }
 
 post {
@@ -13,43 +13,42 @@ post {
 body:graphql {
   query
   {
-    tournaments(publishedOnly: false)
+    user(id:3)
     {
       id
       name
-      isPublished
-      participants
+      seat
+      isGlobalAdmin
+      teams
       {
-        user
-        {
-          id
-          name
-          seat
-          isGlobalAdmin
-        }
         team
         {
-          id
           name
-          tag
-          members
-          {
-            name
-          }
+        }
+      }
+      tournaments
+      {
+        tournament
+        {
+          name
         }
         initialSeed
         finalRank
       }
-      event
+      adminTournaments
       {
-        name
-      }
-      admins
-      {
-        user
+        tournament
         {
           name
         }
+      }
+      teams
+      {
+        team
+        {
+          name
+        }
+        isTeamCaptain
       }
     }
   }
