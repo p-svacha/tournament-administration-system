@@ -5,6 +5,7 @@ import { UserEntity } from './user.entity';
 import { UserModel } from './dto/user.model';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateEventInput } from 'src/event/dto/update-event.input';
+import {UpdateUserInput} from "./dto/update.user.input";
 
 @Injectable()
 export class UserService {
@@ -45,7 +46,7 @@ export class UserService {
     return new UserModel(savedUser);
   }
 
-  async updateUser(id: number, input: UpdateEventInput): Promise<UserModel> {
+  async updateUser(id: number, input: UpdateUserInput): Promise<UserModel> {
     // Find affected user
     const user = await this.userRepository.findOne({ where: { id: id } });
     if (!user) {
