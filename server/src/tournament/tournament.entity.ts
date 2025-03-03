@@ -2,7 +2,7 @@ import { EventEntity } from 'src/event/event.entity';
 import { TournamentAdminEntity } from 'src/tournament-admin/tournament-admin.entity';
 import { TournamentParticipantEntity } from 'src/tournament-participant/tournament-participant.entity';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import {GameEntity} from "../game/game.entity";
+import { GameEntity } from '../game/game.entity';
 
 @Entity('tournament')
 export class TournamentEntity {
