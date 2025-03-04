@@ -44,10 +44,18 @@ type EventModel {
   tournaments: [TournamentModel!]!
 }
 
+type GameModel {
+  id: Int!
+  name: String!
+  logoUrl: String!
+  tournaments: [TournamentModel!]!
+}
+
 type TournamentModel {
   """Unique identifier of the tournament."""
   id: Int!
   event: EventModel!
+  game: GameModel!
 
   """Name of the tournament."""
   name: String!
@@ -112,6 +120,8 @@ type Query {
   event(id: Int!): EventModel
   teams: [TeamModel!]!
   team(id: Int!): TeamModel!
+  games: [GameModel!]!
+  game(id: Int!): GameModel
 }
 
 type Mutation {
@@ -131,6 +141,9 @@ type Mutation {
   createTeam(data: CreateTeamInput!): TeamModel!
   updateTeam(id: Int!, data: UpdateTeamInput!): TeamModel!
   deleteTeam(id: Int!): Boolean!
+  createGame(data: CreateGameInput!): GameModel!
+  updateGame(id: Int!, data: UpdateGameInput!): GameModel!
+  deleteGame(id: Int!): Boolean!
 }
 
 input CreateTournamentInput {
@@ -176,8 +189,6 @@ input CreateEventInput {
 
 input UpdateEventInput {
   name: String
-  seat: String
-  isGlobalAdmin: Boolean
 }
 
 input CreateTeamInput {
@@ -188,4 +199,14 @@ input CreateTeamInput {
 input UpdateTeamInput {
   name: String
   tag: String
+}
+
+input CreateGameInput {
+  name: String!
+  logoUrl: String!
+}
+
+input UpdateGameInput {
+  name: String
+  logoUrl: String
 }

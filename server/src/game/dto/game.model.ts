@@ -19,7 +19,7 @@ export class GameModel {
   constructor(gameEntity: GameEntity) {
     this.id = gameEntity.id;
     this.name = gameEntity.name;
-    this.logoUrl = gameEntity.logo_url;
+    this.logoUrl = gameEntity.logoUrl;
     this.tournaments = [];
   }
 }

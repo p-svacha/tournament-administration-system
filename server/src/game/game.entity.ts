@@ -10,7 +10,7 @@ export class GameEntity {
   name: string;
 
   @Column({ type: 'varchar', length: 2000 })
-  logo_url: string;
+  logoUrl: string;
 
   @OneToMany(() => TournamentEntity, (tournament) => tournament.game)
   tournaments: TournamentEntity[];

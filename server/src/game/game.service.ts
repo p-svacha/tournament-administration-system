@@ -34,6 +34,7 @@ export class GameService {
     // Create entity
     const game = this.gameRepository.create({
       name: input.name,
+      logoUrl: input.logoUrl,
     });
 
     // Save to database

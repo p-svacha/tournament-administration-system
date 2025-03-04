@@ -1,0 +1,24 @@
+meta {
+  name: Create Game
+  type: graphql
+  seq: 1
+}
+
+post {
+  url: {{host}}
+  body: graphql
+  auth: none
+}
+
+body:graphql {
+  mutation {
+    createGame(data: {
+      name: "League of Legends",
+      logoUrl: "common/game-logos/league_of_legends.png"
+    }) {
+      id
+      name
+      logoUrl
+    }
+  }
+}

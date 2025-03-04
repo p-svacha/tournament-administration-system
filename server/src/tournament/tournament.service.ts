@@ -6,6 +6,7 @@ import { TournamentModel } from './dto/tournament.model';
 import { CreateTournamentInput } from './dto/create-tournament.input';
 import { UpdateTournamentInput } from './dto/update-tournament-input';
 import { EventModel } from 'src/event/dto/event.model';
+import { GameModel } from '../game/dto/game.model';
 
 @Injectable()
 export class TournamentService {
@@ -79,6 +80,17 @@ export class TournamentService {
       throw new Error('Event not found for tournament');
     }
     return new EventModel(tournament.event);
+  }
+
+  async findTournamentGame(tournamentId: number): Promise<GameModel> {
+    const tournament = await this.tournamentRepository.findOne({
+      where: { id: tournamentId },
+      relations: ['game'],
+    });
+    if (!tournament || !tournament.game) {
+      throw new Error('Game not found for tournament');
+    }
+    return new GameModel(tournament.game);
   }
 
   async updateTournament(id: number, input: UpdateTournamentInput): Promise<TournamentModel> {
