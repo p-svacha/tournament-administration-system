@@ -62,6 +62,7 @@ export class TournamentService {
     const tournament: TournamentEntity = this.tournamentRepository.create({
       name: input.name,
       event: { id: input.eventId },
+      game: { id: input.gameId },
     });
 
     // Save new entity
