@@ -1,7 +1,7 @@
 meta {
-  name: Create Team
+  name: Update Team
   type: graphql
-  seq: 1
+  seq: 3
 }
 
 post {
@@ -12,12 +12,13 @@ post {
 
 body:graphql {
   mutation {
-    createTeam(data: {
-      name: "Arctic",
-      tag: "AG"
-    }) {
-      id
+    updateTeam(id: 1 data: {
+      name: "ArticGeming",
+      tag: "ARC",
+    })
+    {
       name
+      tag
     }
   }
 }

@@ -26,4 +26,19 @@ export class TeamMemberService {
     });
     return teamMembers.map((teamMemberEntity) => new TeamMemberModel(teamMemberEntity));
   }
+
+  async addTeamMember(teamId: number, userId: number, isTeamCaptain: boolean): Promise<TeamMemberModel> {
+    // Create entity
+    const newTeamMember: TeamMemberEntity = this.teamMemberRepository.create({
+      team: { id: teamId },
+      user: { id: userId },
+      is_team_captain: isTeamCaptain,
+    });
+
+    // Save entity
+    const savedTeamMember: TeamMemberEntity = await this.teamMemberRepository.save(newTeamMember);
+
+    // Return as model
+    return new TeamMemberModel(savedTeamMember);
+  }
 }

@@ -2,19 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type TeamModel {
-  id: Int!
-  name: String!
-  tag: String!
-  users: [TeamMemberModel!]!
-}
-
-type TeamMemberModel {
-  team: TeamModel!
-  user: UserModel!
-  isTeamCaptain: Boolean!
-}
-
 type TournamentAdminModel {
   id: Int!
   tournament: TournamentModel!
@@ -31,9 +18,24 @@ type UserModel {
   adminTournaments: [TournamentAdminModel!]!
 }
 
+type TeamMemberModel {
+  team: TeamModel!
+  user: UserModel!
+  isTeamCaptain: Boolean!
+}
+
+type TeamModel {
+  id: Int!
+  name: String!
+  tag: String!
+  members: [TeamMemberModel!]!
+  tournaments: [TournamentParticipantModel!]!
+}
+
 type TournamentParticipantModel {
   tournament: TournamentModel!
-  user: UserModel!
+  user: UserModel
+  team: TeamModel
   initialSeed: Int
   finalRank: Int
 }
@@ -103,6 +105,12 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type RegisterTeamOutput {
+  success: Boolean!
+  team: TeamModel
+  message: String
+}
+
 type Query {
   tournaments(publishedOnly: Boolean = true, eventId: Int): [TournamentModel!]!
   tournament(id: Int!): TournamentModel
@@ -118,8 +126,8 @@ type Mutation {
   createTournament(data: CreateTournamentInput!): TournamentModel!
   updateTournament(id: Int!, data: UpdateTournamentInput!): TournamentModel!
   deleteTournament(id: Int!): Boolean!
-  registerParticipant(data: RegisterTournamentParticipantInput!): TournamentParticipantModel!
-  deregisterParticipant(data: RegisterTournamentParticipantInput!): Boolean!
+  registerUserParticipant(tournamentId: Int!, userId: Int!): TournamentParticipantModel!
+  deregisterUserParticipant(tournamentId: Int!, userId: Int!): Boolean!
   addTournamentAdmin(tournamentId: Int!, userId: Int!): TournamentAdminModel!
   removeTournamentAdmin(tournamentId: Int!, userId: Int!): Boolean!
   createUser(data: CreateUserInput!): UserModel!
@@ -128,9 +136,9 @@ type Mutation {
   createEvent(data: CreateEventInput!): EventModel!
   updateEvent(id: Int!, data: UpdateEventInput!): EventModel!
   deleteEvent(id: Int!): Boolean!
-  createTeam(data: CreateTeamInput!): TeamModel!
+  registerTeam(data: RegisterTeamInput!): RegisterTeamOutput!
   updateTeam(id: Int!, data: UpdateTeamInput!): TeamModel!
-  deleteTeam(id: Int!): Boolean!
+  deregisterTeam(id: Int!): Boolean!
 }
 
 input CreateTournamentInput {
@@ -151,11 +159,6 @@ input UpdateTournamentInput {
   numPlayersPerTeam: Int
   minParticipants: Int
   maxParticipants: Int
-}
-
-input RegisterTournamentParticipantInput {
-  tournamentId: Int!
-  userId: Int!
 }
 
 input CreateUserInput {
@@ -180,9 +183,11 @@ input UpdateEventInput {
   isGlobalAdmin: Boolean
 }
 
-input CreateTeamInput {
+input RegisterTeamInput {
   name: String!
   tag: String!
+  userId: Int!
+  tournamentId: Int!
 }
 
 input UpdateTeamInput {
