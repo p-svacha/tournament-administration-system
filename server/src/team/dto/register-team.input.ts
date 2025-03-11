@@ -7,15 +7,15 @@ import { Field, InputType, Int } from '@nestjs/graphql';
  */
 @InputType()
 export class RegisterTeamInput {
-  @Field()
+  @Field({ description: 'The name of the team.' })
   name: string;
 
-  @Field()
+  @Field({ description: 'The tag or short identifier for the team.' })
   tag: string;
 
-  @Field(() => Int)
+  @Field(() => Int, { description: 'The ID of the user creating the team, who will be set as the team captain.' })
   userId: number;
 
-  @Field(() => Int)
+  @Field(() => Int, { description: 'The ID of the tournament for which the team is being registered.' })
   tournamentId: number;
 }
