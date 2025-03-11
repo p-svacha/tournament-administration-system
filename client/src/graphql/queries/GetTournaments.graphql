@@ -1,6 +1,6 @@
-query GetTournaments($publishedOnly: Boolean = true, $eventId: Int)
+query GetTournaments($publishedOnly: Boolean = true, $eventId: Int, $gameId: Int)
 {
-    tournaments(publishedOnly: $publishedOnly, eventId: $eventId)
+    tournaments(publishedOnly: $publishedOnly, eventId: $eventId, gameId: $gameId)
     {
         ...TournamentBasicFields
         ...TournamentAdmins

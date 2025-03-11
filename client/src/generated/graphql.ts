@@ -28,6 +28,7 @@ export type CreateTeamInput = {
 };
 
 export type CreateTournamentInput = {
+  gameId: Scalars['Int']['input'];
   eventId: Scalars['Int']['input'];
   name: Scalars['String']['input'];
 };
@@ -180,6 +181,7 @@ export type QueryTournamentArgs = {
 
 
 export type QueryTournamentsArgs = {
+  gameId?: InputMaybe<Scalars['Int']['input']>;
   eventId?: InputMaybe<Scalars['Int']['input']>;
   publishedOnly?: InputMaybe<Scalars['Boolean']['input']>;
 };
@@ -368,6 +370,7 @@ export type GetTournamentQuery = { __typename?: 'Query', tournament?: { __typena
 export type GetTournamentsQueryVariables = Exact<{
   publishedOnly?: InputMaybe<Scalars['Boolean']['input']>;
   eventId?: InputMaybe<Scalars['Int']['input']>;
+  gameId?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
 
@@ -747,8 +750,8 @@ export type GetTournamentLazyQueryHookResult = ReturnType<typeof useGetTournamen
 export type GetTournamentSuspenseQueryHookResult = ReturnType<typeof useGetTournamentSuspenseQuery>;
 export type GetTournamentQueryResult = Apollo.QueryResult<GetTournamentQuery, GetTournamentQueryVariables>;
 export const GetTournamentsDocument = gql`
-    query GetTournaments($publishedOnly: Boolean = true, $eventId: Int) {
-  tournaments(publishedOnly: $publishedOnly, eventId: $eventId) {
+    query GetTournaments($publishedOnly: Boolean = true, $eventId: Int, $gameId: Int) {
+  tournaments(publishedOnly: $publishedOnly, eventId: $eventId, gameId: $gameId) {
     ...TournamentBasicFields
     ...TournamentAdmins
   }
@@ -770,6 +773,7 @@ ${TournamentAdminsFragmentDoc}`;
  *   variables: {
  *      publishedOnly: // value for 'publishedOnly'
  *      eventId: // value for 'eventId'
+ *      gameId: // value for 'gameId'
  *   },
  * });
  */

@@ -15,7 +15,7 @@ export class TournamentService {
     private tournamentRepository: Repository<TournamentEntity>,
   ) {}
 
-  async findTournaments(publishedOnly?: boolean, eventId?: number): Promise<TournamentModel[]> {
+  async findTournaments(publishedOnly?: boolean, eventId?: number, gameId?: number): Promise<TournamentModel[]> {
     let whereCondition: FindOptionsWhere<TournamentEntity> = {};
 
     if (publishedOnly) {
@@ -24,6 +24,10 @@ export class TournamentService {
 
     if (eventId) {
       whereCondition.event = { id: eventId };
+    }
+
+    if (gameId) {
+      whereCondition.game = { id: gameId };
     }
 
     const tournaments: TournamentEntity[] = await this.tournamentRepository.find({
@@ -38,7 +42,6 @@ export class TournamentService {
   async findTournamentById(id: number): Promise<TournamentModel> {
     const tournamentEntity = await this.tournamentRepository.findOne({
       where: { id: id },
-      relations: ['event'],
     });
 
     if (!tournamentEntity) {

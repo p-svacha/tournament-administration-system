@@ -27,8 +27,9 @@ export class TournamentResolver {
     })
     publishedOnly: boolean,
     @Args('eventId', { type: () => Int, nullable: true }) eventId: number,
+    @Args('gameId', { type: () => Int, nullable: true}) gameId: number,
   ): Promise<TournamentModel[]> {
-    return this.tournamentService.findTournaments(publishedOnly, eventId);
+    return this.tournamentService.findTournaments(publishedOnly, eventId, gameId);
   }
 
   @Query(() => TournamentModel, { nullable: true })
