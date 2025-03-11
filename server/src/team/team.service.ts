@@ -1,10 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { TeamEntity } from './team.entity';
 import { Repository } from 'typeorm';
 import { TeamModel } from './dto/team.model';
-import { CreateTeamInput } from './dto/create-team.input';
-import { UpdateTeamInput } from './dto/update-team.input';
+import { UpdateTeamInput } from './dto/update-team-input';
+import { TeamEntity } from './team.entity';
 
 @Injectable()
 export class TeamService {
@@ -30,11 +29,11 @@ export class TeamService {
     return new TeamModel(team);
   }
 
-  async createTeam(input: CreateTeamInput): Promise<TeamModel> {
+  async createTeam(name: string, tag: string): Promise<TeamModel> {
     // Map input DTO to entity
     const team: TeamEntity = this.teamRepository.create({
-      name: input.name,
-      tag: input.tag,
+      name: name,
+      tag: tag,
     });
 
     // Save new entity

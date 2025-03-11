@@ -18,7 +18,7 @@ export class UserEntity {
   is_global_admin: boolean;
 
   @OneToMany(() => TournamentParticipantEntity, (participant) => participant.user)
-  tournamentParticipants: TournamentParticipantEntity[];
+  tournaments: TournamentParticipantEntity[];
 
   @OneToMany(() => TeamMemberEntity, (teamMember) => teamMember.user)
   teams: TeamMemberEntity[];

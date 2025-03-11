@@ -27,6 +27,19 @@ body:graphql {
           seat
           isGlobalAdmin
         }
+        team
+        {
+          id
+          name
+          tag
+          members
+          {
+            user
+            {
+              name
+            }
+          }
+        }
         initialSeed
         finalRank
       }

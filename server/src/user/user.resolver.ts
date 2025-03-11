@@ -1,14 +1,14 @@
 import { Args, Int, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
-import { UserService } from './user.service';
-import { UserModel } from './dto/user.model';
-import { CreateUserInput } from './dto/create-user.input';
-import { TournamentParticipantModel } from 'src/tournament-participant/dto/tournament-participant.model';
-import { TournamentParticipantService } from 'src/tournament-participant/tournament-participant.service';
-import { UpdateUserInput } from './dto/update.user.input';
-import { TeamMemberModel } from '../team-member/dto/team-member.model';
-import { TeamMemberService } from '../team-member/team-member.service';
 import { TournamentAdminModel } from 'src/tournament-admin/dto/tournament-admin.model';
 import { TournamentAdminService } from 'src/tournament-admin/tournament-admin.service';
+import { TournamentParticipantModel } from 'src/tournament-participant/dto/tournament-participant.model';
+import { TournamentParticipantService } from 'src/tournament-participant/tournament-participant.service';
+import { TeamMemberModel } from '../team-member/dto/team-member.model';
+import { TeamMemberService } from '../team-member/team-member.service';
+import { CreateUserInput } from './dto/create-user.input';
+import { UpdateUserInput } from './dto/update.user.input';
+import { UserModel } from './dto/user.model';
+import { UserService } from './user.service';
 
 @Resolver(() => UserModel)
 export class UserResolver {
