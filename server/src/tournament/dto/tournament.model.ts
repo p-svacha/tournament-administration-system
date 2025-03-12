@@ -2,6 +2,7 @@ import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { EventModel } from 'src/event/dto/event.model';
 import { TournamentAdminModel } from 'src/tournament-admin/dto/tournament-admin.model';
 import { TournamentParticipantModel } from 'src/tournament-participant/dto/tournament-participant.model';
+import { GameModel } from '../../game/dto/game.model';
 import { TournamentEntity } from '../tournament.entity';
 
 /**
@@ -14,6 +15,9 @@ export class TournamentModel {
 
   @Field(() => EventModel)
   event: EventModel;
+
+  @Field(() => GameModel)
+  game: GameModel;
 
   @Field({ description: 'Name of the tournament.' })
   name: string;
@@ -58,7 +62,7 @@ export class TournamentModel {
   })
   numPlayersPerTeam: number;
 
-  @Field(() => Int, { description: 'Maximum number of substutitues a team may have.' })
+  @Field(() => Int, { description: 'Maximum number of substitutes a team may have.' })
   maxSubstitutes: number;
 
   @Field(() => Int, {
@@ -67,10 +71,11 @@ export class TournamentModel {
   minParticipants: number;
 
   @Field(() => Int, {
+    nullable: true,
     description:
-      'Maximum number of participants that can register for the tournament (0 means there is no upper limit).',
+      'Maximum number of participants that can register for the tournament. Null if there is no upper limit.',
   })
-  maxParticipants: number;
+  maxParticipants?: number;
 
   @Field(() => [TournamentParticipantModel], {
     description: 'List of participants registered for this tournament.',

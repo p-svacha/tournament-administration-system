@@ -1,5 +1,5 @@
 meta {
-  name: Create Tournament
+  name: Create Game
   type: graphql
   seq: 1
 }
@@ -12,13 +12,13 @@ post {
 
 body:graphql {
   mutation {
-    createTournament(data: {
-      name: "League of Legends PRO"
-      eventId: 1
-      gameId: 1
+    createGame(data: {
+      name: "League of Legends",
+      logoUrl: "./public/game-logos/league_of_legends.png"
     }) {
       id
       name
+      logoUrl
     }
   }
 }

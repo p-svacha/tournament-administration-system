@@ -6,11 +6,5 @@ import { Field, InputType } from '@nestjs/graphql';
 @InputType()
 export class UpdateEventInput {
   @Field({ nullable: true })
-  name: string;
-
-  @Field({ nullable: true })
-  seat: string;
-
-  @Field({ nullable: true })
-  isGlobalAdmin: boolean;
+  name?: string;
 }

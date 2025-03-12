@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { TeamModel } from './dto/team.model';
-import { UpdateTeamInput } from './dto/update-team-input';
+import { UpdateTeamInput } from './dto/update-team.input';
 import { TeamEntity } from './team.entity';
 
 @Injectable()
