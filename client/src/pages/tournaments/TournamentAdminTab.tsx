@@ -20,11 +20,23 @@ const TournamentAdminTab: React.FC = () => {
   const tournamentId = Number(id);
   const navigate = useNavigate();
 
-  const { loading, error, data, refetch } = useGetTournamentQuery({
+  const {
+    data: tournamentData,
+    loading,
+    error,
+    refetch,
+  } = useGetTournamentQuery({
     variables: { id: tournamentId },
   });
+
+  const eventId = tournamentData?.tournament?.event.id;
+
+  const { data: categoriesData } = useGetEventTournamentCategoriesQuery({
+    variables: { eventId: eventId! },
+    skip: !eventId, // skip the query until eventId is available
+  });
+
   const { data: usersData } = useGetUsersQuery();
-  const { data: categoriesData } = useGetEventTournamentCategoriesQuery(data?.tournament?.event.id);
 
   const [updateTournament] = useUpdateTournamentMutation();
   const [deleteTournament] = useDeleteTournamentMutation();
@@ -36,28 +48,31 @@ const TournamentAdminTab: React.FC = () => {
 
   // Initialize formState when tournament data is loaded, only if formState is not yet set.
   useEffect(() => {
-    if (data && data.tournament && formState === null) {
+    if (tournamentData && tournamentData.tournament && formState === null) {
       setFormState({
-        name: data.tournament.name,
-        category: data.tournament.category || '',
-        rules: data.tournament.rules || '',
-        prize1: data.tournament.prize1 || '',
-        prize2: data.tournament.prize2 || '',
-        prize3: data.tournament.prize3 || '',
-        numPlayersPerTeam: data.tournament.numPlayersPerTeam,
-        minParticipants: data.tournament.minParticipants || 0,
-        maxParticipants: data.tournament.maxParticipants || 0,
-        isPublished: data.tournament.isPublished,
+        name: tournamentData.tournament.name,
+        category: tournamentData.tournament.category || '',
+        rules: tournamentData.tournament.rules || '',
+        prize1: tournamentData.tournament.prize1 || '',
+        prize2: tournamentData.tournament.prize2 || '',
+        prize3: tournamentData.tournament.prize3 || '',
+        numPlayersPerTeam: tournamentData.tournament.numPlayersPerTeam,
+        minParticipants: tournamentData.tournament.minParticipants || 0,
+        maxParticipants: tournamentData.tournament.maxParticipants || 0,
+        isPublished: tournamentData.tournament.isPublished,
       });
     }
-  }, [data, formState]);
+  }, [tournamentData, formState]);
 
   if (loading || !formState) return <CircularProgress />;
   if (error) return <Typography color="error">Error: {error.message}</Typography>;
-  if (!data || !data.tournament) return <Typography color="error">Fehler beim Laden der Turnierdaten</Typography>;
+  if (!tournamentData || !tournamentData.tournament)
+    return <Typography color="error">Fehler beim Laden der Turnierdaten</Typography>;
 
   // Get existing tournament categories from save event
-  //const eventId: number = data.tournament.event
+  const existingTournamentCategories: string[] = categoriesData
+    ? categoriesData.tournaments.map((t) => (t.category ? t.category : ''))
+    : [];
 
   const handleFieldChange = (field: keyof TournamentEditFormState, value: string | number | boolean) => {
     setFormState({
@@ -144,8 +159,8 @@ const TournamentAdminTab: React.FC = () => {
 
   // Filter available users (if usersData is loaded)
   const availableUsers =
-    usersData && data
-      ? usersData.users.filter((user) => !data.tournament?.admins.some((admin) => admin.user.id === user.id))
+    usersData && tournamentData
+      ? usersData.users.filter((user) => !tournamentData.tournament?.admins.some((admin) => admin.user.id === user.id))
       : [];
 
   return (
@@ -155,10 +170,10 @@ const TournamentAdminTab: React.FC = () => {
         onFieldChange={handleFieldChange}
         onSave={handleSave}
         onDelete={handleDelete}
-        categories={[]}
+        categories={existingTournamentCategories}
       />
       <TournamentAdminManagement
-        admins={data.tournament.admins}
+        admins={tournamentData.tournament.admins}
         availableUsers={availableUsers}
         selectedNewAdmin={selectedNewAdmin}
         onAdminSelect={setSelectedNewAdmin}
