@@ -66,7 +66,7 @@ export class TournamentEntity {
   })
   min_participants: number;
 
-  @Column({ type: 'int', default: 0, comment: 'Maximum number of participants that can register' })
+  @Column({ type: 'int', nullable: true, comment: 'Maximum number of participants that can register' })
   max_participants: number;
 
   @OneToMany(() => TournamentParticipantEntity, (participant) => participant.tournament)
