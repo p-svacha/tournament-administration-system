@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { Container, Typography, CircularProgress } from '@mui/material';
-import { useParams, useNavigate } from 'react-router-dom';
+import { CircularProgress, Container, Typography } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import client from '../../apollo-client';
+import TournamentAdminManagement from '../../components/TournamentAdminManagement';
+import TournamentEditForm from '../../components/TournamentEditForm/TournamentEditForm';
+import TournamentEditFormState from '../../components/TournamentEditForm/TournamentEditFormState';
 import {
   useAddTournamentAdminMutation,
   useDeleteTournamentMutation,
@@ -10,9 +13,6 @@ import {
   useRemoveTournamentAdminMutation,
   useUpdateTournamentMutation,
 } from '../../generated/graphql';
-import TournamentAdminManagement from '../../components/TournamentAdminManagement';
-import TournamentEditFormState from '../../components/TournamentEditForm/TournamentEditFormState';
-import TournamentEditForm from '../../components/TournamentEditForm/TournamentEditForm';
 
 const TournamentAdminTab: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -53,6 +53,9 @@ const TournamentAdminTab: React.FC = () => {
   if (loading || !formState) return <CircularProgress />;
   if (error) return <Typography color="error">Error: {error.message}</Typography>;
   if (!data || !data.tournament) return <Typography color="error">Fehler beim Laden der Turnierdaten</Typography>;
+
+  // Get existing tournament categories from save event
+  //const eventId: number = data.tournament.event
 
   const handleFieldChange = (field: keyof TournamentEditFormState, value: string | number | boolean) => {
     setFormState({
@@ -150,6 +153,7 @@ const TournamentAdminTab: React.FC = () => {
         onFieldChange={handleFieldChange}
         onSave={handleSave}
         onDelete={handleDelete}
+        categories={[]}
       />
       <TournamentAdminManagement
         admins={data.tournament.admins}

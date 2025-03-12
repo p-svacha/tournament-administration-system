@@ -1,5 +1,14 @@
+import {
+  Autocomplete,
+  Box,
+  Button,
+  Checkbox,
+  FormControlLabel,
+  Grid2 as Grid,
+  TextField,
+  Typography,
+} from '@mui/material';
 import React from 'react';
-import { Typography, TextField, Button, Box, Grid2 as Grid, FormControlLabel, Checkbox } from '@mui/material';
 import { useUser } from '../../contexts/UserContext';
 import { isGlobalAdmin } from '../../utils/permissions';
 import TournamentEditFormState from './TournamentEditFormState';
@@ -9,6 +18,7 @@ interface TournamentEditFormProps {
   onFieldChange: (field: keyof TournamentEditFormState, value: string | number | boolean) => void;
   onSave: () => void;
   onDelete: () => void;
+  categories: string[];
 }
 
 /**
@@ -32,11 +42,12 @@ const TournamentEditForm: React.FC<TournamentEditFormProps> = (props: Tournament
           />
         </Grid>
         <Grid size={{ xs: 12 }}>
-          <TextField
-            fullWidth
-            label="Kategorie"
+          <Autocomplete
+            freeSolo
+            options={props.categories}
             value={props.formState.category}
-            onChange={(e) => props.onFieldChange('category', e.target.value)}
+            onInputChange={(_, newValue) => props.onFieldChange('category', newValue)}
+            renderInput={(params) => <TextField {...params} label="Kategorie" />}
           />
         </Grid>
         <Grid size={{ xs: 12 }}>

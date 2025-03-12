@@ -11,6 +11,10 @@ query GetTournament($id: Int!)
         minParticipants
         maxParticipants
         briefingTime
+        event
+        {
+            id
+        }
         participants
         {
             initialSeed
