@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOptionsWhere, Repository } from 'typeorm';
-import { TournamentEntity } from './tournament.entity';
-import { TournamentModel } from './dto/tournament.model';
-import { CreateTournamentInput } from './dto/create-tournament.input';
-import { UpdateTournamentInput } from './dto/update-tournament-input';
 import { EventModel } from 'src/event/dto/event.model';
+import { FindOptionsWhere, Repository } from 'typeorm';
+import { CreateTournamentInput } from './dto/create-tournament.input';
+import { TournamentModel } from './dto/tournament.model';
+import { UpdateTournamentInput } from './dto/update-tournament-input';
+import { TournamentEntity } from './tournament.entity';
 
 @Injectable()
 export class TournamentService {
@@ -101,6 +101,7 @@ export class TournamentService {
     if (input.prize3 !== undefined) tournament.prize_third = input.prize3;
     if (input.briefingTime !== undefined) tournament.briefing_time = input.briefingTime;
     if (input.numPlayersPerTeam !== undefined) tournament.num_players_per_team = input.numPlayersPerTeam;
+    if (input.maxSubstitutes !== undefined) tournament.max_substitutes = input.maxSubstitutes;
     if (input.minParticipants !== undefined) tournament.min_participants = input.minParticipants;
     if (input.maxParticipants !== undefined) tournament.max_participants = input.maxParticipants;
 

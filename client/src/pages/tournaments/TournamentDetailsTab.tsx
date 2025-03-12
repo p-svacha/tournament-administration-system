@@ -1,11 +1,11 @@
+import { Box, Button, CircularProgress, Container, Typography } from '@mui/material';
 import React from 'react';
-import { Container, Typography, Box, Button, CircularProgress } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import { useUser } from '../../contexts/UserContext';
 import {
-  useDeregisterParticipantMutation,
+  useDeregisterUserParticipantMutation,
   useGetTournamentQuery,
-  useRegisterParticipantMutation,
+  useRegisterUserParticipantMutation,
 } from '../../generated/graphql';
 
 const TournamentDetailsTab: React.FC = () => {
@@ -15,20 +15,22 @@ const TournamentDetailsTab: React.FC = () => {
 
   const { loading, error, data, refetch } = useGetTournamentQuery({ variables: { id: tournamentId } });
 
-  const [registerParticipant] = useRegisterParticipantMutation();
-  const [deregisterParticipant] = useDeregisterParticipantMutation();
+  const [registerParticipant] = useRegisterUserParticipantMutation();
+  const [deregisterParticipant] = useDeregisterUserParticipantMutation();
 
   if (loading) return <CircularProgress />;
   if (error) return <Typography color="error">Error: {error.message}</Typography>;
   if (!data || !data.tournament) return <Typography color="error">Error: Turnier nicht vorhanden</Typography>;
 
   const tournament = data.tournament;
-  const isRegistered = currentUser ? tournament?.participants?.some((p: any) => p.user.id === currentUser.id) : false;
+  const isTeamTournament: boolean = data.tournament.numPlayersPerTeam > 1;
+  const isRegistered =
+    currentUser && !isTeamTournament ? tournament?.participants?.some((p: any) => p.user.id === currentUser.id) : false;
 
   const handleRegister = async () => {
     if (!currentUser) return;
     await registerParticipant({
-      variables: { data: { tournamentId, userId: currentUser.id } },
+      variables: { tournamentId: tournamentId, userId: currentUser.id },
     });
     refetch();
   };
@@ -36,7 +38,7 @@ const TournamentDetailsTab: React.FC = () => {
   const handleDeregister = async () => {
     if (!currentUser) return;
     await deregisterParticipant({
-      variables: { data: { tournamentId, userId: currentUser.id } },
+      variables: { tournamentId: tournamentId, userId: currentUser.id },
     });
     refetch();
   };
@@ -58,18 +60,22 @@ const TournamentDetailsTab: React.FC = () => {
         Min./Max. Teilnehmer: {tournament.minParticipants || '-'} / {tournament.maxParticipants || '-'}
       </Typography>
       <Box sx={{ mt: 2 }}>
-        {currentUser && (
-          <>
-            {isRegistered ? (
-              <Button variant="contained" color="error" onClick={handleDeregister}>
-                Abmelden
-              </Button>
-            ) : (
-              <Button variant="contained" color="primary" onClick={handleRegister}>
-                Registrieren
-              </Button>
-            )}
-          </>
+        {isTeamTournament ? (
+          <Typography>Team-Registrierung noch nicht implementiert.</Typography>
+        ) : (
+          currentUser && (
+            <>
+              {isRegistered ? (
+                <Button variant="contained" color="error" onClick={handleDeregister}>
+                  Abmelden
+                </Button>
+              ) : (
+                <Button variant="contained" color="primary" onClick={handleRegister}>
+                  Registrieren
+                </Button>
+              )}
+            </>
+          )
         )}
       </Box>
     </Container>

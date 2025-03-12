@@ -1,7 +1,7 @@
+import { Box, Button, ListItem, ListItemText } from '@mui/material';
 import React from 'react';
-import { ListItem, ListItemText, Button, Box } from '@mui/material';
-import { useDeregisterParticipantMutation } from '../generated/graphql';
 import { useUser } from '../contexts/UserContext';
+import { useDeregisterUserParticipantMutation } from '../generated/graphql';
 
 export interface ParticipantProps {
   tournamentId: number;
@@ -15,16 +15,14 @@ export interface ParticipantProps {
 
 const ParticipantListItem: React.FC<ParticipantProps> = (props: ParticipantProps) => {
   const { currentUser } = useUser();
-  const [deregisterParticipant] = useDeregisterParticipantMutation();
+  const [deregisterParticipant] = useDeregisterUserParticipantMutation();
 
   const handleRemove = async () => {
     try {
       await deregisterParticipant({
         variables: {
-          data: {
-            tournamentId: props.tournamentId,
-            userId: props.participant.user.id,
-          },
+          tournamentId: props.tournamentId,
+          userId: props.participant.user.id,
         },
       });
       if (props.onRemoved) props.onRemoved();

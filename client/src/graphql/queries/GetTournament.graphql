@@ -15,18 +15,7 @@ query GetTournament($id: Int!)
         {
             id
         }
-        participants
-        {
-            initialSeed
-            finalRank
-            user
-            {
-                id
-                name
-                seat
-                isGlobalAdmin
-            }
-        }
+        ...TournamentParticipants
         ...TournamentAdmins
     }
 }

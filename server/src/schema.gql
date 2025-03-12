@@ -2,22 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type TournamentAdminModel {
-  id: Int!
-  tournament: TournamentModel!
-  user: UserModel!
-}
-
-type UserModel {
-  id: Int!
-  name: String!
-  seat: String!
-  isGlobalAdmin: Boolean!
-  tournaments: [TournamentParticipantModel!]!
-  teams: [TeamMemberModel!]!
-  adminTournaments: [TournamentAdminModel!]!
-}
-
 type TeamMemberModel {
   team: TeamModel!
   user: UserModel!
@@ -40,10 +24,20 @@ type TournamentParticipantModel {
   finalRank: Int
 }
 
-type EventModel {
+type UserModel {
   id: Int!
   name: String!
-  tournaments: [TournamentModel!]!
+  seat: String!
+  isGlobalAdmin: Boolean!
+  tournaments: [TournamentParticipantModel!]!
+  teams: [TeamMemberModel!]!
+  adminTournaments: [TournamentAdminModel!]!
+}
+
+type TournamentAdminModel {
+  id: Int!
+  tournament: TournamentModel!
+  user: UserModel!
 }
 
 type TournamentModel {
@@ -85,15 +79,18 @@ type TournamentModel {
   """Number of players per team (1 means solo tournaments)."""
   numPlayersPerTeam: Int!
 
+  """Maximum number of substutitues a team may have."""
+  maxSubstitutes: Int!
+
   """
   Minimum number of participants required for the tournament to take place.
   """
-  minParticipants: Int
+  minParticipants: Int!
 
   """
   Maximum number of participants that can register for the tournament (0 means there is no upper limit).
   """
-  maxParticipants: Int
+  maxParticipants: Int!
 
   """List of participants registered for this tournament."""
   participants: [TournamentParticipantModel!]!
@@ -104,6 +101,12 @@ type TournamentModel {
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
+
+type EventModel {
+  id: Int!
+  name: String!
+  tournaments: [TournamentModel!]!
+}
 
 type RegisterTeamOutput {
   """Indicates whether the team registration was successful."""
@@ -164,6 +167,7 @@ input UpdateTournamentInput {
   prize3: String
   briefingTime: DateTime
   numPlayersPerTeam: Int
+  maxSubstitutes: Int
   minParticipants: Int
   maxParticipants: Int
 }
