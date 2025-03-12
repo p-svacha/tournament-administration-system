@@ -8,6 +8,7 @@ import TournamentEditFormState from '../../components/TournamentEditForm/Tournam
 import {
   useAddTournamentAdminMutation,
   useDeleteTournamentMutation,
+  useGetEventTournamentCategoriesQuery,
   useGetTournamentQuery,
   useGetUsersQuery,
   useRemoveTournamentAdminMutation,
@@ -23,6 +24,7 @@ const TournamentAdminTab: React.FC = () => {
     variables: { id: tournamentId },
   });
   const { data: usersData } = useGetUsersQuery();
+  const { data: categoriesData } = useGetEventTournamentCategoriesQuery(data?.tournament?.event.id);
 
   const [updateTournament] = useUpdateTournamentMutation();
   const [deleteTournament] = useDeleteTournamentMutation();
