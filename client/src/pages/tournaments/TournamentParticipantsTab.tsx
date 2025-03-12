@@ -1,9 +1,9 @@
+import { CircularProgress, Container, List, Typography } from '@mui/material';
 import React from 'react';
-import { Container, Typography, List, CircularProgress } from '@mui/material';
 import { useParams } from 'react-router-dom';
-import { useGetTournamentQuery } from '../../generated/graphql';
-import ParticipantListItem from '../../components/ParticipantListItem';
 import AddParticipantForm from '../../components/AddParticipantForm';
+import ParticipantListItem from '../../components/ParticipantListItem';
+import { useGetTournamentQuery } from '../../generated/graphql';
 import { useTournamentAdminAccess } from '../../hooks/useTournamentAdminAccess';
 
 const TournamentParticipantsTab: React.FC = () => {
@@ -18,13 +18,16 @@ const TournamentParticipantsTab: React.FC = () => {
   if (error) return <Typography color="error">Error: {error.message}</Typography>;
   if (!data || !data.tournament) return <Typography color="error">Error: Turnier nicht vorhanden</Typography>;
 
-  const registeredUserIds = data.tournament.participants.map((p: any) => p.user.id);
+  const isTeamTournament: boolean = data.tournament.numPlayersPerTeam > 1;
+  const registeredUserIds: number[] = isTeamTournament ? [] : data.tournament.participants.map((p: any) => p.user.id);
 
   return (
     <Container>
       {/* Participant list*/}
       <Typography variant="h5">Teilnehmer</Typography>
-      {data.tournament.participants.length > 0 ? (
+      {isTeamTournament ? (
+        <Typography>Team-Teilnehmer-Anzeige noch nicht implementiert.</Typography>
+      ) : data.tournament.participants.length > 0 ? (
         <List>
           {data.tournament.participants.map((p: any) => (
             <ParticipantListItem key={p.user.id} tournamentId={tournamentId} participant={p} onRemoved={refetch} />
@@ -36,7 +39,12 @@ const TournamentParticipantsTab: React.FC = () => {
 
       {/* Form to manually add participants (admins only)*/}
       {hasAdminAccess && (
-        <AddParticipantForm tournamentId={tournamentId} registeredUserIds={registeredUserIds} onAdded={refetch} />
+        <AddParticipantForm
+          tournamentId={tournamentId}
+          isTeamTournament={isTeamTournament}
+          registeredUserIds={registeredUserIds}
+          onAdded={refetch}
+        />
       )}
     </Container>
   );

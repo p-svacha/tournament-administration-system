@@ -11,18 +11,7 @@ query GetTournament($id: Int!)
         minParticipants
         maxParticipants
         briefingTime
-        participants
-        {
-            initialSeed
-            finalRank
-            user
-            {
-                id
-                name
-                seat
-                isGlobalAdmin
-            }
-        }
+        ...TournamentParticipants
         ...TournamentAdmins
     }
 }
