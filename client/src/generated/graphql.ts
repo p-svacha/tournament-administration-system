@@ -28,6 +28,7 @@ export type CreateTeamInput = {
 };
 
 export type CreateTournamentInput = {
+  gameId: Scalars['Int']['input'];
   eventId: Scalars['Int']['input'];
   name: Scalars['String']['input'];
 };

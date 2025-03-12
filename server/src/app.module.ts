@@ -11,6 +11,7 @@ import { EventModule } from './event/event.module';
 import { TeamModule } from './team/team.module';
 import { TeamMemberModule } from './team-member/team-member.module';
 import { TournamentAdminModule } from './tournament-admin/tournament-admin.module';
+import { GameModule } from './game/game.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { TournamentAdminModule } from './tournament-admin/tournament-admin.modul
     TeamModule,
     TeamMemberModule,
     TournamentAdminModule,
+    GameModule,
   ],
   controllers: [],
   providers: [],

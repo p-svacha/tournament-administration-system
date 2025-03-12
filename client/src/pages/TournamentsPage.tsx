@@ -62,6 +62,7 @@ const TournamentsPage: React.FC = () => {
           data: {
             name: 'Neues Turnier',
             eventId: currentEvent.id,
+            gameId: 1
           },
         },
       });

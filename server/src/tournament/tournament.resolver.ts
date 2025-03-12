@@ -8,6 +8,7 @@ import { UpdateTournamentInput } from './dto/update-tournament-input';
 import { EventModel } from 'src/event/dto/event.model';
 import { TournamentAdminService } from 'src/tournament-admin/tournament-admin.service';
 import { TournamentAdminModel } from 'src/tournament-admin/dto/tournament-admin.model';
+import { GameModel } from '../game/dto/game.model';
 
 @Resolver(() => TournamentModel)
 export class TournamentResolver {
@@ -43,6 +44,11 @@ export class TournamentResolver {
   @ResolveField(() => EventModel)
   async event(@Parent() tournament: TournamentModel): Promise<EventModel> {
     return this.tournamentService.findTournamentEvent(tournament.id);
+  }
+
+  @ResolveField(() => GameModel)
+  async game(@Parent() tournament: TournamentModel): Promise<GameModel> {
+    return this.tournamentService.findTournamentGame(tournament.id);
   }
 
   @ResolveField(() => [TournamentAdminModel])

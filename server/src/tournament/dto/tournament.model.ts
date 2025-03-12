@@ -3,6 +3,7 @@ import { TournamentEntity } from '../tournament.entity';
 import { TournamentParticipantModel } from 'src/tournament-participant/dto/tournament-participant.model';
 import { EventModel } from 'src/event/dto/event.model';
 import { TournamentAdminModel } from 'src/tournament-admin/dto/tournament-admin.model';
+import {GameModel} from "../../game/dto/game.model";
 
 /**
  * Data that can be requested from the API for a specific tournament.
@@ -14,6 +15,9 @@ export class TournamentModel {
 
   @Field(() => EventModel)
   event: EventModel;
+
+  @Field(() => GameModel)
+  game: GameModel;
 
   @Field({ description: 'Name of the tournament.' })
   name: string;

@@ -46,10 +46,18 @@ type EventModel {
   tournaments: [TournamentModel!]!
 }
 
+type GameModel {
+  id: Int!
+  name: String!
+  logoUrl: String!
+  tournaments: [TournamentModel!]!
+}
+
 type TournamentModel {
   """Unique identifier of the tournament."""
   id: Int!
   event: EventModel!
+  game: GameModel!
 
   """Name of the tournament."""
   name: String!
@@ -106,8 +114,15 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 scalar DateTime
 
 type RegisterTeamOutput {
+  """Indicates whether the team registration was successful."""
   success: Boolean!
+
+  """
+  The newly registered team if the registration was successful; otherwise null.
+  """
   team: TeamModel
+
+  """A message providing additional information or error details."""
   message: String
 }
 
@@ -120,6 +135,8 @@ type Query {
   event(id: Int!): EventModel
   teams: [TeamModel!]!
   team(id: Int!): TeamModel!
+  games: [GameModel!]!
+  game(id: Int!): GameModel
 }
 
 type Mutation {
@@ -139,11 +156,15 @@ type Mutation {
   registerTeam(data: RegisterTeamInput!): RegisterTeamOutput!
   updateTeam(id: Int!, data: UpdateTeamInput!): TeamModel!
   deregisterTeam(id: Int!): Boolean!
+  createGame(data: CreateGameInput!): GameModel!
+  updateGame(id: Int!, data: UpdateGameInput!): GameModel!
+  deleteGame(id: Int!): Boolean!
 }
 
 input CreateTournamentInput {
   name: String!
   eventId: Int!
+  gameId: Int!
 }
 
 input UpdateTournamentInput {
@@ -179,18 +200,35 @@ input CreateEventInput {
 
 input UpdateEventInput {
   name: String
-  seat: String
-  isGlobalAdmin: Boolean
 }
 
 input RegisterTeamInput {
+  """The name of the team."""
   name: String!
+
+  """The tag or short identifier for the team."""
   tag: String!
+
+  """
+  The ID of the user creating the team, who will be set as the team captain.
+  """
   userId: Int!
+
+  """The ID of the tournament for which the team is being registered."""
   tournamentId: Int!
 }
 
 input UpdateTeamInput {
   name: String
   tag: String
+}
+
+input CreateGameInput {
+  name: String!
+  logoUrl: String!
+}
+
+input UpdateGameInput {
+  name: String
+  logoUrl: String
 }

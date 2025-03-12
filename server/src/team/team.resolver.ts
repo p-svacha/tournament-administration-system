@@ -6,7 +6,7 @@ import { TeamMemberService } from '../team-member/team-member.service';
 import { RegisterTeamInput } from './dto/register-team.input';
 import { RegisterTeamOutput } from './dto/register-team.output';
 import { TeamModel } from './dto/team.model';
-import { UpdateTeamInput } from './dto/update-team-input';
+import { UpdateTeamInput } from './dto/update-team.input';
 import { TeamService } from './team.service';
 
 @Resolver(() => TeamModel)
