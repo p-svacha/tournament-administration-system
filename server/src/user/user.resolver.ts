@@ -6,7 +6,7 @@ import { TournamentParticipantService } from 'src/tournament-participant/tournam
 import { TeamMemberModel } from '../team-member/dto/team-member.model';
 import { TeamMemberService } from '../team-member/team-member.service';
 import { CreateUserInput } from './dto/create-user.input';
-import { UpdateUserInput } from './dto/update.user.input';
+import { UpdateUserInput } from './dto/update-user.input';
 import { UserModel } from './dto/user.model';
 import { UserService } from './user.service';
 

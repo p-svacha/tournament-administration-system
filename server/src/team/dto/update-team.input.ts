@@ -6,8 +6,8 @@ import {Field, InputType} from '@nestjs/graphql';
 @InputType()
 export class UpdateTeamInput {
   @Field({ nullable: true })
-  name: string;
+  name?: string;
 
   @Field({ nullable: true })
-  tag: string;
+  tag?: string;
 }

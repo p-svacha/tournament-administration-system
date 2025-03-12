@@ -2,6 +2,7 @@ import { EventEntity } from 'src/event/event.entity';
 import { TournamentAdminEntity } from 'src/tournament-admin/tournament-admin.entity';
 import { TournamentParticipantEntity } from 'src/tournament-participant/tournament-participant.entity';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { GameEntity } from '../game/game.entity';
 
 @Entity('tournament')
 export class TournamentEntity {
@@ -11,6 +12,10 @@ export class TournamentEntity {
   @ManyToOne(() => EventEntity, (event) => event.tournaments, { nullable: false, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'event_id' })
   event: EventEntity;
+
+  @ManyToOne(() => GameEntity, (game) => game.tournaments, { nullable: false, onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'game_id' })
+  game: GameEntity;
 
   @Column({ type: 'varchar', length: 255, comment: 'Tournament name' })
   name: string;

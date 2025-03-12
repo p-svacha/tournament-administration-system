@@ -2,6 +2,7 @@ import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { EventModel } from 'src/event/dto/event.model';
 import { TournamentAdminModel } from 'src/tournament-admin/dto/tournament-admin.model';
 import { TournamentParticipantModel } from 'src/tournament-participant/dto/tournament-participant.model';
+import { GameModel } from '../../game/dto/game.model';
 import { TournamentEntity } from '../tournament.entity';
 
 /**
@@ -14,6 +15,9 @@ export class TournamentModel {
 
   @Field(() => EventModel)
   event: EventModel;
+
+  @Field(() => GameModel)
+  game: GameModel;
 
   @Field({ description: 'Name of the tournament.' })
   name: string;

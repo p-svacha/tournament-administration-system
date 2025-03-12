@@ -10,4 +10,7 @@ export class CreateTournamentInput {
 
   @Field(() => Int)
   eventId: number;
+
+  @Field(() => Int)
+  gameId: number;
 }

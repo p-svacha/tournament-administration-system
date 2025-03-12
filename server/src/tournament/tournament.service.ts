@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EventModel } from 'src/event/dto/event.model';
 import { FindOptionsWhere, Repository } from 'typeorm';
+import { GameModel } from '../game/dto/game.model';
 import { CreateTournamentInput } from './dto/create-tournament.input';
 import { TournamentModel } from './dto/tournament.model';
 import { UpdateTournamentInput } from './dto/update-tournament-input';
@@ -37,7 +38,6 @@ export class TournamentService {
   async findTournamentById(id: number): Promise<TournamentModel> {
     const tournamentEntity = await this.tournamentRepository.findOne({
       where: { id: id },
-      relations: ['event'],
     });
 
     if (!tournamentEntity) {
@@ -56,11 +56,21 @@ export class TournamentService {
     return tournaments.map((tournamentEntity) => new TournamentModel(tournamentEntity));
   }
 
+  async findTournamentsByGameId(gameId: number): Promise<TournamentModel[]> {
+    const tournaments: TournamentEntity[] = await this.tournamentRepository.find({
+      where: { game: { id: gameId } },
+      relations: ['game'],
+    });
+
+    return tournaments.map((tournamentEntity) => new TournamentModel(tournamentEntity));
+  }
+
   async createTournament(input: CreateTournamentInput): Promise<TournamentModel> {
     // Map input DTO to entity
     const tournament: TournamentEntity = this.tournamentRepository.create({
       name: input.name,
       event: { id: input.eventId },
+      game: { id: input.gameId },
     });
 
     // Save new entity
@@ -79,6 +89,17 @@ export class TournamentService {
       throw new Error('Event not found for tournament');
     }
     return new EventModel(tournament.event);
+  }
+
+  async findTournamentGame(tournamentId: number): Promise<GameModel> {
+    const tournament = await this.tournamentRepository.findOne({
+      where: { id: tournamentId },
+      relations: ['game'],
+    });
+    if (!tournament || !tournament.game) {
+      throw new Error('Game not found for tournament');
+    }
+    return new GameModel(tournament.game);
   }
 
   async updateTournament(id: number, input: UpdateTournamentInput): Promise<TournamentModel> {
