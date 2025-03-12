@@ -6,5 +6,5 @@ import { Field, InputType } from '@nestjs/graphql';
 @InputType()
 export class UpdateEventInput {
   @Field({ nullable: true })
-  name: string;
+  name?: string;
 }

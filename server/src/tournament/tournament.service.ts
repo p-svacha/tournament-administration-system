@@ -15,7 +15,7 @@ export class TournamentService {
     private tournamentRepository: Repository<TournamentEntity>,
   ) {}
 
-  async findTournaments(publishedOnly?: boolean, eventId?: number, gameId?: number): Promise<TournamentModel[]> {
+  async findTournaments(publishedOnly?: boolean, eventId?: number): Promise<TournamentModel[]> {
     let whereCondition: FindOptionsWhere<TournamentEntity> = {};
 
     if (publishedOnly) {
@@ -24,10 +24,6 @@ export class TournamentService {
 
     if (eventId) {
       whereCondition.event = { id: eventId };
-    }
-
-    if (gameId) {
-      whereCondition.game = { id: gameId };
     }
 
     const tournaments: TournamentEntity[] = await this.tournamentRepository.find({
@@ -55,6 +51,15 @@ export class TournamentService {
     const tournaments: TournamentEntity[] = await this.tournamentRepository.find({
       where: { event: { id: eventId } },
       relations: ['event'],
+    });
+
+    return tournaments.map((tournamentEntity) => new TournamentModel(tournamentEntity));
+  }
+
+  async findTournamentsByGameId(gameId: number): Promise<TournamentModel[]> {
+    const tournaments: TournamentEntity[] = await this.tournamentRepository.find({
+      where: { game: { id: gameId } },
+      relations: ['game'],
     });
 
     return tournaments.map((tournamentEntity) => new TournamentModel(tournamentEntity));
