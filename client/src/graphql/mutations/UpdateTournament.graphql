@@ -1,15 +1,5 @@
 mutation UpdateTournament($id: Int!, $data: UpdateTournamentInput!) {
     updateTournament(id: $id, data: $data) {
         id
-        name
-        category
-        rules
-        prize1
-        prize2
-        prize3
-        numPlayersPerTeam
-        minParticipants
-        maxParticipants
-        isPublished
     }
 }

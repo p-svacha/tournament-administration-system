@@ -30,7 +30,13 @@ const TournamentParticipantsTab: React.FC = () => {
       ) : data.tournament.participants.length > 0 ? (
         <List>
           {data.tournament.participants.map((p: any) => (
-            <ParticipantListItem key={p.user.id} tournamentId={tournamentId} participant={p} onRemoved={refetch} />
+            <ParticipantListItem
+              key={p.user.id}
+              tournamentId={tournamentId}
+              participant={p}
+              onRemoved={refetch}
+              hasAdminAccess={hasAdminAccess}
+            />
           ))}
         </List>
       ) : (

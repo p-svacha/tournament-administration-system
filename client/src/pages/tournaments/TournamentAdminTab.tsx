@@ -1,10 +1,11 @@
-import { CircularProgress, Container, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, Container, Divider, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import client from '../../apollo-client';
 import TournamentAdminManagement from '../../components/TournamentAdminManagement';
 import TournamentEditForm from '../../components/TournamentEditForm/TournamentEditForm';
 import TournamentEditFormState from '../../components/TournamentEditForm/TournamentEditFormState';
+import { useUser } from '../../contexts/UserContext';
 import {
   useAddTournamentAdminMutation,
   useDeleteTournamentMutation,
@@ -14,11 +15,13 @@ import {
   useRemoveTournamentAdminMutation,
   useUpdateTournamentMutation,
 } from '../../generated/graphql';
+import { isGlobalAdmin } from '../../utils/permissions';
 
 const TournamentAdminTab: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const tournamentId = Number(id);
   const navigate = useNavigate();
+  const { currentUser } = useUser();
 
   const {
     data: tournamentData,
@@ -57,6 +60,7 @@ const TournamentAdminTab: React.FC = () => {
         prize2: tournamentData.tournament.prize2 || '',
         prize3: tournamentData.tournament.prize3 || '',
         numPlayersPerTeam: tournamentData.tournament.numPlayersPerTeam,
+        maxSubstitutes: tournamentData.tournament.maxSubstitutes,
         minParticipants: tournamentData.tournament.minParticipants || 0,
         maxParticipants: tournamentData.tournament.maxParticipants || 0,
         isPublished: tournamentData.tournament.isPublished,
@@ -64,6 +68,7 @@ const TournamentAdminTab: React.FC = () => {
     }
   }, [tournamentData, formState]);
 
+  // Stop here and return error/loading screen if tournament data is not available
   if (loading || !formState) return <CircularProgress />;
   if (error) return <Typography color="error">Error: {error.message}</Typography>;
   if (!tournamentData || !tournamentData.tournament)
@@ -74,11 +79,14 @@ const TournamentAdminTab: React.FC = () => {
     ? categoriesData.tournaments.map((t) => (t.category ? t.category : ''))
     : [];
 
+  // Check if tournament already has participants
+  const hasParticipants = tournamentData.tournament.participants.length > 0;
+
   const handleFieldChange = (field: keyof TournamentEditFormState, value: string | number | boolean) => {
-    setFormState({
-      ...formState,
+    setFormState((prevState) => ({
+      ...prevState!,
       [field]: value,
-    });
+    }));
   };
 
   const handleSave = async () => {
@@ -94,6 +102,7 @@ const TournamentAdminTab: React.FC = () => {
             prize2: formState.prize2,
             prize3: formState.prize3,
             numPlayersPerTeam: formState.numPlayersPerTeam,
+            maxSubstitutes: formState.maxSubstitutes,
             minParticipants: formState.minParticipants,
             maxParticipants: formState.maxParticipants,
             isPublished: formState.isPublished,
@@ -165,13 +174,18 @@ const TournamentAdminTab: React.FC = () => {
 
   return (
     <Container>
+      {/*Section to edit tournament details*/}
       <TournamentEditForm
         formState={formState}
         onFieldChange={handleFieldChange}
         onSave={handleSave}
-        onDelete={handleDelete}
         categories={existingTournamentCategories}
+        disableTeamToggle={hasParticipants}
       />
+
+      <Divider sx={{ my: 4 }} />
+
+      {/*Section to edit tournament admins*/}
       <TournamentAdminManagement
         admins={tournamentData.tournament.admins}
         availableUsers={availableUsers}
@@ -180,6 +194,17 @@ const TournamentAdminTab: React.FC = () => {
         onAddAdmin={handleAddAdmin}
         onRemoveAdmin={handleRemoveAdmin}
       />
+
+      <Divider sx={{ my: 4 }} />
+
+      {/*Section to delete tournament*/}
+      {isGlobalAdmin(currentUser) && (
+        <Box sx={{ mt: 4 }}>
+          <Button variant="contained" color="error" onClick={handleDelete}>
+            Turnier löschen
+          </Button>
+        </Box>
+      )}
     </Container>
   );
 };

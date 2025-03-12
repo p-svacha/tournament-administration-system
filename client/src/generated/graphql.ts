@@ -415,7 +415,7 @@ export type UpdateTournamentMutationVariables = Exact<{
 }>;
 
 
-export type UpdateTournamentMutation = { __typename?: 'Mutation', updateTournament: { __typename?: 'TournamentModel', id: number, name: string, category?: string | null, rules?: string | null, prize1?: string | null, prize2?: string | null, prize3?: string | null, numPlayersPerTeam: number, minParticipants: number, maxParticipants?: number | null, isPublished: boolean } };
+export type UpdateTournamentMutation = { __typename?: 'Mutation', updateTournament: { __typename?: 'TournamentModel', id: number } };
 
 export type GetEventsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -434,7 +434,7 @@ export type GetTournamentQueryVariables = Exact<{
 }>;
 
 
-export type GetTournamentQuery = { __typename?: 'Query', tournament?: { __typename?: 'TournamentModel', rules?: string | null, prize1?: string | null, prize2?: string | null, prize3?: string | null, numPlayersPerTeam: number, minParticipants: number, maxParticipants?: number | null, briefingTime?: any | null, id: number, name: string, category?: string | null, isPublished: boolean, event: { __typename?: 'EventModel', id: number }, participants: Array<{ __typename?: 'TournamentParticipantModel', user?: { __typename?: 'UserModel', id: number, name: string } | null, team?: { __typename?: 'TeamModel', id: number, name: string, members: Array<{ __typename?: 'TeamMemberModel', isTeamCaptain: boolean, user: { __typename?: 'UserModel', id: number, name: string } }> } | null }>, admins: Array<{ __typename?: 'TournamentAdminModel', user: { __typename?: 'UserModel', id: number, name: string } }> } | null };
+export type GetTournamentQuery = { __typename?: 'Query', tournament?: { __typename?: 'TournamentModel', rules?: string | null, prize1?: string | null, prize2?: string | null, prize3?: string | null, numPlayersPerTeam: number, maxSubstitutes: number, minParticipants: number, maxParticipants?: number | null, briefingTime?: any | null, id: number, name: string, category?: string | null, isPublished: boolean, event: { __typename?: 'EventModel', id: number }, participants: Array<{ __typename?: 'TournamentParticipantModel', user?: { __typename?: 'UserModel', id: number, name: string } | null, team?: { __typename?: 'TeamModel', id: number, name: string, members: Array<{ __typename?: 'TeamMemberModel', isTeamCaptain: boolean, user: { __typename?: 'UserModel', id: number, name: string } }> } | null }>, admins: Array<{ __typename?: 'TournamentAdminModel', user: { __typename?: 'UserModel', id: number, name: string } }> } | null };
 
 export type GetTournamentsQueryVariables = Exact<{
   publishedOnly?: InputMaybe<Scalars['Boolean']['input']>;
@@ -702,16 +702,6 @@ export const UpdateTournamentDocument = gql`
     mutation UpdateTournament($id: Int!, $data: UpdateTournamentInput!) {
   updateTournament(id: $id, data: $data) {
     id
-    name
-    category
-    rules
-    prize1
-    prize2
-    prize3
-    numPlayersPerTeam
-    minParticipants
-    maxParticipants
-    isPublished
   }
 }
     `;
@@ -831,6 +821,7 @@ export const GetTournamentDocument = gql`
     prize2
     prize3
     numPlayersPerTeam
+    maxSubstitutes
     minParticipants
     maxParticipants
     briefingTime

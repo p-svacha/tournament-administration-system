@@ -8,6 +8,7 @@ query GetTournament($id: Int!)
         prize2
         prize3
         numPlayersPerTeam
+        maxSubstitutes
         minParticipants
         maxParticipants
         briefingTime
