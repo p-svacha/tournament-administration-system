@@ -127,7 +127,7 @@ type RegisterTeamOutput {
 }
 
 type Query {
-  tournaments(publishedOnly: Boolean = true, eventId: Int, gameId: Int): [TournamentModel!]!
+  tournaments(publishedOnly: Boolean = true, eventId: Int): [TournamentModel!]!
   tournament(id: Int!): TournamentModel
   users: [UserModel!]!
   user(id: Int!): UserModel!
