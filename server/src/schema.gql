@@ -87,18 +87,18 @@ type TournamentModel {
   """Number of players per team (1 means solo tournaments)."""
   numPlayersPerTeam: Int!
 
-  """Maximum number of substutitues a team may have."""
+  """Maximum number of substitutes a team may have."""
   maxSubstitutes: Int!
 
   """
-  Minimum number of participants required for the tournament to take place.
+  Minimum number of participants required for the tournament to take place. A participant refers to either a user (in solo tournaments) or a team (in team tournaments).
   """
   minParticipants: Int!
 
   """
-  Maximum number of participants that can register for the tournament (0 means there is no upper limit).
+  Maximum number of participants that can register for the tournament. A participant refers to either a user (in solo tournaments) or a team (in team tournaments). Null if there is no upper limit.
   """
-  maxParticipants: Int!
+  maxParticipants: Int
 
   """List of participants registered for this tournament."""
   participants: [TournamentParticipantModel!]!

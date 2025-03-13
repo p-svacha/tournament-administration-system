@@ -1,4 +1,16 @@
-import { Box, Button, CircularProgress, Container, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Container,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
+  Typography,
+} from '@mui/material';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useUser } from '../../contexts/UserContext';
@@ -43,22 +55,38 @@ const TournamentDetailsTab: React.FC = () => {
     refetch();
   };
 
+  function createData(key: string, value: any) {
+    return { key, value };
+  }
+
+  const tournamentDetails = [
+    createData('Kategorie', tournament.category),
+    createData('Anzahl Spieler pro Team', tournament.numPlayersPerTeam),
+    createData('Minimale Anzahl Teilnehmer', tournament.minParticipants),
+    createData('Maximale Anzahl Teilnehmer', tournament.maxParticipants),
+    createData('Briefing', tournament.briefingTime ? new Date(tournament.briefingTime).toLocaleString() : '-'),
+    createData('Preis für den 1. Platz', tournament.prize1 ? tournament.prize1 : '-'),
+    createData('Preis für den 2. Platz', tournament.prize2 ? tournament.prize2 : '-'),
+    createData('Preis für den 3. Platz', tournament.prize3 ? tournament.prize3 : '-'),
+  ];
+
   return (
     <Container>
-      <Typography variant="h5">Turnierdetails</Typography>
-      <Typography>Name: {tournament.name}</Typography>
-      <Typography>Kategorie: {tournament.category || '-'}</Typography>
-      <Typography>Regeln: {tournament.rules || '-'}</Typography>
-      <Typography>
-        Briefing: {tournament.briefingTime ? new Date(tournament.briefingTime).toLocaleString() : '-'}
-      </Typography>
-      <Typography>
-        Preise: 1. {tournament.prize1 || '-'}, 2. {tournament.prize2 || '-'}, 3. {tournament.prize3 || '-'}
-      </Typography>
-      <Typography>Anzahl Spieler pro Team: {tournament.numPlayersPerTeam}</Typography>
-      <Typography>
-        Min./Max. Teilnehmer: {tournament.minParticipants || '-'} / {tournament.maxParticipants || '-'}
-      </Typography>
+      <Typography variant="h5">{tournament.name}</Typography>
+      <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 300 }} aria-label="simple table">
+          <TableBody>
+            {tournamentDetails.map((tournamentDetail) => (
+              <TableRow key={tournamentDetail.key} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                <TableCell component="th" scope="row">
+                  {tournamentDetail.key}
+                </TableCell>
+                <TableCell align="left">{tournamentDetail.value}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
       <Box sx={{ mt: 2 }}>
         {isTeamTournament ? (
           <Typography>Team-Registrierung noch nicht implementiert.</Typography>
