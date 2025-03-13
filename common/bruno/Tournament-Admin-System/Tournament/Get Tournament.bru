@@ -21,11 +21,22 @@ body:graphql {
       {
         user
         {
+          id
           name
         }
         team
         {
-          name
+              id
+              name
+              members
+              {
+                  user
+                  {
+                      id
+                      name 
+                  }
+                isTeamCaptain
+              }
         }
       }
     }

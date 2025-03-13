@@ -17,20 +17,20 @@ export class TournamentEntity {
   @JoinColumn({ name: 'game_id' })
   game: GameEntity;
 
-  @Column({ type: 'varchar', length: 255, comment: 'Name des Turniers' })
+  @Column({ type: 'varchar', length: 255, comment: 'Tournament name' })
   name: string;
 
-  @Column({ type: 'boolean', default: false, comment: 'Flag, ob das Turnier öffentlich angezeigt wird' })
+  @Column({ type: 'boolean', default: false, comment: 'Indicates whether the tournament is publicly visible' })
   is_published: boolean;
 
-  @Column({ type: 'text', nullable: true, comment: 'Regeln des Turniers' })
+  @Column({ type: 'text', nullable: true, comment: 'Tournament rules' })
   rules: string;
 
   @Column({
     type: 'varchar',
     length: 255,
     nullable: true,
-    comment: 'Kategorie des Turniers, wonach die Turniere in der Turnierübersicht gruppiert werden.',
+    comment: 'Tournament category used to group tournaments in the overview',
   })
   category: string;
 
@@ -38,30 +38,40 @@ export class TournamentEntity {
     type: 'varchar',
     length: 255,
     nullable: true,
-    comment:
-      'Registrierungsgruppe des Turniers. Teilnehmer können sich nur für ein Turnier innerhalb derselben Grupper registrieren.',
+    comment: 'Tournament registration group. Participants can register for only one tournament within the same group',
   })
   registration_group: string;
 
-  @Column({ type: 'varchar', length: 255, nullable: true, comment: 'Preis für den Erstplatzierten' })
+  @Column({ type: 'varchar', length: 255, nullable: true, comment: 'Prize for first place' })
   prize_first: string;
 
-  @Column({ type: 'varchar', length: 255, nullable: true, comment: 'Preis für den Zweitplatzierten' })
+  @Column({ type: 'varchar', length: 255, nullable: true, comment: 'Prize for second place' })
   prize_second: string;
 
-  @Column({ type: 'varchar', length: 255, nullable: true, comment: 'Preis für den Drittplatzierten' })
+  @Column({ type: 'varchar', length: 255, nullable: true, comment: 'Prize for third place' })
   prize_third: string;
 
-  @Column({ type: 'datetime', nullable: true, comment: 'Datum und Zeit des Turnierbriefings' })
+  @Column({ type: 'datetime', nullable: true, comment: 'Date and time of the tournament briefing' })
   briefing_time: Date;
 
-  @Column({ type: 'int', default: 1, comment: 'Anzahl Spieler pro Team (1 = Solo)' })
+  @Column({
+    type: 'int',
+    default: 1,
+    comment: 'Number of players per team (1 for solo tournament, 2+ for team tournament)',
+  })
   num_players_per_team: number;
 
-  @Column({ type: 'int', nullable: true, comment: 'Minimale Teilnehmerzahl, damit das Turnier stattfinden kann' })
+  @Column({ type: 'int', default: 1, comment: 'Maximum number of substitutes allowed per team' })
+  max_substitutes: number;
+
+  @Column({
+    type: 'int',
+    default: 1,
+    comment: 'Minimum number of participants required for the tournament to take place',
+  })
   min_participants: number;
 
-  @Column({ type: 'int', nullable: true, comment: 'Maximale Teilnehmerzahl, die sich anmelden können' })
+  @Column({ type: 'int', nullable: true, comment: 'Maximum number of participants that can register' })
   max_participants: number;
 
   @OneToMany(() => TournamentParticipantEntity, (participant) => participant.tournament)

@@ -1,5 +1,5 @@
-mutation RegisterParticipant($data: RegisterTournamentParticipantInput!) {
-    registerParticipant(data: $data) {
+mutation RegisterUserParticipant($tournamentId: Int!, $userId: Int!) {
+    registerUserParticipant(tournamentId: $tournamentId, userId: $userId) {
         tournament {
             id
         }

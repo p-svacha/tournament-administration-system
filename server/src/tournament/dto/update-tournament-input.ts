@@ -36,6 +36,9 @@ export class UpdateTournamentInput {
   numPlayersPerTeam?: number;
 
   @Field(() => Int, { nullable: true })
+  maxSubstitutes?: number;
+
+  @Field(() => Int, { nullable: true })
   minParticipants?: number;
 
   @Field(() => Int, { nullable: true })

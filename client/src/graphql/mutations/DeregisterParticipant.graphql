@@ -1,3 +1,3 @@
-mutation DeregisterParticipant($data: RegisterTournamentParticipantInput!) {
-    deregisterParticipant(data: $data)
+mutation DeregisterUserParticipant($tournamentId: Int!, $userId: Int!) {
+    deregisterUserParticipant(tournamentId: $tournamentId, userId: $userId)
 }
