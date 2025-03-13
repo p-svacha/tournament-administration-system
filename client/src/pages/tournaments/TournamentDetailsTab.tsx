@@ -4,6 +4,7 @@ import {
   CircularProgress,
   Container,
   Paper,
+  Stack,
   Table,
   TableBody,
   TableCell,
@@ -61,24 +62,48 @@ const TournamentDetailsTab: React.FC = () => {
 
   const tournamentDetails = [
     createData('Kategorie', tournament.category),
+    createData('Turnieradmins', tournament.admins.map((admin) => admin.user.name).join(', ')),
     createData('Anzahl Spieler pro Team', tournament.numPlayersPerTeam),
     createData('Minimale Anzahl Teilnehmer', tournament.minParticipants),
     createData('Maximale Anzahl Teilnehmer', tournament.maxParticipants),
     createData('Briefing', tournament.briefingTime ? new Date(tournament.briefingTime).toLocaleString() : '-'),
-    createData('Preis für den 1. Platz', tournament.prize1 ? tournament.prize1 : '-'),
-    createData('Preis für den 2. Platz', tournament.prize2 ? tournament.prize2 : '-'),
-    createData('Preis für den 3. Platz', tournament.prize3 ? tournament.prize3 : '-'),
+    createData('Registrierungsgruppe', tournament.registrationGroup ? tournament.registrationGroup : '-'),
   ];
 
+  const prizes = [
+    { title: '🥇 1. Platz:', value: tournament.prize1 ? tournament.prize1 : '-', color: '#F1E5AC' },
+    { title: '🥈 2. Platz:', value: tournament.prize2 ? tournament.prize2 : '-', color: '#D8D8D8' },
+    { title: '🥉 3. Platz:', value: tournament.prize3 ? tournament.prize3 : '-', color: '#DAAA5E' },
+  ];
+
+  const PrizeCard = ({ title, value, color }: { title: string; value: string; color: string }) => (
+    <Stack
+      direction="row"
+      spacing={2}
+      alignItems="center"
+      margin="1em 2em"
+      sx={{ border: '2px solid ' + color, borderRadius: '8px', padding: '16px', backgroundColor: color }}
+    >
+      <Typography variant="body1">{title}</Typography>
+      <Typography variant="h6" fontWeight="bold">
+        {value}
+      </Typography>
+    </Stack>
+  );
+
   return (
-    <Container>
-      <Typography variant="h5" align="center">{tournament.name}</Typography>
-      <img src={tournament.game.logoUrl} alt={tournament.game.name} width="220px"/>
+    <Container sx={{ width: '800px' }}>
+      <Typography variant="h5" align="center">
+        {tournament.name}
+      </Typography>
+      <Box sx={{ display: 'flex', justifyContent: 'center', textAlign: 'center', margin: '2em' }}>
+        <Box component="img" src={tournament.game.logoUrl} alt={tournament.game.name} width="220px" />
+      </Box>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 300 }} aria-label="simple table">
           <TableBody>
-            {tournamentDetails.map((tournamentDetail) => (
-              <TableRow key={tournamentDetail.key} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+            {tournamentDetails.map((tournamentDetail, rowIndex) => (
+              <TableRow key={tournamentDetail.key} sx={{ backgroundColor: rowIndex % 2 === 0 ? '#f0f0f0' : 'inherit' }}>
                 <TableCell component="th" scope="row">
                   {tournamentDetail.key}
                 </TableCell>
@@ -88,6 +113,11 @@ const TournamentDetailsTab: React.FC = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+        {prizes.map((prize) => (
+          <PrizeCard title={prize.title} value={prize.value} color={prize.color} />
+        ))}
+      </Box>
       <Box sx={{ mt: 2 }}>
         {isTeamTournament ? (
           <Typography>Team-Registrierung noch nicht implementiert.</Typography>
@@ -107,6 +137,10 @@ const TournamentDetailsTab: React.FC = () => {
           )
         )}
       </Box>
+      <Typography variant="h5" align="center">
+        Turnierregeln
+      </Typography>
+      <Typography>{tournament.rules}</Typography>
     </Container>
   );
 };
