@@ -66,14 +66,15 @@ export class TournamentModel {
   maxSubstitutes: number;
 
   @Field(() => Int, {
-    description: 'Minimum number of participants required for the tournament to take place.',
+    description:
+      'Minimum number of participants required for the tournament to take place. A participant refers to either a user (in solo tournaments) or a team (in team tournaments).',
   })
   minParticipants: number;
 
   @Field(() => Int, {
     nullable: true,
     description:
-      'Maximum number of participants that can register for the tournament. Null if there is no upper limit.',
+      'Maximum number of participants that can register for the tournament. A participant refers to either a user (in solo tournaments) or a team (in team tournaments). Null if there is no upper limit.',
   })
   maxParticipants?: number;
 
