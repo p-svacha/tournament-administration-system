@@ -79,7 +79,7 @@ const TournamentDetailsTab: React.FC = () => {
   const PrizeCard = ({ title, value, color }: { title: string; value: string; color: string }) => (
     <Stack
       direction="row"
-      spacing={2}
+      spacing={1}
       alignItems="center"
       margin="1em 2em"
       sx={{ border: '2px solid ' + color, borderRadius: '8px', padding: '16px', backgroundColor: color }}

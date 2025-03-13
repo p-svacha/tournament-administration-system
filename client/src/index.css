@@ -11,7 +11,3 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
-
-td:nth-of-type(2n) {
-  background-color: #f0f0f0;
-}
