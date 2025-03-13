@@ -72,7 +72,8 @@ const TournamentDetailsTab: React.FC = () => {
 
   return (
     <Container>
-      <Typography variant="h5">{tournament.name}</Typography>
+      <Typography variant="h5" align="center">{tournament.name}</Typography>
+      <img src={tournament.game.logoUrl} alt={tournament.game.name} width="220px"/>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 300 }} aria-label="simple table">
           <TableBody>
