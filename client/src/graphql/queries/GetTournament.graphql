@@ -7,14 +7,21 @@ query GetTournament($id: Int!)
         prize1
         prize2
         prize3
+        registrationGroup
         numPlayersPerTeam
         maxSubstitutes
         minParticipants
         maxParticipants
         briefingTime
+        game
+        {
+            name
+            logoUrl
+        }
         event
         {
             id
+            name
         }
         ...TournamentParticipants
         ...TournamentAdmins

@@ -283,11 +283,11 @@ export type TournamentModel = {
   id: Scalars['Int']['output'];
   /** Flag indicating whether the tournament is publicly displayed. */
   isPublished: Scalars['Boolean']['output'];
-  /** Maximum number of participants that can register for the tournament. Null if there is no upper limit. */
+  /** Maximum number of participants that can register for the tournament. A participant refers to either a user (in solo tournaments) or a team (in team tournaments). Null if there is no upper limit. */
   maxParticipants?: Maybe<Scalars['Int']['output']>;
   /** Maximum number of substitutes a team may have. */
   maxSubstitutes: Scalars['Int']['output'];
-  /** Minimum number of participants required for the tournament to take place. */
+  /** Minimum number of participants required for the tournament to take place. A participant refers to either a user (in solo tournaments) or a team (in team tournaments). */
   minParticipants: Scalars['Int']['output'];
   /** Name of the tournament. */
   name: Scalars['String']['output'];
@@ -434,7 +434,7 @@ export type GetTournamentQueryVariables = Exact<{
 }>;
 
 
-export type GetTournamentQuery = { __typename?: 'Query', tournament?: { __typename?: 'TournamentModel', rules?: string | null, prize1?: string | null, prize2?: string | null, prize3?: string | null, numPlayersPerTeam: number, maxSubstitutes: number, minParticipants: number, maxParticipants?: number | null, briefingTime?: any | null, id: number, name: string, category?: string | null, isPublished: boolean, event: { __typename?: 'EventModel', id: number }, participants: Array<{ __typename?: 'TournamentParticipantModel', user?: { __typename?: 'UserModel', id: number, name: string } | null, team?: { __typename?: 'TeamModel', id: number, name: string, members: Array<{ __typename?: 'TeamMemberModel', isTeamCaptain: boolean, user: { __typename?: 'UserModel', id: number, name: string } }> } | null }>, admins: Array<{ __typename?: 'TournamentAdminModel', user: { __typename?: 'UserModel', id: number, name: string } }> } | null };
+export type GetTournamentQuery = { __typename?: 'Query', tournament?: { __typename?: 'TournamentModel', rules?: string | null, prize1?: string | null, prize2?: string | null, prize3?: string | null, registrationGroup?: string | null, numPlayersPerTeam: number, maxSubstitutes: number, minParticipants: number, maxParticipants?: number | null, briefingTime?: any | null, id: number, name: string, category?: string | null, isPublished: boolean, game: { __typename?: 'GameModel', name: string, logoUrl: string }, event: { __typename?: 'EventModel', id: number, name: string }, participants: Array<{ __typename?: 'TournamentParticipantModel', user?: { __typename?: 'UserModel', id: number, name: string } | null, team?: { __typename?: 'TeamModel', id: number, name: string, members: Array<{ __typename?: 'TeamMemberModel', isTeamCaptain: boolean, user: { __typename?: 'UserModel', id: number, name: string } }> } | null }>, admins: Array<{ __typename?: 'TournamentAdminModel', user: { __typename?: 'UserModel', id: number, name: string } }> } | null };
 
 export type GetTournamentsQueryVariables = Exact<{
   publishedOnly?: InputMaybe<Scalars['Boolean']['input']>;
@@ -820,13 +820,19 @@ export const GetTournamentDocument = gql`
     prize1
     prize2
     prize3
+    registrationGroup
     numPlayersPerTeam
     maxSubstitutes
     minParticipants
     maxParticipants
     briefingTime
+    game {
+      name
+      logoUrl
+    }
     event {
       id
+      name
     }
     ...TournamentParticipants
     ...TournamentAdmins
