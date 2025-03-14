@@ -1,27 +1,44 @@
-import React, { useState, useEffect } from 'react';
-import { Container, Typography, CircularProgress } from '@mui/material';
-import { useParams, useNavigate } from 'react-router-dom';
+import { Box, Button, CircularProgress, Container, Divider, Typography } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import client from '../../apollo-client';
+import TournamentAdminManagement from '../../components/TournamentAdminManagement';
+import TournamentEditForm from '../../components/TournamentEditForm/TournamentEditForm';
+import TournamentEditFormState from '../../components/TournamentEditForm/TournamentEditFormState';
+import { useUser } from '../../contexts/UserContext';
 import {
   useAddTournamentAdminMutation,
   useDeleteTournamentMutation,
+  useGetEventTournamentCategoriesQuery,
   useGetTournamentQuery,
   useGetUsersQuery,
   useRemoveTournamentAdminMutation,
   useUpdateTournamentMutation,
 } from '../../generated/graphql';
-import TournamentAdminManagement from '../../components/TournamentAdminManagement';
-import TournamentEditFormState from '../../components/TournamentEditForm/TournamentEditFormState';
-import TournamentEditForm from '../../components/TournamentEditForm/TournamentEditForm';
+import { isGlobalAdmin } from '../../utils/permissions';
 
 const TournamentAdminTab: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const tournamentId = Number(id);
   const navigate = useNavigate();
+  const { currentUser } = useUser();
 
-  const { loading, error, data, refetch } = useGetTournamentQuery({
+  const {
+    data: tournamentData,
+    loading,
+    error,
+    refetch,
+  } = useGetTournamentQuery({
     variables: { id: tournamentId },
   });
+
+  const eventId = tournamentData?.tournament?.event.id;
+
+  const { data: categoriesData } = useGetEventTournamentCategoriesQuery({
+    variables: { eventId: eventId! },
+    skip: !eventId, // skip the query until eventId is available
+  });
+
   const { data: usersData } = useGetUsersQuery();
 
   const [updateTournament] = useUpdateTournamentMutation();
@@ -34,31 +51,42 @@ const TournamentAdminTab: React.FC = () => {
 
   // Initialize formState when tournament data is loaded, only if formState is not yet set.
   useEffect(() => {
-    if (data && data.tournament && formState === null) {
+    if (tournamentData && tournamentData.tournament && formState === null) {
       setFormState({
-        name: data.tournament.name,
-        category: data.tournament.category || '',
-        rules: data.tournament.rules || '',
-        prize1: data.tournament.prize1 || '',
-        prize2: data.tournament.prize2 || '',
-        prize3: data.tournament.prize3 || '',
-        numPlayersPerTeam: data.tournament.numPlayersPerTeam,
-        minParticipants: data.tournament.minParticipants || 0,
-        maxParticipants: data.tournament.maxParticipants || 0,
-        isPublished: data.tournament.isPublished,
+        name: tournamentData.tournament.name,
+        category: tournamentData.tournament.category || '',
+        rules: tournamentData.tournament.rules || '',
+        prize1: tournamentData.tournament.prize1 || '',
+        prize2: tournamentData.tournament.prize2 || '',
+        prize3: tournamentData.tournament.prize3 || '',
+        numPlayersPerTeam: tournamentData.tournament.numPlayersPerTeam,
+        maxSubstitutes: tournamentData.tournament.maxSubstitutes,
+        minParticipants: tournamentData.tournament.minParticipants || 0,
+        maxParticipants: tournamentData.tournament.maxParticipants || 0,
+        isPublished: tournamentData.tournament.isPublished,
       });
     }
-  }, [data, formState]);
+  }, [tournamentData, formState]);
 
+  // Stop here and return error/loading screen if tournament data is not available
   if (loading || !formState) return <CircularProgress />;
   if (error) return <Typography color="error">Error: {error.message}</Typography>;
-  if (!data || !data.tournament) return <Typography color="error">Fehler beim Laden der Turnierdaten</Typography>;
+  if (!tournamentData || !tournamentData.tournament)
+    return <Typography color="error">Fehler beim Laden der Turnierdaten</Typography>;
+
+  // Get existing tournament categories from save event
+  const existingTournamentCategories: string[] = categoriesData
+    ? categoriesData.tournaments.map((t) => (t.category ? t.category : ''))
+    : [];
+
+  // Check if tournament already has participants
+  const hasParticipants = tournamentData.tournament.participants.length > 0;
 
   const handleFieldChange = (field: keyof TournamentEditFormState, value: string | number | boolean) => {
-    setFormState({
-      ...formState,
+    setFormState((prevState) => ({
+      ...prevState!,
       [field]: value,
-    });
+    }));
   };
 
   const handleSave = async () => {
@@ -74,6 +102,7 @@ const TournamentAdminTab: React.FC = () => {
             prize2: formState.prize2,
             prize3: formState.prize3,
             numPlayersPerTeam: formState.numPlayersPerTeam,
+            maxSubstitutes: formState.maxSubstitutes,
             minParticipants: formState.minParticipants,
             maxParticipants: formState.maxParticipants,
             isPublished: formState.isPublished,
@@ -139,26 +168,43 @@ const TournamentAdminTab: React.FC = () => {
 
   // Filter available users (if usersData is loaded)
   const availableUsers =
-    usersData && data
-      ? usersData.users.filter((user) => !data.tournament?.admins.some((admin) => admin.user.id === user.id))
+    usersData && tournamentData
+      ? usersData.users.filter((user) => !tournamentData.tournament?.admins.some((admin) => admin.user.id === user.id))
       : [];
 
   return (
     <Container>
+      {/*Section to edit tournament details*/}
       <TournamentEditForm
         formState={formState}
         onFieldChange={handleFieldChange}
         onSave={handleSave}
-        onDelete={handleDelete}
+        categories={existingTournamentCategories}
+        disableTeamToggle={hasParticipants}
       />
+
+      <Divider sx={{ my: 4 }} />
+
+      {/*Section to edit tournament admins*/}
       <TournamentAdminManagement
-        admins={data.tournament.admins}
+        admins={tournamentData.tournament.admins}
         availableUsers={availableUsers}
         selectedNewAdmin={selectedNewAdmin}
         onAdminSelect={setSelectedNewAdmin}
         onAddAdmin={handleAddAdmin}
         onRemoveAdmin={handleRemoveAdmin}
       />
+
+      <Divider sx={{ my: 4 }} />
+
+      {/*Section to delete tournament*/}
+      {isGlobalAdmin(currentUser) && (
+        <Box sx={{ mt: 4 }}>
+          <Button variant="contained" color="error" onClick={handleDelete}>
+            Turnier löschen
+          </Button>
+        </Box>
+      )}
     </Container>
   );
 };
