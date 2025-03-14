@@ -1,15 +1,11 @@
 import { Box, Button, ListItem, ListItemText } from '@mui/material';
 import React from 'react';
 import { useUser } from '../../contexts/UserContext';
-import { useDeregisterUserParticipantMutation } from '../../generated/graphql';
+import { useDeregisterUserParticipantMutation, UserFieldsFragment } from '../../generated/graphql';
 
 export interface ParticipantProps {
   tournamentId: number;
-  participant: {
-    user: { id: number; name: string; seat: string; isGlobalAdmin: boolean };
-    initialSeed: number;
-    finalRank: number | null;
-  };
+  user: UserFieldsFragment;
   onRemoved?: () => void;
   hasAdminAccess: boolean;
 }
@@ -23,7 +19,7 @@ const UserParticipantListItem: React.FC<ParticipantProps> = (props: ParticipantP
       await deregisterParticipant({
         variables: {
           tournamentId: props.tournamentId,
-          userId: props.participant.user.id,
+          userId: props.user.id,
         },
       });
       if (props.onRemoved) props.onRemoved();
@@ -34,12 +30,7 @@ const UserParticipantListItem: React.FC<ParticipantProps> = (props: ParticipantP
 
   return (
     <ListItem>
-      <ListItemText
-        primary={props.participant.user.name}
-        secondary={`Sitzplatz: ${props.participant.user.seat} | Seed: ${props.participant.initialSeed} | Rang: ${
-          props.participant.finalRank ?? '-'
-        }`}
-      />
+      <ListItemText primary={props.user.name} secondary={`Sitzplatz: ${props.user.seat}`} />
       {props.hasAdminAccess && (
         <Box ml={2}>
           <Button variant="contained" color="error" onClick={handleRemove}>

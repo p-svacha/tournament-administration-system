@@ -1,5 +1,5 @@
-import { useGetTournamentQuery } from '../generated/graphql';
 import { useUser } from '../contexts/UserContext';
+import { useGetTournamentQuery } from '../generated/graphql';
 import { hasTournamentAdminAccess } from '../utils/permissions';
 
 interface UseTournamentAdminAccessResult {
@@ -17,5 +17,5 @@ export const useTournamentAdminAccess = (tournamentId: number): UseTournamentAdm
   }
 
   // Return final access if loading is done
-  return { loading: false, hasAdminAccess: hasTournamentAdminAccess(data.tournament, currentUser) };
+  return { loading: false, hasAdminAccess: hasTournamentAdminAccess(data.tournament.admins, currentUser) };
 };

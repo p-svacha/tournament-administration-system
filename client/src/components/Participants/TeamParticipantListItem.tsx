@@ -1,21 +1,10 @@
 import { Box, Button, ListItem, ListItemText, Typography } from '@mui/material';
 import React from 'react';
-import { useDeregisterTeamMutation } from '../../generated/graphql';
+import { TeamFieldsFragment, useDeregisterTeamMutation } from '../../generated/graphql';
 
 export interface TeamParticipantListItemProps {
   tournamentId: number;
-  team: {
-    id: number;
-    name: string;
-    members: {
-      user: {
-        id: number;
-        name: string;
-        seat: string;
-      };
-      isTeamCaptain: boolean;
-    }[];
-  };
+  team: TeamFieldsFragment;
   onRemoved?: () => void;
   hasAdminAccess: boolean;
 }

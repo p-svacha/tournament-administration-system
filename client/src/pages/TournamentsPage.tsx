@@ -1,4 +1,4 @@
-import { Box, Container, Typography } from '@mui/material';
+import { Container, Typography } from '@mui/material';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import CreateTournamentCard from '../components/CreateTournamentCard';
@@ -34,7 +34,7 @@ const TournamentsPage: React.FC = () => {
   // Filter tournaments:
   // Show all published tournaments, and unpublished only if the current user has access.
   const filteredTournaments = data.tournaments.filter((tournament) => {
-    return tournament.isPublished || hasTournamentAdminAccess(tournament, currentUser);
+    return tournament.isPublished || hasTournamentAdminAccess(tournament.admins, currentUser);
   });
 
   // Group tournaments by category. If category is missing or empty, use "Uncategorized".
@@ -89,12 +89,6 @@ const TournamentsPage: React.FC = () => {
       ))}
 
       {isGlobalAdmin(currentUser) && <CreateTournamentCard onCreate={handleCreateTournament} />}
-
-      <Box
-        component="img"
-        src={`${process.env.PUBLIC_URL}/game-logos/league_of_legends.png`}
-        alt="League of Legends Logo"
-      />
     </Container>
   );
 };

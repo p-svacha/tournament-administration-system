@@ -56,6 +56,7 @@ export type GameModel = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  addTeamMember: TeamMemberModel;
   addTournamentAdmin: TournamentAdminModel;
   createEvent: EventModel;
   createGame: GameModel;
@@ -69,12 +70,18 @@ export type Mutation = {
   deregisterUserParticipant: Scalars['Boolean']['output'];
   registerTeam: RegisterTeamOutput;
   registerUserParticipant: TournamentParticipantModel;
+  removeTeamMember: Scalars['Boolean']['output'];
   removeTournamentAdmin: Scalars['Boolean']['output'];
   updateEvent: EventModel;
   updateGame: GameModel;
   updateTeam: TeamModel;
   updateTournament: TournamentModel;
   updateUser: UserModel;
+};
+
+export type MutationAddTeamMemberArgs = {
+  teamId: Scalars['Int']['input'];
+  userId: Scalars['Int']['input'];
 };
 
 export type MutationAddTournamentAdminArgs = {
@@ -129,6 +136,11 @@ export type MutationRegisterTeamArgs = {
 
 export type MutationRegisterUserParticipantArgs = {
   tournamentId: Scalars['Int']['input'];
+  userId: Scalars['Int']['input'];
+};
+
+export type MutationRemoveTeamMemberArgs = {
+  teamId: Scalars['Int']['input'];
   userId: Scalars['Int']['input'];
 };
 
@@ -224,6 +236,7 @@ export type RegisterTeamOutput = {
 
 export type TeamMemberModel = {
   __typename?: 'TeamMemberModel';
+  id: Scalars['Int']['output'];
   isTeamCaptain: Scalars['Boolean']['output'];
   team: TeamModel;
   user: UserModel;
@@ -474,7 +487,7 @@ export type GetTournamentQuery = {
     event: { __typename?: 'EventModel'; id: number; name: string };
     participants: Array<{
       __typename?: 'TournamentParticipantModel';
-      user?: { __typename?: 'UserModel'; id: number; name: string } | null;
+      user?: { __typename?: 'UserModel'; id: number; name: string; seat: string } | null;
       team?: {
         __typename?: 'TeamModel';
         id: number;
@@ -482,13 +495,13 @@ export type GetTournamentQuery = {
         members: Array<{
           __typename?: 'TeamMemberModel';
           isTeamCaptain: boolean;
-          user: { __typename?: 'UserModel'; id: number; name: string };
+          user: { __typename?: 'UserModel'; id: number; name: string; seat: string };
         }>;
       } | null;
     }>;
     admins: Array<{
       __typename?: 'TournamentAdminModel';
-      user: { __typename?: 'UserModel'; id: number; name: string };
+      user: { __typename?: 'UserModel'; id: number; name: string; seat: string };
     }>;
   } | null;
 };
@@ -508,7 +521,7 @@ export type GetTournamentsQuery = {
     isPublished: boolean;
     admins: Array<{
       __typename?: 'TournamentAdminModel';
-      user: { __typename?: 'UserModel'; id: number; name: string };
+      user: { __typename?: 'UserModel'; id: number; name: string; seat: string };
     }>;
   }>;
 };
@@ -520,9 +533,9 @@ export type GetUsersQuery = {
   users: Array<{ __typename?: 'UserModel'; id: number; name: string; seat: string; isGlobalAdmin: boolean }>;
 };
 
-export type TournamentAdminsFragment = {
-  __typename?: 'TournamentModel';
-  admins: Array<{ __typename?: 'TournamentAdminModel'; user: { __typename?: 'UserModel'; id: number; name: string } }>;
+export type TournamentAdminFieldsFragment = {
+  __typename?: 'TournamentAdminModel';
+  user: { __typename?: 'UserModel'; id: number; name: string; seat: string };
 };
 
 export type TournamentBasicFieldsFragment = {
@@ -533,33 +546,54 @@ export type TournamentBasicFieldsFragment = {
   isPublished: boolean;
 };
 
-export type TournamentParticipantsFragment = {
-  __typename?: 'TournamentModel';
-  participants: Array<{
-    __typename?: 'TournamentParticipantModel';
-    user?: { __typename?: 'UserModel'; id: number; name: string; seat: string } | null;
-    team?: {
-      __typename?: 'TeamModel';
-      id: number;
-      name: string;
-      members: Array<{
-        __typename?: 'TeamMemberModel';
-        isTeamCaptain: boolean;
-        user: { __typename?: 'UserModel'; id: number; name: string; seat: string };
-      }>;
-    } | null;
+export type TournamentParticipantFieldsFragment = {
+  __typename?: 'TournamentParticipantModel';
+  user?: { __typename?: 'UserModel'; id: number; name: string; seat: string } | null;
+  team?: {
+    __typename?: 'TeamModel';
+    id: number;
+    name: string;
+    members: Array<{
+      __typename?: 'TeamMemberModel';
+      isTeamCaptain: boolean;
+      user: { __typename?: 'UserModel'; id: number; name: string; seat: string };
+    }>;
+  } | null;
+};
+
+export type TeamFieldsFragment = {
+  __typename?: 'TeamModel';
+  id: number;
+  name: string;
+  members: Array<{
+    __typename?: 'TeamMemberModel';
+    isTeamCaptain: boolean;
+    user: { __typename?: 'UserModel'; id: number; name: string; seat: string };
   }>;
 };
 
-export const TournamentAdminsFragmentDoc = gql`
-  fragment TournamentAdmins on TournamentModel {
-    admins {
-      user {
-        id
-        name
-      }
+export type TeamMemberFieldsFragment = {
+  __typename?: 'TeamMemberModel';
+  isTeamCaptain: boolean;
+  user: { __typename?: 'UserModel'; id: number; name: string; seat: string };
+};
+
+export type UserFieldsFragment = { __typename?: 'UserModel'; id: number; name: string; seat: string };
+
+export const UserFieldsFragmentDoc = gql`
+  fragment UserFields on UserModel {
+    id
+    name
+    seat
+  }
+`;
+export const TournamentAdminFieldsFragmentDoc = gql`
+  fragment TournamentAdminFields on TournamentAdminModel {
+    user {
+      ...UserFields
     }
   }
+  ${UserFieldsFragmentDoc}
 `;
 export const TournamentBasicFieldsFragmentDoc = gql`
   fragment TournamentBasicFields on TournamentModel {
@@ -569,28 +603,36 @@ export const TournamentBasicFieldsFragmentDoc = gql`
     isPublished
   }
 `;
-export const TournamentParticipantsFragmentDoc = gql`
-  fragment TournamentParticipants on TournamentModel {
-    participants {
-      user {
-        id
-        name
-        seat
-      }
-      team {
-        id
-        name
-        members {
-          user {
-            id
-            name
-            seat
-          }
-          isTeamCaptain
-        }
-      }
+export const TeamMemberFieldsFragmentDoc = gql`
+  fragment TeamMemberFields on TeamMemberModel {
+    user {
+      ...UserFields
+    }
+    isTeamCaptain
+  }
+  ${UserFieldsFragmentDoc}
+`;
+export const TeamFieldsFragmentDoc = gql`
+  fragment TeamFields on TeamModel {
+    id
+    name
+    members {
+      ...TeamMemberFields
     }
   }
+  ${TeamMemberFieldsFragmentDoc}
+`;
+export const TournamentParticipantFieldsFragmentDoc = gql`
+  fragment TournamentParticipantFields on TournamentParticipantModel {
+    user {
+      ...UserFields
+    }
+    team {
+      ...TeamFields
+    }
+  }
+  ${UserFieldsFragmentDoc}
+  ${TeamFieldsFragmentDoc}
 `;
 export const AddTournamentAdminDocument = gql`
   mutation AddTournamentAdmin($tournamentId: Int!, $userId: Int!) {
@@ -1131,13 +1173,17 @@ export const GetTournamentDocument = gql`
         id
         name
       }
-      ...TournamentParticipants
-      ...TournamentAdmins
+      participants {
+        ...TournamentParticipantFields
+      }
+      admins {
+        ...TournamentAdminFields
+      }
     }
   }
   ${TournamentBasicFieldsFragmentDoc}
-  ${TournamentParticipantsFragmentDoc}
-  ${TournamentAdminsFragmentDoc}
+  ${TournamentParticipantFieldsFragmentDoc}
+  ${TournamentAdminFieldsFragmentDoc}
 `;
 
 /**
@@ -1183,11 +1229,13 @@ export const GetTournamentsDocument = gql`
   query GetTournaments($publishedOnly: Boolean = true, $eventId: Int) {
     tournaments(publishedOnly: $publishedOnly, eventId: $eventId) {
       ...TournamentBasicFields
-      ...TournamentAdmins
+      admins {
+        ...TournamentAdminFields
+      }
     }
   }
   ${TournamentBasicFieldsFragmentDoc}
-  ${TournamentAdminsFragmentDoc}
+  ${TournamentAdminFieldsFragmentDoc}
 `;
 
 /**

@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import AddParticipantForm from '../../components/Participants/AddParticipantForm';
 import TeamParticipantListItem from '../../components/Participants/TeamParticipantListItem';
 import UserParticipantListItem from '../../components/Participants/UserParticipantListItem';
-import { useGetTournamentQuery } from '../../generated/graphql';
+import { TeamFieldsFragment, useGetTournamentQuery, UserFieldsFragment } from '../../generated/graphql';
 import { useTournamentAdminAccess } from '../../hooks/useTournamentAdminAccess';
 
 const TournamentParticipantsTab: React.FC = () => {
@@ -22,12 +22,9 @@ const TournamentParticipantsTab: React.FC = () => {
   const isTeamTournament: boolean = data.tournament.numPlayersPerTeam > 1;
   const registeredUserIds: number[] = isTeamTournament ? [] : data.tournament.participants.map((p: any) => p.user.id);
 
-  // For team tournaments, extract unique teams from the participants list
-  const teams = isTeamTournament
-    ? Array.from(
-        new Map(data.tournament.participants.filter((p: any) => p.team).map((p: any) => [p.team.id, p.team])).values(),
-      )
-    : [];
+  // Extract users/teams into separate arrays
+  const users: UserFieldsFragment[] = data.tournament.participants.map((p) => p.user!);
+  const teams: TeamFieldsFragment[] = data.tournament.participants.map((p) => p.team!);
 
   return (
     <Container>
@@ -39,7 +36,7 @@ const TournamentParticipantsTab: React.FC = () => {
         isTeamTournament ? (
           teams.length > 0 ? (
             <List>
-              {teams.map((team: any) => (
+              {teams.map((team: TeamFieldsFragment) => (
                 <TeamParticipantListItem
                   key={team.id}
                   tournamentId={tournamentId}
@@ -55,11 +52,11 @@ const TournamentParticipantsTab: React.FC = () => {
         ) : //Solo tournament
         data.tournament.participants.length > 0 ? (
           <List>
-            {data.tournament.participants.map((p: any) => (
+            {users.map((user: UserFieldsFragment) => (
               <UserParticipantListItem
-                key={p.user.id}
+                key={user.id}
                 tournamentId={tournamentId}
-                participant={p}
+                user={user}
                 onRemoved={refetch}
                 hasAdminAccess={hasAdminAccess}
               />
