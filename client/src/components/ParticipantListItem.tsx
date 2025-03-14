@@ -11,6 +11,7 @@ export interface ParticipantProps {
     finalRank: number | null;
   };
   onRemoved?: () => void;
+  hasAdminAccess: boolean;
 }
 
 const ParticipantListItem: React.FC<ParticipantProps> = (props: ParticipantProps) => {
@@ -39,7 +40,7 @@ const ParticipantListItem: React.FC<ParticipantProps> = (props: ParticipantProps
           props.participant.finalRank ?? '-'
         }`}
       />
-      {currentUser && currentUser.isGlobalAdmin && (
+      {props.hasAdminAccess && (
         <Box ml={2}>
           <Button variant="contained" color="error" onClick={handleRemove}>
             Entfernen

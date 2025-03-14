@@ -61,7 +61,7 @@ export class TournamentEntity {
   })
   num_players_per_team: number;
 
-  @Column({ type: 'int', default: 1, comment: 'Maximum number of substitutes allowed per team' })
+  @Column({ type: 'int', default: 0, comment: 'Maximum number of substitutes allowed per team' })
   max_substitutes: number;
 
   @Column({

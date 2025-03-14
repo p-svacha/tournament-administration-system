@@ -6,6 +6,7 @@ export default interface TournamentEditFormState {
   prize2?: string;
   prize3?: string;
   numPlayersPerTeam: number;
+  maxSubstitutes: number;
   minParticipants?: number;
   maxParticipants?: number;
   isPublished: boolean;
