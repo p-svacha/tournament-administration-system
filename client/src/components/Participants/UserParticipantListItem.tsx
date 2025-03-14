@@ -1,7 +1,7 @@
 import { Box, Button, ListItem, ListItemText } from '@mui/material';
 import React from 'react';
-import { useUser } from '../contexts/UserContext';
-import { useDeregisterUserParticipantMutation } from '../generated/graphql';
+import { useUser } from '../../contexts/UserContext';
+import { useDeregisterUserParticipantMutation } from '../../generated/graphql';
 
 export interface ParticipantProps {
   tournamentId: number;
@@ -14,7 +14,7 @@ export interface ParticipantProps {
   hasAdminAccess: boolean;
 }
 
-const ParticipantListItem: React.FC<ParticipantProps> = (props: ParticipantProps) => {
+const UserParticipantListItem: React.FC<ParticipantProps> = (props: ParticipantProps) => {
   const { currentUser } = useUser();
   const [deregisterParticipant] = useDeregisterUserParticipantMutation();
 
@@ -51,4 +51,4 @@ const ParticipantListItem: React.FC<ParticipantProps> = (props: ParticipantProps
   );
 };
 
-export default ParticipantListItem;
+export default UserParticipantListItem;

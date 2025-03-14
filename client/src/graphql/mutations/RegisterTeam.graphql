@@ -1,13 +1,9 @@
-fragment TournamentParticipants on TournamentModel
+mutation RegisterTeam($data: RegisterTeamInput!)
 {
-    participants
+    registerTeam(data: $data)
     {
-        user
-        {
-            id
-            name
-            seat
-        }
+        success
+        message
         team
         {
             id

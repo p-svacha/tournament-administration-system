@@ -1,6 +1,6 @@
 import { Autocomplete, Box, Button, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
-import { useGetUsersQuery, useRegisterUserParticipantMutation } from '../generated/graphql';
+import { useGetUsersQuery, useRegisterUserParticipantMutation } from '../../generated/graphql';
 
 interface AddParticipantFormProps {
   tournamentId: number;

@@ -283,11 +283,11 @@ export type TournamentModel = {
   id: Scalars['Int']['output'];
   /** Flag indicating whether the tournament is publicly displayed. */
   isPublished: Scalars['Boolean']['output'];
-  /** Maximum number of participants that can register for the tournament. Null if there is no upper limit. */
+  /** Maximum number of participants that can register for the tournament. A participant refers to either a user (in solo tournaments) or a team (in team tournaments). Null if there is no upper limit. */
   maxParticipants?: Maybe<Scalars['Int']['output']>;
   /** Maximum number of substitutes a team may have. */
   maxSubstitutes: Scalars['Int']['output'];
-  /** Minimum number of participants required for the tournament to take place. */
+  /** Minimum number of participants required for the tournament to take place. A participant refers to either a user (in solo tournaments) or a team (in team tournaments). */
   minParticipants: Scalars['Int']['output'];
   /** Name of the tournament. */
   name: Scalars['String']['output'];
@@ -385,6 +385,13 @@ export type DeleteTournamentMutationVariables = Exact<{
 
 export type DeleteTournamentMutation = { __typename?: 'Mutation', deleteTournament: boolean };
 
+export type DeregisterTeamMutationVariables = Exact<{
+  teamId: Scalars['Int']['input'];
+}>;
+
+
+export type DeregisterTeamMutation = { __typename?: 'Mutation', deregisterTeam: boolean };
+
 export type DeregisterUserParticipantMutationVariables = Exact<{
   tournamentId: Scalars['Int']['input'];
   userId: Scalars['Int']['input'];
@@ -392,6 +399,13 @@ export type DeregisterUserParticipantMutationVariables = Exact<{
 
 
 export type DeregisterUserParticipantMutation = { __typename?: 'Mutation', deregisterUserParticipant: boolean };
+
+export type RegisterTeamMutationVariables = Exact<{
+  data: RegisterTeamInput;
+}>;
+
+
+export type RegisterTeamMutation = { __typename?: 'Mutation', registerTeam: { __typename?: 'RegisterTeamOutput', success: boolean, message?: string | null, team?: { __typename?: 'TeamModel', id: number, name: string, members: Array<{ __typename?: 'TeamMemberModel', isTeamCaptain: boolean, user: { __typename?: 'UserModel', id: number, name: string, seat: string } }> } | null } };
 
 export type RegisterUserParticipantMutationVariables = Exact<{
   tournamentId: Scalars['Int']['input'];
@@ -434,7 +448,7 @@ export type GetTournamentQueryVariables = Exact<{
 }>;
 
 
-export type GetTournamentQuery = { __typename?: 'Query', tournament?: { __typename?: 'TournamentModel', rules?: string | null, prize1?: string | null, prize2?: string | null, prize3?: string | null, numPlayersPerTeam: number, maxSubstitutes: number, minParticipants: number, maxParticipants?: number | null, briefingTime?: any | null, id: number, name: string, category?: string | null, isPublished: boolean, event: { __typename?: 'EventModel', id: number }, participants: Array<{ __typename?: 'TournamentParticipantModel', user?: { __typename?: 'UserModel', id: number, name: string } | null, team?: { __typename?: 'TeamModel', id: number, name: string, members: Array<{ __typename?: 'TeamMemberModel', isTeamCaptain: boolean, user: { __typename?: 'UserModel', id: number, name: string } }> } | null }>, admins: Array<{ __typename?: 'TournamentAdminModel', user: { __typename?: 'UserModel', id: number, name: string } }> } | null };
+export type GetTournamentQuery = { __typename?: 'Query', tournament?: { __typename?: 'TournamentModel', rules?: string | null, prize1?: string | null, prize2?: string | null, prize3?: string | null, numPlayersPerTeam: number, maxSubstitutes: number, minParticipants: number, maxParticipants?: number | null, briefingTime?: any | null, id: number, name: string, category?: string | null, isPublished: boolean, event: { __typename?: 'EventModel', id: number }, participants: Array<{ __typename?: 'TournamentParticipantModel', user?: { __typename?: 'UserModel', id: number, name: string, seat: string } | null, team?: { __typename?: 'TeamModel', id: number, name: string, members: Array<{ __typename?: 'TeamMemberModel', isTeamCaptain: boolean, user: { __typename?: 'UserModel', id: number, name: string, seat: string } }> } | null }>, admins: Array<{ __typename?: 'TournamentAdminModel', user: { __typename?: 'UserModel', id: number, name: string } }> } | null };
 
 export type GetTournamentsQueryVariables = Exact<{
   publishedOnly?: InputMaybe<Scalars['Boolean']['input']>;
@@ -453,7 +467,7 @@ export type TournamentAdminsFragment = { __typename?: 'TournamentModel', admins:
 
 export type TournamentBasicFieldsFragment = { __typename?: 'TournamentModel', id: number, name: string, category?: string | null, isPublished: boolean };
 
-export type TournamentParticipantsFragment = { __typename?: 'TournamentModel', participants: Array<{ __typename?: 'TournamentParticipantModel', user?: { __typename?: 'UserModel', id: number, name: string } | null, team?: { __typename?: 'TeamModel', id: number, name: string, members: Array<{ __typename?: 'TeamMemberModel', isTeamCaptain: boolean, user: { __typename?: 'UserModel', id: number, name: string } }> } | null }> };
+export type TournamentParticipantsFragment = { __typename?: 'TournamentModel', participants: Array<{ __typename?: 'TournamentParticipantModel', user?: { __typename?: 'UserModel', id: number, name: string, seat: string } | null, team?: { __typename?: 'TeamModel', id: number, name: string, members: Array<{ __typename?: 'TeamMemberModel', isTeamCaptain: boolean, user: { __typename?: 'UserModel', id: number, name: string, seat: string } }> } | null }> };
 
 export const TournamentAdminsFragmentDoc = gql`
     fragment TournamentAdmins on TournamentModel {
@@ -479,6 +493,7 @@ export const TournamentParticipantsFragmentDoc = gql`
     user {
       id
       name
+      seat
     }
     team {
       id
@@ -487,6 +502,7 @@ export const TournamentParticipantsFragmentDoc = gql`
         user {
           id
           name
+          seat
         }
         isTeamCaptain
       }
@@ -593,6 +609,37 @@ export function useDeleteTournamentMutation(baseOptions?: Apollo.MutationHookOpt
 export type DeleteTournamentMutationHookResult = ReturnType<typeof useDeleteTournamentMutation>;
 export type DeleteTournamentMutationResult = Apollo.MutationResult<DeleteTournamentMutation>;
 export type DeleteTournamentMutationOptions = Apollo.BaseMutationOptions<DeleteTournamentMutation, DeleteTournamentMutationVariables>;
+export const DeregisterTeamDocument = gql`
+    mutation DeregisterTeam($teamId: Int!) {
+  deregisterTeam(id: $teamId)
+}
+    `;
+export type DeregisterTeamMutationFn = Apollo.MutationFunction<DeregisterTeamMutation, DeregisterTeamMutationVariables>;
+
+/**
+ * __useDeregisterTeamMutation__
+ *
+ * To run a mutation, you first call `useDeregisterTeamMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeregisterTeamMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deregisterTeamMutation, { data, loading, error }] = useDeregisterTeamMutation({
+ *   variables: {
+ *      teamId: // value for 'teamId'
+ *   },
+ * });
+ */
+export function useDeregisterTeamMutation(baseOptions?: Apollo.MutationHookOptions<DeregisterTeamMutation, DeregisterTeamMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeregisterTeamMutation, DeregisterTeamMutationVariables>(DeregisterTeamDocument, options);
+      }
+export type DeregisterTeamMutationHookResult = ReturnType<typeof useDeregisterTeamMutation>;
+export type DeregisterTeamMutationResult = Apollo.MutationResult<DeregisterTeamMutation>;
+export type DeregisterTeamMutationOptions = Apollo.BaseMutationOptions<DeregisterTeamMutation, DeregisterTeamMutationVariables>;
 export const DeregisterUserParticipantDocument = gql`
     mutation DeregisterUserParticipant($tournamentId: Int!, $userId: Int!) {
   deregisterUserParticipant(tournamentId: $tournamentId, userId: $userId)
@@ -625,6 +672,52 @@ export function useDeregisterUserParticipantMutation(baseOptions?: Apollo.Mutati
 export type DeregisterUserParticipantMutationHookResult = ReturnType<typeof useDeregisterUserParticipantMutation>;
 export type DeregisterUserParticipantMutationResult = Apollo.MutationResult<DeregisterUserParticipantMutation>;
 export type DeregisterUserParticipantMutationOptions = Apollo.BaseMutationOptions<DeregisterUserParticipantMutation, DeregisterUserParticipantMutationVariables>;
+export const RegisterTeamDocument = gql`
+    mutation RegisterTeam($data: RegisterTeamInput!) {
+  registerTeam(data: $data) {
+    success
+    message
+    team {
+      id
+      name
+      members {
+        user {
+          id
+          name
+          seat
+        }
+        isTeamCaptain
+      }
+    }
+  }
+}
+    `;
+export type RegisterTeamMutationFn = Apollo.MutationFunction<RegisterTeamMutation, RegisterTeamMutationVariables>;
+
+/**
+ * __useRegisterTeamMutation__
+ *
+ * To run a mutation, you first call `useRegisterTeamMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRegisterTeamMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [registerTeamMutation, { data, loading, error }] = useRegisterTeamMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useRegisterTeamMutation(baseOptions?: Apollo.MutationHookOptions<RegisterTeamMutation, RegisterTeamMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RegisterTeamMutation, RegisterTeamMutationVariables>(RegisterTeamDocument, options);
+      }
+export type RegisterTeamMutationHookResult = ReturnType<typeof useRegisterTeamMutation>;
+export type RegisterTeamMutationResult = Apollo.MutationResult<RegisterTeamMutation>;
+export type RegisterTeamMutationOptions = Apollo.BaseMutationOptions<RegisterTeamMutation, RegisterTeamMutationVariables>;
 export const RegisterUserParticipantDocument = gql`
     mutation RegisterUserParticipant($tournamentId: Int!, $userId: Int!) {
   registerUserParticipant(tournamentId: $tournamentId, userId: $userId) {

@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { TeamMemberEntity } from './team-member.entity';
 import { TeamMemberModel } from './dto/team-member.model';
+import { TeamMemberEntity } from './team-member.entity';
 
 @Injectable()
 export class TeamMemberService {
@@ -40,5 +40,14 @@ export class TeamMemberService {
 
     // Return as model
     return new TeamMemberModel(savedTeamMember);
+  }
+
+  async removeTeamMember(teamId: number, userId: number): Promise<boolean> {
+    const result = await this.teamMemberRepository.delete({
+      team: { id: teamId },
+      user: { id: userId },
+    });
+
+    return result.affected != null && result.affected > 0;
   }
 }

@@ -1,16 +1,16 @@
+import { Box, Container, Typography } from '@mui/material';
 import React from 'react';
-import { Container, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import CreateTournamentCard from '../components/CreateTournamentCard';
+import TournamentSection from '../components/TournamentSection';
+import { useEvent } from '../contexts/EventContext';
 import { useUser } from '../contexts/UserContext';
 import {
   TournamentBasicFieldsFragment,
   useCreateTournamentMutation,
   useGetTournamentsQuery,
 } from '../generated/graphql';
-import { useEvent } from '../contexts/EventContext';
-import TournamentSection from '../components/TournamentSection';
 import { hasTournamentAdminAccess, isGlobalAdmin } from '../utils/permissions';
-import CreateTournamentCard from '../components/CreateTournamentCard';
 
 const TournamentsPage: React.FC = () => {
   const { currentUser } = useUser();
@@ -62,7 +62,7 @@ const TournamentsPage: React.FC = () => {
           data: {
             name: 'Neues Turnier',
             eventId: currentEvent.id,
-            gameId: 1
+            gameId: 1,
           },
         },
       });
@@ -89,6 +89,12 @@ const TournamentsPage: React.FC = () => {
       ))}
 
       {isGlobalAdmin(currentUser) && <CreateTournamentCard onCreate={handleCreateTournament} />}
+
+      <Box
+        component="img"
+        src={`${process.env.PUBLIC_URL}/game-logos/league_of_legends.png`}
+        alt="League of Legends Logo"
+      />
     </Container>
   );
 };
