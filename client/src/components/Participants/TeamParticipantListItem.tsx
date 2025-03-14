@@ -52,12 +52,11 @@ const TeamParticipantListItem: React.FC<TeamParticipantListItemProps> = (props: 
         secondary={
           <Typography variant="body2" color="textSecondary">
             {sortedMembers.map((member, index) => {
+              const displayString: string = `${member.user.name} (${member.user.seat})`;
               const memberDisplay = member.isTeamCaptain ? (
-                <strong key={member.user.id}>
-                  {member.user.name} ({member.user.seat})
-                </strong>
+                <strong key={member.user.id}>{displayString}</strong> // Team captain in bold
               ) : (
-                <span key={member.user.id}>{member.user.name}</span>
+                <span key={member.user.id}>{displayString}</span>
               );
               // Append a comma except after the last member.
               return (

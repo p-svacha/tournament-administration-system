@@ -46,6 +46,7 @@ export class TeamMemberService {
     const result = await this.teamMemberRepository.delete({
       team: { id: teamId },
       user: { id: userId },
+      is_team_captain: false, // Cannot remove team captain
     });
 
     return result.affected != null && result.affected > 0;

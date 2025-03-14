@@ -1,0 +1,21 @@
+meta {
+  name: Remove Team Member
+  type: graphql
+  seq: 2
+}
+
+post {
+  url: {{host}}
+  body: graphql
+  auth: none
+}
+
+body:graphql {
+  mutation
+  {
+    removeTeamMember(
+      teamId: 4,
+      userId: 1,
+    )
+  }
+}
