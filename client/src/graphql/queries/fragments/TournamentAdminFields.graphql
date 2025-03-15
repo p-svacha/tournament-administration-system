@@ -1,0 +1,7 @@
+fragment TournamentAdminFields on TournamentAdminModel
+{
+    user
+    {
+        ...UserFields
+    }
+}

@@ -3,6 +3,7 @@
 # ------------------------------------------------------
 
 type TeamMemberModel {
+  id: Int!
   team: TeamModel!
   user: UserModel!
   isTeamCaptain: Boolean!
@@ -153,6 +154,8 @@ type Mutation {
   createUser(data: CreateUserInput!): UserModel!
   updateUser(id: Int!, data: UpdateUserInput!): UserModel!
   deleteUser(id: Int!): Boolean!
+  addTeamMember(teamId: Int!, userId: Int!): TeamMemberModel!
+  removeTeamMember(teamId: Int!, userId: Int!): Boolean!
   createEvent(data: CreateEventInput!): EventModel!
   updateEvent(id: Int!, data: UpdateEventInput!): EventModel!
   deleteEvent(id: Int!): Boolean!

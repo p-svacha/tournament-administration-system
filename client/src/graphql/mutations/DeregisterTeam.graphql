@@ -1,0 +1,4 @@
+mutation DeregisterTeam($teamId: Int!)
+{
+    deregisterTeam(id: $teamId)
+}

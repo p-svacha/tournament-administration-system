@@ -23,7 +23,13 @@ query GetTournament($id: Int!)
             id
             name
         }
-        ...TournamentParticipants
-        ...TournamentAdmins
+        participants
+        {
+            ...TournamentParticipantFields
+        }
+        admins
+        {
+            ...TournamentAdminFields
+        }      
     }
 }

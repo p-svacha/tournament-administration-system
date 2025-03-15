@@ -1,0 +1,30 @@
+fragment TournamentParticipantFields on TournamentParticipantModel
+{
+    user
+    {
+        ...UserFields
+    }
+    team
+    {
+        ...TeamFields
+    }
+}
+
+fragment TeamFields on TeamModel
+{
+    id
+    name
+    members
+    {
+        ...TeamMemberFields
+    }
+}
+
+fragment TeamMemberFields on TeamMemberModel
+{
+    user
+    {
+        ...UserFields
+    }
+    isTeamCaptain
+}
