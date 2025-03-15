@@ -1,17 +1,15 @@
 import { Box, Button, ListItem, ListItemText } from '@mui/material';
 import React from 'react';
-import { useUser } from '../../contexts/UserContext';
 import { useDeregisterUserParticipantMutation, UserFieldsFragment } from '../../generated/graphql';
 
 export interface ParticipantProps {
   tournamentId: number;
   user: UserFieldsFragment;
-  onRemoved?: () => void;
+  onParticipantRemoved?: () => void;
   hasAdminAccess: boolean;
 }
 
 const UserParticipantListItem: React.FC<ParticipantProps> = (props: ParticipantProps) => {
-  const { currentUser } = useUser();
   const [deregisterParticipant] = useDeregisterUserParticipantMutation();
 
   const handleRemove = async () => {
@@ -22,7 +20,7 @@ const UserParticipantListItem: React.FC<ParticipantProps> = (props: ParticipantP
           userId: props.user.id,
         },
       });
-      if (props.onRemoved) props.onRemoved();
+      if (props.onParticipantRemoved) props.onParticipantRemoved();
     } catch (err) {
       console.error('Fehler beim Entfernen des Teilnehmers', err);
     }

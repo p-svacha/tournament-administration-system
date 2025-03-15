@@ -1,12 +1,12 @@
 import React from 'react';
-import { Routes, Route, Navigate, useParams } from 'react-router-dom';
+import { Navigate, Route, Routes, useParams } from 'react-router-dom';
 import Header from './components/Header';
-import TournamentsPage from './pages/TournamentsPage';
 import { useUser } from './contexts/UserContext';
+import TournamentParticipantsTab from './pages/tournaments/ParticipantsTab/TournamentParticipantsTab';
+import TournamentAdminTabWrapper from './pages/tournaments/TournamentAdminTabWrapper';
 import TournamentDetailsTab from './pages/tournaments/TournamentDetailsTab';
 import TournamentDetailsTabs from './pages/tournaments/TournamentInfoPage';
-import TournamentParticipantsTab from './pages/tournaments/TournamentParticipantsTab';
-import TournamentAdminTabWrapper from './pages/tournaments/TournamentAdminTabWrapper';
+import TournamentsPage from './pages/TournamentsPage';
 
 const RedirectToDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();

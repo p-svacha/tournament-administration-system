@@ -1,3 +1,5 @@
+import { CheckCircle } from '@mui/icons-material';
+import ErrorIcon from '@mui/icons-material/Error';
 import { Box, Button, ListItem, ListItemText, Typography } from '@mui/material';
 import React from 'react';
 import { TeamFieldsFragment, useDeregisterTeamMutation } from '../../generated/graphql';
@@ -5,8 +7,10 @@ import { TeamFieldsFragment, useDeregisterTeamMutation } from '../../generated/g
 export interface TeamParticipantListItemProps {
   tournamentId: number;
   team: TeamFieldsFragment;
-  onRemoved?: () => void;
+  onTeamRemoved?: () => void;
   hasAdminAccess: boolean;
+  numPlayersPerTeam: number;
+  maxSubstitutes: number;
 }
 
 const TeamParticipantListItem: React.FC<TeamParticipantListItemProps> = (props: TeamParticipantListItemProps) => {
@@ -19,7 +23,7 @@ const TeamParticipantListItem: React.FC<TeamParticipantListItemProps> = (props: 
           teamId: props.team.id,
         },
       });
-      if (props.onRemoved) props.onRemoved();
+      if (props.onTeamRemoved) props.onTeamRemoved();
     } catch (err) {
       console.error('Fehler beim Entfernen des Teams', err);
     }
@@ -34,10 +38,42 @@ const TeamParticipantListItem: React.FC<TeamParticipantListItemProps> = (props: 
     sortedMembers = [captainMember, ...others];
   }
 
+  // Calculate team validity based on tournament rules.
+  const memberCount = props.team.members.length;
+  const minCount = props.numPlayersPerTeam;
+  const maxCount = props.numPlayersPerTeam + props.maxSubstitutes;
+  let validationText = '';
+  if (memberCount < minCount) {
+    validationText = `Zu wenige Spieler (${memberCount}/${minCount})`;
+  } else if (memberCount > maxCount) {
+    validationText = `Zu viele Spieler (${memberCount}/${maxCount})`;
+  } else {
+    validationText = 'Gültig';
+  }
+  const isValid = memberCount >= minCount && memberCount <= maxCount;
+
   return (
     <ListItem alignItems="flex-start">
       <ListItemText
-        primary={<Typography variant="h6">{props.team.name}</Typography>}
+        primary={
+          <>
+            <Typography variant="h6" display="inline">
+              {props.team.name}
+            </Typography>
+            <Box ml={1} display="inline-flex" alignItems="center">
+              {isValid ? (
+                <CheckCircle sx={{ color: 'green' }} fontSize="small" />
+              ) : (
+                <>
+                  <ErrorIcon sx={{ color: 'red' }} fontSize="small" />
+                  <Typography variant="caption" color="error" sx={{ ml: 0.5 }}>
+                    {validationText}
+                  </Typography>
+                </>
+              )}
+            </Box>
+          </>
+        }
         secondary={
           <Typography variant="body2" color="textSecondary">
             {sortedMembers.map((member, index) => {
