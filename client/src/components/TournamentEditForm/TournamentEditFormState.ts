@@ -1,6 +1,9 @@
 export default interface TournamentEditFormState {
   name: string;
+  eventId: number;
+  gameId: number;
   category?: string;
+  registrationGroup?: string;
   rules?: string;
   prize1?: string;
   prize2?: string;
@@ -9,5 +12,6 @@ export default interface TournamentEditFormState {
   maxSubstitutes: number;
   minParticipants?: number;
   maxParticipants?: number;
+  briefingTime?: Date;
   isPublished: boolean;
 }
