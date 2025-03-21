@@ -1,4 +1,4 @@
-export default interface TournamentEditFormState {
+export default interface TournamentFormState {
   name: string;
   eventId: number;
   gameId: number;

@@ -1,13 +1,13 @@
-import { useGetGamesQuery } from '../generated/graphql';
-import { Autocomplete, Box, TextField, Typography } from '@mui/material';
 import React from 'react';
+import { Autocomplete, Box, TextField, Typography } from '@mui/material';
+import { useGetEventsQuery } from '../generated/graphql';
 
-interface GamesProps {
-  onGameSelected: (e: React.SyntheticEvent, value: any | null) => void;
+interface EventsProps {
+  onEventSelected: (e: React.SyntheticEvent, value: any | null) => void;
 }
 
-export function Games({ onGameSelected }: GamesProps) {
-  const { loading, error, data } = useGetGamesQuery();
+export function Events({ onEventSelected }: EventsProps) {
+  const { loading, error, data } = useGetEventsQuery();
 
   if (loading) return <Typography>Loading...</Typography>;
 
@@ -17,15 +17,14 @@ export function Games({ onGameSelected }: GamesProps) {
     <Autocomplete
       id="country-select-demo"
       sx={{ width: 300 }}
-      options={data!.games}
-      onChange={onGameSelected}
+      options={data!.events}
+      onChange={onEventSelected}
       autoHighlight
       getOptionLabel={(option) => option.name}
       renderOption={(props, option) => {
         const { key, ...optionProps } = props;
         return (
           <Box key={key} component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...optionProps}>
-            <img loading="lazy" width="40" src={`${process.env.PUBLIC_URL}${option.logoUrl}`} alt="" />
             {option.name}
           </Box>
         );
@@ -33,7 +32,7 @@ export function Games({ onGameSelected }: GamesProps) {
       renderInput={(params) => (
         <TextField
           {...params}
-          label="Spiel"
+          label="Event"
           required
           slotProps={{
             htmlInput: {
