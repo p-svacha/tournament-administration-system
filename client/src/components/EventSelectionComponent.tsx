@@ -16,7 +16,6 @@ export function Events({ onEventSelected }: EventsProps) {
   return (
     <Autocomplete
       id="country-select-demo"
-      sx={{ width: 300 }}
       options={data!.events}
       onChange={onEventSelected}
       autoHighlight

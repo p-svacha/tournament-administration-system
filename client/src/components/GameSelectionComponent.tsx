@@ -16,7 +16,6 @@ export function Games({ onGameSelected }: GamesProps) {
   return (
     <Autocomplete
       id="country-select-demo"
-      sx={{ width: 300 }}
       options={data!.games}
       onChange={onGameSelected}
       autoHighlight

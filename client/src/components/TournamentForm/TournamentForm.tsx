@@ -58,8 +58,9 @@ const TournamentForm: React.FC = () => {
     setFormData({ ...formData, eventId: value.id });
   };
 
-  const handleTeamToggle = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
-    if (checked) {
+  // TODO: Fix this; numPlayersPerTeam and maxSubstitutes are not updating correctly
+  const handleTeamToggle = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.checked) {
       // Switching to team tournament
       setFormData({ ...formData, numPlayersPerTeam: 2 });
       setFormData({ ...formData, maxSubstitutes: 0 });
@@ -69,6 +70,14 @@ const TournamentForm: React.FC = () => {
       setFormData({ ...formData, numPlayersPerTeam: 1 });
       setFormData({ ...formData, maxSubstitutes: 0 });
       setFormData({ ...formData, isTeamTournament: false });
+    }
+  };
+
+  const handlePublishedToggle = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.checked) {
+      setFormData({ ...formData, isPublished: true });
+    } else {
+      setFormData({ ...formData, isPublished: false });
     }
   };
 
@@ -103,174 +112,183 @@ const TournamentForm: React.FC = () => {
   };
 
   return (
-    <Box component="form" noValidate autoComplete="off" sx={{ mt: 2 }}>
-      <Typography variant="h5" gutterBottom>
-        Turnier erstellen
-      </Typography>
-      <Grid container spacing={2}>
-        <Grid size={{ xs: 12 }}>
-          <TextField
-            fullWidth
-            label="Name"
-            value={formData.name}
-            onChange={(e) => {
-              setFormData({ ...formData, name: e.target.value });
-            }}
-          />
-        </Grid>
-        <Grid size={{ xs: 12 }}>
-          <Events onEventSelected={handleEventChange} />
-        </Grid>
-        <Grid size={{ xs: 12 }}>
-          <Games onGameSelected={handleGameChange} />
-        </Grid>
-        <Grid size={{ xs: 12 }}>
-          <Autocomplete
-            freeSolo
-            options={existingTournamentCategories}
-            value={formData.category}
-            onInputChange={(_, newValue) => setFormData({ ...formData, category: newValue })}
-            renderInput={(params) => <TextField {...params} label="Kategorie" />}
-          />
-        </Grid>
-        <Grid size={{ xs: 12 }}>
-          <TextField
-            fullWidth
-            label="Registrierungsgruppe"
-            value={formData.registrationGroup}
-            onChange={(e) => setFormData({ ...formData, registrationGroup: e.target.value })}
-          />
-        </Grid>
-        <Grid size={{ xs: 12 }}>
-          <TextField
-            fullWidth
-            label="Briefing-Zeitpunkt"
-            type="datetime-local"
-            value={formData.briefingTime}
-            slotProps={{
-              inputLabel: {
-                shrink: true,
-              },
-            }}
-            onChange={(e) => setFormData({ ...formData, briefingTime: e.target.value })}
-          />
-        </Grid>
-        <Grid size={{ xs: 12 }}>
-          {/* Checkbox to toggle between solo and team tournament */}
-          <Box display="flex" alignItems="center">
-            <FormControlLabel
-              control={<Checkbox checked={formData.isTeamTournament} onChange={handleTeamToggle} />}
-              label="Team Turnier"
+    <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+      <Box
+        component="form"
+        noValidate
+        autoComplete="off"
+        sx={{
+          mt: 2,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          margin: '1em 2em',
+          width: { xs: '100%', sm: '75%', md: '50%' },
+        }}
+      >
+        <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+          <Typography variant="h4" gutterBottom>
+            Turnier erstellen
+          </Typography>
+        </Box>
+        <Grid container spacing={2}>
+          <Grid size={{ xs: 12 }}>
+            <TextField
+              fullWidth
+              label="Name"
+              value={formData.name}
+              onChange={(e) => {
+                setFormData({ ...formData, name: e.target.value });
+              }}
             />
-          </Box>
-        </Grid>
-        {formData.isTeamTournament && (
-          <>
+          </Grid>
+          <Grid container spacing={2} size={{ xs: 12 }}>
             <Grid size={{ xs: 12, sm: 6 }}>
-              <TextField
-                fullWidth
-                label="Spieler pro Team"
-                type="number"
-                slotProps={{ htmlInput: { min: 2, max: 99 } }}
-                value={formData.numPlayersPerTeam}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    numPlayersPerTeam: +e.target.value,
-                  })
-                }
-              />
+              <Events onEventSelected={handleEventChange} />
             </Grid>
             <Grid size={{ xs: 12, sm: 6 }}>
-              <TextField
-                fullWidth
-                label="Max. Ersatzspieler"
-                type="number"
-                slotProps={{ htmlInput: { min: 0, max: 99 } }}
-                value={formData.maxSubstitutes}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    maxSubstitutes: +e.target.value,
-                  })
-                }
-              />
+              <Games onGameSelected={handleGameChange} />
             </Grid>
-          </>
-        )}
-        <Grid size={{ xs: 12, sm: 4 }}>
-          <TextField
-            fullWidth
-            label="Preis (1. Platz)"
-            value={formData.prize1}
-            onChange={(e) => setFormData({ ...formData, prize1: e.target.value })}
-          />
-        </Grid>
-        <Grid size={{ xs: 12, sm: 4 }}>
-          <TextField
-            fullWidth
-            label="Preis (2. Platz)"
-            value={formData.prize2}
-            onChange={(e) => setFormData({ ...formData, prize2: e.target.value })}
-          />
-        </Grid>
-        <Grid size={{ xs: 12, sm: 4 }}>
-          <TextField
-            fullWidth
-            label="Preis (3. Platz)"
-            value={formData.prize3}
-            onChange={(e) => setFormData({ ...formData, prize3: e.target.value })}
-          />
-        </Grid>
-        <Grid size={{ xs: 12, sm: 4 }}>
-          <TextField
-            fullWidth
-            label="Min. Teilnehmer"
-            type="number"
-            value={formData.minParticipants}
-            onChange={(e) => setFormData({ ...formData, minParticipants: +e.target.value })}
-          />
-        </Grid>
-        <Grid size={{ xs: 12, sm: 4 }}>
-          <TextField
-            fullWidth
-            label="Max. Teilnehmer"
-            type="number"
-            value={formData.maxParticipants}
-            onChange={(e) => setFormData({ ...formData, maxParticipants: +e.target.value })}
-          />
-        </Grid>
-        <Grid size={{ xs: 12 }}>
-          <TextField
-            fullWidth
-            label="Regeln"
-            multiline
-            minRows={3}
-            value={formData.rules}
-            onChange={(e) => setFormData({ ...formData, rules: e.target.value })}
-          />
-        </Grid>
-        <Grid size={{ xs: 12 }}>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={formData.isPublished}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    isPublished: Boolean(e.target.value),
-                  })
-                }
+          </Grid>
+          <Grid size={{ xs: 12, sm: 6 }}>
+            <Autocomplete
+              freeSolo
+              options={existingTournamentCategories}
+              value={formData.category}
+              onInputChange={(_, newValue) => setFormData({ ...formData, category: newValue })}
+              renderInput={(params) => <TextField {...params} label="Kategorie" />}
+            />
+          </Grid>
+          <Grid size={{ xs: 12, sm: 6 }}>
+            <TextField
+              fullWidth
+              label="Registrierungsgruppe"
+              value={formData.registrationGroup}
+              onChange={(e) => setFormData({ ...formData, registrationGroup: e.target.value })}
+            />
+          </Grid>
+
+          <Grid size={{ xs: 12 }}>
+            {/* Checkbox to toggle between solo and team tournament */}
+            <Box display="flex" alignItems="center">
+              <FormControlLabel
+                control={<Checkbox checked={formData.isTeamTournament} onChange={handleTeamToggle} />}
+                label="Team Turnier"
               />
-            }
-            label="Veröffentlicht"
-          />
+            </Box>
+          </Grid>
+          {formData.isTeamTournament && (
+            <>
+              <Grid size={{ xs: 12, sm: 6 }}>
+                <TextField
+                  fullWidth
+                  label="Spieler pro Team"
+                  type="number"
+                  slotProps={{ htmlInput: { min: 2, max: 99 } }}
+                  value={formData.numPlayersPerTeam}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      numPlayersPerTeam: Number(e.target.value),
+                    })
+                  }
+                />
+              </Grid>
+              <Grid size={{ xs: 12, sm: 6 }}>
+                <TextField
+                  fullWidth
+                  label="Max. Ersatzspieler"
+                  type="number"
+                  slotProps={{ htmlInput: { min: 0, max: 99 } }}
+                  value={formData.maxSubstitutes}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      maxSubstitutes: Number(e.target.value),
+                    })
+                  }
+                />
+              </Grid>
+            </>
+          )}
+          <Grid size={{ xs: 12, sm: 4 }}>
+            <TextField
+              fullWidth
+              label="Preis (1. Platz)"
+              value={formData.prize1}
+              onChange={(e) => setFormData({ ...formData, prize1: e.target.value })}
+            />
+          </Grid>
+          <Grid size={{ xs: 12, sm: 4 }}>
+            <TextField
+              fullWidth
+              label="Preis (2. Platz)"
+              value={formData.prize2}
+              onChange={(e) => setFormData({ ...formData, prize2: e.target.value })}
+            />
+          </Grid>
+          <Grid size={{ xs: 12, sm: 4 }}>
+            <TextField
+              fullWidth
+              label="Preis (3. Platz)"
+              value={formData.prize3}
+              onChange={(e) => setFormData({ ...formData, prize3: e.target.value })}
+            />
+          </Grid>
+          <Grid size={{ xs: 12, sm: 4 }}>
+            <TextField
+              fullWidth
+              label="Min. Teilnehmer"
+              type="number"
+              value={formData.minParticipants}
+              onChange={(e) => setFormData({ ...formData, minParticipants: Number(e.target.value) })}
+            />
+          </Grid>
+          <Grid size={{ xs: 12, sm: 4 }}>
+            <TextField
+              fullWidth
+              label="Max. Teilnehmer"
+              type="number"
+              value={formData.maxParticipants}
+              onChange={(e) => setFormData({ ...formData, maxParticipants: Number(e.target.value) })}
+            />
+          </Grid>
+          <Grid size={{ xs: 12, sm: 4 }}>
+            <TextField
+              fullWidth
+              label="Briefing-Zeitpunkt"
+              type="datetime-local"
+              value={formData.briefingTime}
+              slotProps={{
+                inputLabel: {
+                  shrink: true,
+                },
+              }}
+              onChange={(e) => setFormData({ ...formData, briefingTime: e.target.value })}
+            />
+          </Grid>
+          <Grid size={{ xs: 12 }}>
+            <TextField
+              fullWidth
+              label="Regeln"
+              multiline
+              minRows={3}
+              value={formData.rules}
+              onChange={(e) => setFormData({ ...formData, rules: e.target.value })}
+            />
+          </Grid>
+          <Grid size={{ xs: 12 }}>
+            <FormControlLabel
+              control={<Checkbox checked={formData.isPublished} onChange={handlePublishedToggle} />}
+              label="Veröffentlicht"
+            />
+          </Grid>
         </Grid>
-      </Grid>
-      <Box sx={{ mt: 3, display: 'flex', gap: 2 }}>
-        <Button variant="contained" color="primary" onClick={handleCreateTournament}>
-          Turnier anlegen
-        </Button>
+        <Box sx={{ mt: 3, display: 'flex', justifyContent: 'center', gap: 2 }}>
+          <Button variant="contained" color="primary" onClick={handleCreateTournament}>
+            Turnier erstellen
+          </Button>
+        </Box>
       </Box>
     </Box>
   );
