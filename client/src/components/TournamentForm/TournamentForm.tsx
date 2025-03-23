@@ -8,22 +8,14 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import React, { useState } from 'react';
-import TournamentFormState from './TournamentFormState';
-import { CreateTournamentInput, useCreateTournamentMutation } from '../../generated/graphql';
-import { Games } from '../GameSelectionComponent';
-import { Events } from '../EventSelectionComponent';
-import { useNavigate } from 'react-router-dom';
-
-interface TournamentCreateFormProps {
-  formState: TournamentFormState;
-  onFieldChange: (field: keyof CreateTournamentInput, value: string | number | boolean) => void;
-  onSave: () => void;
-  categories: string[];
-}
+import React, {useState} from 'react';
+import {useCreateTournamentMutation} from '../../generated/graphql';
+import EventSelectionComponent from '../EventSelectionComponent';
+import {useNavigate} from 'react-router-dom';
+import GameSelectionComponent from '../GameSelectionComponent';
 
 /**
- * Tournament editing form allowing to update tournament details.
+ * Tournament form allowing to create or update tournament details.
  */
 const TournamentForm: React.FC = () => {
   const navigate = useNavigate();
@@ -47,30 +39,57 @@ const TournamentForm: React.FC = () => {
     isPublished: false,
     isTeamTournament: false,
   });
+  const [errors, setErrors] = useState({ event: '', game: '' });
+  const [touched, setTouched] = useState({ event: false, game: false });
 
   const existingTournamentCategories: string[] = ['Pro', 'Comp', 'Fun'];
 
   const handleGameChange = (e: React.SyntheticEvent, value: any | null) => {
-    setFormData({ ...formData, gameId: value.id });
+    if (value) {
+      setFormData({ ...formData, gameId: value.id });
+      validateField('game', value.id);
+    } else {
+      setFormData({ ...formData, gameId: 0 });
+      validateField('game', 0);
+    }
+  };
+
+  const handleGameBlur = () => {
+    setTouched((prev) => ({ ...prev, game: true }));
+    validateField('game', formData.gameId);
   };
 
   const handleEventChange = (e: React.SyntheticEvent, value: any | null) => {
-    setFormData({ ...formData, eventId: value.id });
+    if (value) {
+      setFormData({ ...formData, eventId: value.id });
+      validateField('event', value.id);
+    } else {
+      setFormData({ ...formData, eventId: 0 });
+      validateField('event', 0);
+    }
   };
 
-  // TODO: Fix this; numPlayersPerTeam and maxSubstitutes are not updating correctly
-  const handleTeamToggle = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.checked) {
-      // Switching to team tournament
-      setFormData({ ...formData, numPlayersPerTeam: 2 });
-      setFormData({ ...formData, maxSubstitutes: 0 });
-      setFormData({ ...formData, isTeamTournament: true });
+  const handleEventBlur = () => {
+    setTouched((prev) => ({ ...prev, event: true }));
+    validateField('event', formData.eventId);
+  };
+
+  // Make sure that the id of Game and Event are not 0 anymore. This would lead to a DB constraint violation.
+  const validateField = (name: string, value: any) => {
+    if (value === 0) {
+      setErrors((prev) => ({ ...prev, [name]: 'Dies ist ein Pflichtfeld' }));
     } else {
-      // Switching to solo tournament
-      setFormData({ ...formData, numPlayersPerTeam: 1 });
-      setFormData({ ...formData, maxSubstitutes: 0 });
-      setFormData({ ...formData, isTeamTournament: false });
+      setErrors((prev) => ({ ...prev, [name]: '' }));
     }
+  };
+
+  const handleTeamToggle = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData((prev) => ({
+      ...prev,
+      numPlayersPerTeam: event.target.checked ? 2 : 1,
+      maxSubstitutes: 0,
+      isTeamTournament: event.target.checked,
+    }));
   };
 
   const handlePublishedToggle = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -81,35 +100,50 @@ const TournamentForm: React.FC = () => {
     }
   };
 
-  const handleCreateTournament = async () => {
-    try {
-      const result = await createTournament({
-        variables: {
-          data: {
-            name: formData.name,
-            eventId: formData.eventId,
-            gameId: formData.gameId,
-            category: formData.category,
-            registrationGroup: formData.registrationGroup,
-            rules: formData.rules,
-            prize1: formData.prize1,
-            prize2: formData.prize2,
-            prize3: formData.prize3,
-            numPlayersPerTeam: formData.numPlayersPerTeam,
-            maxSubstitutes: formData.maxSubstitutes,
-            minParticipants: formData.minParticipants,
-            maxParticipants: formData.maxParticipants,
-            briefingTime: formData.briefingTime,
-            isPublished: formData.isPublished,
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    validateField('event', formData.eventId);
+    validateField('game', formData.gameId);
+
+    if (!isEventFormError() && !isGameFormError()) {
+      console.log('no errors');
+      try {
+        const result = await createTournament({
+          variables: {
+            data: {
+              name: formData.name,
+              eventId: formData.eventId,
+              gameId: formData.gameId,
+              category: formData.category,
+              registrationGroup: formData.registrationGroup,
+              rules: formData.rules,
+              prize1: formData.prize1,
+              prize2: formData.prize2,
+              prize3: formData.prize3,
+              numPlayersPerTeam: formData.numPlayersPerTeam,
+              maxSubstitutes: formData.maxSubstitutes,
+              minParticipants: formData.minParticipants,
+              maxParticipants: formData.maxParticipants,
+              briefingTime: formData.briefingTime,
+              isPublished: formData.isPublished,
+            },
           },
-        },
-      });
-      alert('Turnier wurde erfolgreich angelegt: ' + result);
-      navigate('/tournaments');
-    } catch (err) {
-      console.error('Fehler beim Erstellen eines neuen Turniers:', err);
+        });
+        alert('Turnier wurde erfolgreich angelegt: ' + result.data);
+        navigate('/tournaments');
+      } catch (err) {
+        console.error('Fehler beim Erstellen eines neuen Turniers:', err);
+      }
     }
   };
+
+  function isEventFormError() {
+    return !!errors.event || (!!errors.event && touched.event);
+  }
+
+  function isGameFormError() {
+    return !!errors.game || (!!errors.game && touched.game);
+  }
 
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -144,10 +178,22 @@ const TournamentForm: React.FC = () => {
           </Grid>
           <Grid container spacing={2} size={{ xs: 12 }}>
             <Grid size={{ xs: 12, sm: 6 }}>
-              <Events onEventSelected={handleEventChange} />
+              <EventSelectionComponent
+                onChange={handleEventChange}
+                onBlur={handleEventBlur}
+                err={isEventFormError()}
+                helperText={isEventFormError() ? errors.event : ''}
+                required={true}
+              />
             </Grid>
             <Grid size={{ xs: 12, sm: 6 }}>
-              <Games onGameSelected={handleGameChange} />
+              <GameSelectionComponent
+                onChange={handleGameChange}
+                onBlur={handleGameBlur}
+                err={isGameFormError()}
+                helperText={isGameFormError() ? errors.game : ''}
+                required={true}
+              />
             </Grid>
           </Grid>
           <Grid size={{ xs: 12, sm: 6 }}>
@@ -285,7 +331,7 @@ const TournamentForm: React.FC = () => {
           </Grid>
         </Grid>
         <Box sx={{ mt: 3, display: 'flex', justifyContent: 'center', gap: 2 }}>
-          <Button variant="contained" color="primary" onClick={handleCreateTournament}>
+          <Button variant="contained" color="primary" onClick={handleSubmit}>
             Turnier erstellen
           </Button>
         </Box>

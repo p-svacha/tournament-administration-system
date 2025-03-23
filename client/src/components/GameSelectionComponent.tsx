@@ -2,11 +2,21 @@ import { useGetGamesQuery } from '../generated/graphql';
 import { Autocomplete, Box, TextField, Typography } from '@mui/material';
 import React from 'react';
 
-interface GamesProps {
-  onGameSelected: (e: React.SyntheticEvent, value: any | null) => void;
+interface GameSelectionProps {
+  onChange: (e: React.SyntheticEvent, value: any | null) => void;
+  err?: boolean;
+  helperText?: string;
+  onBlur?: () => void;
+  required: boolean;
 }
 
-export function Games({ onGameSelected }: GamesProps) {
+const GameSelectionComponent: React.FC<GameSelectionProps> = ({
+  onChange,
+  err = false,
+  helperText = '',
+  onBlur,
+  required = false,
+}) => {
   const { loading, error, data } = useGetGamesQuery();
 
   if (loading) return <Typography>Loading...</Typography>;
@@ -15,9 +25,10 @@ export function Games({ onGameSelected }: GamesProps) {
 
   return (
     <Autocomplete
-      id="country-select-demo"
+      id="game-selection"
       options={data!.games}
-      onChange={onGameSelected}
+      onChange={onChange}
+      onBlur={onBlur}
       autoHighlight
       getOptionLabel={(option) => option.name}
       renderOption={(props, option) => {
@@ -33,7 +44,9 @@ export function Games({ onGameSelected }: GamesProps) {
         <TextField
           {...params}
           label="Spiel"
-          required
+          required={required}
+          error={err}
+          helperText={helperText}
           slotProps={{
             htmlInput: {
               ...params.inputProps,
@@ -44,4 +57,6 @@ export function Games({ onGameSelected }: GamesProps) {
       )}
     />
   );
-}
+};
+
+export default GameSelectionComponent;
