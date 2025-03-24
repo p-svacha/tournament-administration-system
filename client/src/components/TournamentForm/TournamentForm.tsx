@@ -8,36 +8,44 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import React, {useState} from 'react';
-import {useCreateTournamentMutation} from '../../generated/graphql';
+import React, { useState } from 'react';
+import { useCreateTournamentMutation } from '../../generated/graphql';
 import EventSelectionComponent from '../EventSelectionComponent';
-import {useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import GameSelectionComponent from '../GameSelectionComponent';
+import TournamentFormState from './TournamentFormState';
+
+interface TournamentFormProps {
+  tournamentId?: number;
+  existingData?: TournamentFormState;
+  handleSave?: () => void;
+  disableTeamToggle?: boolean;
+}
 
 /**
  * Tournament form allowing to create or update tournament details.
  */
-const TournamentForm: React.FC = () => {
+const TournamentForm: React.FC<TournamentFormProps> = (props: TournamentFormProps) => {
   const navigate = useNavigate();
   const [createTournament] = useCreateTournamentMutation();
 
   const [formData, setFormData] = useState({
-    name: '',
-    eventId: 0,
-    gameId: 0,
-    category: '',
-    registrationGroup: '',
-    rules: '',
-    prize1: '',
-    prize2: '',
-    prize3: '',
-    numPlayersPerTeam: 1,
-    maxSubstitutes: 0,
-    minParticipants: 8,
-    maxParticipants: 64,
-    briefingTime: '',
-    isPublished: false,
-    isTeamTournament: false,
+    name: props.existingData?.name || '',
+    eventId: props.existingData?.eventId || 0,
+    gameId: props.existingData?.gameId || 0,
+    category: props.existingData?.category || '',
+    registrationGroup: props.existingData?.registrationGroup || '',
+    rules: props.existingData?.rules || '',
+    prize1: props.existingData?.prize1 || '',
+    prize2: props.existingData?.prize2 || '',
+    prize3: props.existingData?.prize3 || '',
+    numPlayersPerTeam: props.existingData?.numPlayersPerTeam || 1,
+    maxSubstitutes: props.existingData?.maxSubstitutes || 0,
+    minParticipants: props.existingData?.maxParticipants || 8,
+    maxParticipants: props.existingData?.maxParticipants || 64,
+    briefingTime: props.existingData?.briefingTime || '',
+    isPublished: props.existingData?.isPublished || false,
+    isTeamTournament: props.existingData?.numPlayersPerTeam ? props.existingData?.numPlayersPerTeam > 1 : false,
   });
   const [errors, setErrors] = useState({ event: '', game: '' });
   const [touched, setTouched] = useState({ event: false, game: false });
@@ -106,9 +114,8 @@ const TournamentForm: React.FC = () => {
     validateField('game', formData.gameId);
 
     if (!isEventFormError() && !isGameFormError()) {
-      console.log('no errors');
       try {
-        const result = await createTournament({
+        await createTournament({
           variables: {
             data: {
               name: formData.name,
@@ -129,7 +136,7 @@ const TournamentForm: React.FC = () => {
             },
           },
         });
-        alert('Turnier wurde erfolgreich angelegt: ' + result.data);
+        alert('Turnier wurde erfolgreich angelegt.');
         navigate('/tournaments');
       } catch (err) {
         console.error('Fehler beim Erstellen eines neuen Turniers:', err);
@@ -162,7 +169,7 @@ const TournamentForm: React.FC = () => {
       >
         <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
           <Typography variant="h4" gutterBottom>
-            Turnier erstellen
+            Turnier{props.tournamentId ? ' bearbeiten' : ' erstellen'}
           </Typography>
         </Box>
         <Grid container spacing={2}>
@@ -218,9 +225,21 @@ const TournamentForm: React.FC = () => {
             {/* Checkbox to toggle between solo and team tournament */}
             <Box display="flex" alignItems="center">
               <FormControlLabel
-                control={<Checkbox checked={formData.isTeamTournament} onChange={handleTeamToggle} />}
+                control={
+                  <Checkbox
+                    checked={formData.isTeamTournament}
+                    onChange={handleTeamToggle}
+                    disabled={props.disableTeamToggle}
+                  />
+                }
                 label="Team Turnier"
               />
+              {/* Warning text if checkbox is disabled */}
+              {props.disableTeamToggle && (
+                <Typography variant="body2" color="error" sx={{ ml: 2 }}>
+                  Änderung nicht möglich, da bereits Teilnehmer registriert sind.
+                </Typography>
+              )}
             </Box>
           </Grid>
           {formData.isTeamTournament && (
@@ -332,7 +351,7 @@ const TournamentForm: React.FC = () => {
         </Grid>
         <Box sx={{ mt: 3, display: 'flex', justifyContent: 'center', gap: 2 }}>
           <Button variant="contained" color="primary" onClick={handleSubmit}>
-            Turnier erstellen
+            {props.tournamentId ? 'Speichern' : 'Turnier erstellen'}
           </Button>
         </Box>
       </Box>
