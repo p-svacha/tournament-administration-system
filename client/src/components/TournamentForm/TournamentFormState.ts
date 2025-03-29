@@ -1,7 +1,7 @@
 export default interface TournamentFormState {
   name: string;
-  eventId: number;
-  gameId: number;
+  event: Event;
+  game: Game;
   category?: string;
   registrationGroup?: string;
   rules?: string;
@@ -14,4 +14,16 @@ export default interface TournamentFormState {
   maxParticipants?: number;
   briefingTime?: Date;
   isPublished: boolean;
+  isTeamTournament?: boolean;
+}
+
+export interface Event {
+  id: number;
+  name: string;
+}
+
+export interface Game {
+  id: number;
+  name: string;
+  logoUrl: string;
 }
