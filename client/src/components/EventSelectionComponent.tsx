@@ -1,9 +1,11 @@
 import React from 'react';
 import { Autocomplete, Box, TextField, Typography } from '@mui/material';
 import { useGetEventsQuery } from '../generated/graphql';
+import { Event } from './TournamentForm/TournamentFormState';
 
 interface EventSelectionProps {
   onChange: (e: React.SyntheticEvent, value: any | null) => void;
+  initialValue?: Event;
   err?: boolean;
   helperText?: string;
   onBlur?: () => void;
@@ -12,6 +14,7 @@ interface EventSelectionProps {
 
 const EventSelectionComponent: React.FC<EventSelectionProps> = ({
   onChange,
+  initialValue = { id: 0, name: '' },
   err = false,
   helperText = '',
   onBlur,
@@ -27,6 +30,7 @@ const EventSelectionComponent: React.FC<EventSelectionProps> = ({
     <Autocomplete
       id="event-selection"
       options={data!.events}
+      defaultValue={initialValue}
       onChange={onChange}
       onBlur={onBlur}
       autoHighlight

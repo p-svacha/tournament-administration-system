@@ -31,8 +31,8 @@ const TournamentForm: React.FC<TournamentFormProps> = (props: TournamentFormProp
 
   const [formData, setFormData] = useState({
     name: props.existingData?.name || '',
-    eventId: props.existingData?.eventId || 0,
-    gameId: props.existingData?.gameId || 0,
+    event: props.existingData?.event || { id: 0, name: '' },
+    game: props.existingData?.game || { id: 0, name: '', logoUrl: '' },
     category: props.existingData?.category || '',
     registrationGroup: props.existingData?.registrationGroup || '',
     rules: props.existingData?.rules || '',
@@ -54,32 +54,32 @@ const TournamentForm: React.FC<TournamentFormProps> = (props: TournamentFormProp
 
   const handleGameChange = (e: React.SyntheticEvent, value: any | null) => {
     if (value) {
-      setFormData({ ...formData, gameId: value.id });
+      setFormData({ ...formData, game: value });
       validateField('game', value.id);
     } else {
-      setFormData({ ...formData, gameId: 0 });
+      setFormData({ ...formData, game: { id: 0, name: '', logoUrl: '' } });
       validateField('game', 0);
     }
   };
 
   const handleGameBlur = () => {
     setTouched((prev) => ({ ...prev, game: true }));
-    validateField('game', formData.gameId);
+    validateField('game', formData.game.id);
   };
 
   const handleEventChange = (e: React.SyntheticEvent, value: any | null) => {
     if (value) {
-      setFormData({ ...formData, eventId: value.id });
+      setFormData({ ...formData, event: value });
       validateField('event', value.id);
     } else {
-      setFormData({ ...formData, eventId: 0 });
+      setFormData({ ...formData, event: { id: 0, name: '' } });
       validateField('event', 0);
     }
   };
 
   const handleEventBlur = () => {
     setTouched((prev) => ({ ...prev, event: true }));
-    validateField('event', formData.eventId);
+    validateField('event', formData.event.id);
   };
 
   // Make sure that the id of Game and Event are not 0 anymore. This would lead to a DB constraint violation.
@@ -110,8 +110,8 @@ const TournamentForm: React.FC<TournamentFormProps> = (props: TournamentFormProp
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    validateField('event', formData.eventId);
-    validateField('game', formData.gameId);
+    validateField('event', formData.event.id);
+    validateField('game', formData.game.id);
 
     if (!isEventFormError() && !isGameFormError()) {
       try {
@@ -119,8 +119,8 @@ const TournamentForm: React.FC<TournamentFormProps> = (props: TournamentFormProp
           variables: {
             data: {
               name: formData.name,
-              eventId: formData.eventId,
-              gameId: formData.gameId,
+              eventId: formData.event.id,
+              gameId: formData.game.id,
               category: formData.category,
               registrationGroup: formData.registrationGroup,
               rules: formData.rules,
@@ -195,6 +195,7 @@ const TournamentForm: React.FC<TournamentFormProps> = (props: TournamentFormProp
             <Grid size={{ xs: 12, sm: 6 }}>
               <EventSelectionComponent
                 onChange={handleEventChange}
+                initialValue={props.existingData?.event}
                 onBlur={handleEventBlur}
                 err={isEventFormError()}
                 helperText={isEventFormError() ? errors.event : ''}
@@ -204,6 +205,7 @@ const TournamentForm: React.FC<TournamentFormProps> = (props: TournamentFormProp
             <Grid size={{ xs: 12, sm: 6 }}>
               <GameSelectionComponent
                 onChange={handleGameChange}
+                initialValue={props.existingData?.game}
                 onBlur={handleGameBlur}
                 err={isGameFormError()}
                 helperText={isGameFormError() ? errors.game : ''}

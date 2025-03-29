@@ -1,9 +1,11 @@
 import { useGetGamesQuery } from '../generated/graphql';
 import { Autocomplete, Box, TextField, Typography } from '@mui/material';
 import React from 'react';
+import { Game } from './TournamentForm/TournamentFormState';
 
 interface GameSelectionProps {
   onChange: (e: React.SyntheticEvent, value: any | null) => void;
+  initialValue?: Game;
   err?: boolean;
   helperText?: string;
   onBlur?: () => void;
@@ -12,6 +14,7 @@ interface GameSelectionProps {
 
 const GameSelectionComponent: React.FC<GameSelectionProps> = ({
   onChange,
+  initialValue = { id: 0, name: '', logoUrl: '' },
   err = false,
   helperText = '',
   onBlur,
@@ -27,6 +30,7 @@ const GameSelectionComponent: React.FC<GameSelectionProps> = ({
     <Autocomplete
       id="game-selection"
       options={data!.games}
+      defaultValue={initialValue}
       onChange={onChange}
       onBlur={onBlur}
       autoHighlight
