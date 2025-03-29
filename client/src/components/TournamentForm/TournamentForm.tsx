@@ -43,7 +43,7 @@ const TournamentForm: React.FC<TournamentFormProps> = (props: TournamentFormProp
     maxSubstitutes: props.existingData?.maxSubstitutes || 0,
     minParticipants: props.existingData?.maxParticipants || 8,
     maxParticipants: props.existingData?.maxParticipants || 64,
-    briefingTime: props.existingData?.briefingTime || '',
+    briefingTime: convertDateString(),
     isPublished: props.existingData?.isPublished || false,
     isTeamTournament: props.existingData?.numPlayersPerTeam ? props.existingData?.numPlayersPerTeam > 1 : false,
   });
@@ -144,6 +144,16 @@ const TournamentForm: React.FC<TournamentFormProps> = (props: TournamentFormProp
     }
   };
 
+  function convertDateString() {
+    if (props.existingData?.briefingTime) {
+      return new Date(new Date(props.existingData.briefingTime).getTime() - new Date().getTimezoneOffset() * 60000)
+        .toISOString()
+        .slice(0, 16);
+    } else {
+      return '';
+    }
+  }
+
   function isEventFormError() {
     return !!errors.event || (!!errors.event && touched.event);
   }
@@ -163,8 +173,6 @@ const TournamentForm: React.FC<TournamentFormProps> = (props: TournamentFormProp
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
-          margin: '1em 2em',
-          width: { xs: '100%', sm: '75%', md: '50%' },
         }}
       >
         <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
