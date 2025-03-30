@@ -68,6 +68,7 @@ const TournamentDetailsTab: React.FC = () => {
     createData('Kategorie', tournament.category),
     createData('Turnieradmins', tournament.admins.map((admin) => admin.user.name).join(', ')),
     createData('Anzahl Spieler pro Team', tournament.numPlayersPerTeam),
+    createData('Maximale Anzahl Ersatzspieler', tournament.maxSubstitutes),
     createData('Minimale Anzahl Teilnehmer' + displayTeamOrPlayer(), tournament.minParticipants),
     createData('Maximale Anzahl Teilnehmer' + displayTeamOrPlayer(), tournament.maxParticipants),
     createData('Briefing', tournament.briefingTime ? new Date(tournament.briefingTime).toLocaleString() : '-'),

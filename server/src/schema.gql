@@ -168,22 +168,36 @@ input CreateTournamentInput {
   name: String!
   eventId: Int!
   gameId: Int!
+  category: String!
+  registrationGroup: String!
+  rules: String!
+  prize1: String!
+  prize2: String!
+  prize3: String!
+  numPlayersPerTeam: Float!
+  maxSubstitutes: Float!
+  minParticipants: Float!
+  maxParticipants: Float!
+  briefingTime: DateTime!
+  isPublished: Boolean!
 }
 
 input UpdateTournamentInput {
   name: String
-  isPublished: Boolean
-  rules: String
+  eventId: Int!
+  gameId: Int!
   category: String
   registrationGroup: String
+  rules: String!
   prize1: String
   prize2: String
   prize3: String
-  briefingTime: DateTime
   numPlayersPerTeam: Int
   maxSubstitutes: Int
   minParticipants: Int
   maxParticipants: Int
+  briefingTime: DateTime
+  isPublished: Boolean
 }
 
 input CreateUserInput {

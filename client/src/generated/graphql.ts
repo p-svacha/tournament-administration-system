@@ -28,9 +28,21 @@ export type CreateGameInput = {
 };
 
 export type CreateTournamentInput = {
+  briefingTime: Scalars['DateTime']['input'];
+  category: Scalars['String']['input'];
   eventId: Scalars['Int']['input'];
   gameId: Scalars['Int']['input'];
+  isPublished: Scalars['Boolean']['input'];
+  maxParticipants: Scalars['Float']['input'];
+  maxSubstitutes: Scalars['Float']['input'];
+  minParticipants: Scalars['Float']['input'];
   name: Scalars['String']['input'];
+  numPlayersPerTeam: Scalars['Float']['input'];
+  prize1: Scalars['String']['input'];
+  prize2: Scalars['String']['input'];
+  prize3: Scalars['String']['input'];
+  registrationGroup: Scalars['String']['input'];
+  rules: Scalars['String']['input'];
 };
 
 export type CreateUserInput = {
@@ -333,6 +345,8 @@ export type UpdateTeamInput = {
 export type UpdateTournamentInput = {
   briefingTime?: InputMaybe<Scalars['DateTime']['input']>;
   category?: InputMaybe<Scalars['String']['input']>;
+  eventId: Scalars['Int']['input'];
+  gameId: Scalars['Int']['input'];
   isPublished?: InputMaybe<Scalars['Boolean']['input']>;
   maxParticipants?: InputMaybe<Scalars['Int']['input']>;
   maxSubstitutes?: InputMaybe<Scalars['Int']['input']>;
@@ -343,7 +357,7 @@ export type UpdateTournamentInput = {
   prize2?: InputMaybe<Scalars['String']['input']>;
   prize3?: InputMaybe<Scalars['String']['input']>;
   registrationGroup?: InputMaybe<Scalars['String']['input']>;
-  rules?: InputMaybe<Scalars['String']['input']>;
+  rules: Scalars['String']['input'];
 };
 
 export type UpdateUserInput = {
@@ -422,6 +436,11 @@ export type GetEventsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetEventsQuery = { __typename?: 'Query', events: Array<{ __typename?: 'EventModel', id: number, name: string }> };
 
+export type GetGamesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetGamesQuery = { __typename?: 'Query', games: Array<{ __typename?: 'GameModel', id: number, name: string, logoUrl: string }> };
+
 export type GetEventTournamentCategoriesQueryVariables = Exact<{
   eventId: Scalars['Int']['input'];
 }>;
@@ -434,7 +453,7 @@ export type GetTournamentQueryVariables = Exact<{
 }>;
 
 
-export type GetTournamentQuery = { __typename?: 'Query', tournament?: { __typename?: 'TournamentModel', rules?: string | null, prize1?: string | null, prize2?: string | null, prize3?: string | null, registrationGroup?: string | null, numPlayersPerTeam: number, maxSubstitutes: number, minParticipants: number, maxParticipants?: number | null, briefingTime?: any | null, id: number, name: string, category?: string | null, isPublished: boolean, game: { __typename?: 'GameModel', name: string, logoUrl: string }, event: { __typename?: 'EventModel', id: number, name: string }, participants: Array<{ __typename?: 'TournamentParticipantModel', user?: { __typename?: 'UserModel', id: number, name: string } | null, team?: { __typename?: 'TeamModel', id: number, name: string, members: Array<{ __typename?: 'TeamMemberModel', isTeamCaptain: boolean, user: { __typename?: 'UserModel', id: number, name: string } }> } | null }>, admins: Array<{ __typename?: 'TournamentAdminModel', user: { __typename?: 'UserModel', id: number, name: string } }> } | null };
+export type GetTournamentQuery = { __typename?: 'Query', tournament?: { __typename?: 'TournamentModel', rules?: string | null, prize1?: string | null, prize2?: string | null, prize3?: string | null, registrationGroup?: string | null, numPlayersPerTeam: number, maxSubstitutes: number, minParticipants: number, maxParticipants?: number | null, briefingTime?: any | null, id: number, name: string, category?: string | null, isPublished: boolean, game: { __typename?: 'GameModel', id: number, name: string, logoUrl: string }, event: { __typename?: 'EventModel', id: number, name: string }, participants: Array<{ __typename?: 'TournamentParticipantModel', user?: { __typename?: 'UserModel', id: number, name: string } | null, team?: { __typename?: 'TeamModel', id: number, name: string, members: Array<{ __typename?: 'TeamMemberModel', isTeamCaptain: boolean, user: { __typename?: 'UserModel', id: number, name: string } }> } | null }>, admins: Array<{ __typename?: 'TournamentAdminModel', user: { __typename?: 'UserModel', id: number, name: string } }> } | null };
 
 export type GetTournamentsQueryVariables = Exact<{
   publishedOnly?: InputMaybe<Scalars['Boolean']['input']>;
@@ -772,6 +791,47 @@ export type GetEventsQueryHookResult = ReturnType<typeof useGetEventsQuery>;
 export type GetEventsLazyQueryHookResult = ReturnType<typeof useGetEventsLazyQuery>;
 export type GetEventsSuspenseQueryHookResult = ReturnType<typeof useGetEventsSuspenseQuery>;
 export type GetEventsQueryResult = Apollo.QueryResult<GetEventsQuery, GetEventsQueryVariables>;
+export const GetGamesDocument = gql`
+    query GetGames {
+  games {
+    id
+    name
+    logoUrl
+  }
+}
+    `;
+
+/**
+ * __useGetGamesQuery__
+ *
+ * To run a query within a React component, call `useGetGamesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetGamesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetGamesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetGamesQuery(baseOptions?: Apollo.QueryHookOptions<GetGamesQuery, GetGamesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetGamesQuery, GetGamesQueryVariables>(GetGamesDocument, options);
+      }
+export function useGetGamesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetGamesQuery, GetGamesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetGamesQuery, GetGamesQueryVariables>(GetGamesDocument, options);
+        }
+export function useGetGamesSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetGamesQuery, GetGamesQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetGamesQuery, GetGamesQueryVariables>(GetGamesDocument, options);
+        }
+export type GetGamesQueryHookResult = ReturnType<typeof useGetGamesQuery>;
+export type GetGamesLazyQueryHookResult = ReturnType<typeof useGetGamesLazyQuery>;
+export type GetGamesSuspenseQueryHookResult = ReturnType<typeof useGetGamesSuspenseQuery>;
+export type GetGamesQueryResult = Apollo.QueryResult<GetGamesQuery, GetGamesQueryVariables>;
 export const GetEventTournamentCategoriesDocument = gql`
     query GetEventTournamentCategories($eventId: Int!) {
   tournaments(eventId: $eventId) {
@@ -827,6 +887,7 @@ export const GetTournamentDocument = gql`
     maxParticipants
     briefingTime
     game {
+      id
       name
       logoUrl
     }

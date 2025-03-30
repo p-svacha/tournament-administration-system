@@ -3,19 +3,19 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import client from '../../apollo-client';
 import TournamentAdminManagement from '../../components/TournamentAdminManagement';
-import TournamentEditForm from '../../components/TournamentEditForm/TournamentEditForm';
-import TournamentEditFormState from '../../components/TournamentEditForm/TournamentEditFormState';
+import { Event, Game, TournamentFormState } from '../../components/TournamentForm/TournamentFormState';
 import { useUser } from '../../contexts/UserContext';
 import {
+  GetTournamentQuery,
   useAddTournamentAdminMutation,
   useDeleteTournamentMutation,
-  useGetEventTournamentCategoriesQuery,
   useGetTournamentQuery,
   useGetUsersQuery,
   useRemoveTournamentAdminMutation,
   useUpdateTournamentMutation,
 } from '../../generated/graphql';
 import { isGlobalAdmin } from '../../utils/permissions';
+import TournamentForm from '../../components/TournamentForm/TournamentForm';
 
 const TournamentAdminTab: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -32,13 +32,6 @@ const TournamentAdminTab: React.FC = () => {
     variables: { id: tournamentId },
   });
 
-  const eventId = tournamentData?.tournament?.event.id;
-
-  const { data: categoriesData } = useGetEventTournamentCategoriesQuery({
-    variables: { eventId: eventId! },
-    skip: !eventId, // skip the query until eventId is available
-  });
-
   const { data: usersData } = useGetUsersQuery();
 
   const [updateTournament] = useUpdateTournamentMutation();
@@ -46,7 +39,7 @@ const TournamentAdminTab: React.FC = () => {
   const [addTournamentAdmin] = useAddTournamentAdminMutation();
   const [removeTournamentAdmin] = useRemoveTournamentAdminMutation();
 
-  const [formState, setFormState] = useState<TournamentEditFormState | null>(null);
+  const [formState, setFormState] = useState<TournamentFormState | null>(null);
   const [selectedNewAdmin, setSelectedNewAdmin] = useState<{ id: number; name: string } | null>(null);
 
   // Initialize formState when tournament data is loaded, only if formState is not yet set.
@@ -54,7 +47,10 @@ const TournamentAdminTab: React.FC = () => {
     if (tournamentData && tournamentData.tournament && formState === null) {
       setFormState({
         name: tournamentData.tournament.name,
+        event: tournamentData.tournament.event,
+        game: tournamentData.tournament.game,
         category: tournamentData.tournament.category || '',
+        registrationGroup: tournamentData.tournament.registrationGroup || '',
         rules: tournamentData.tournament.rules || '',
         prize1: tournamentData.tournament.prize1 || '',
         prize2: tournamentData.tournament.prize2 || '',
@@ -63,7 +59,9 @@ const TournamentAdminTab: React.FC = () => {
         maxSubstitutes: tournamentData.tournament.maxSubstitutes,
         minParticipants: tournamentData.tournament.minParticipants || 0,
         maxParticipants: tournamentData.tournament.maxParticipants || 0,
+        briefingTime: convertDateString(tournamentData),
         isPublished: tournamentData.tournament.isPublished,
+        isTeamTournament: tournamentData.tournament.numPlayersPerTeam > 1 || false,
       });
     }
   }, [tournamentData, formState]);
@@ -74,20 +72,27 @@ const TournamentAdminTab: React.FC = () => {
   if (!tournamentData || !tournamentData.tournament)
     return <Typography color="error">Fehler beim Laden der Turnierdaten</Typography>;
 
-  // Get existing tournament categories from save event
-  const existingTournamentCategories: string[] = categoriesData
-    ? categoriesData.tournaments.map((t) => (t.category ? t.category : ''))
-    : [];
-
   // Check if tournament already has participants
   const hasParticipants = tournamentData.tournament.participants.length > 0;
 
-  const handleFieldChange = (field: keyof TournamentEditFormState, value: string | number | boolean) => {
+  const handleFieldChange = (field: keyof TournamentFormState, value: string | number | boolean | Game | Event) => {
     setFormState((prevState) => ({
       ...prevState!,
       [field]: value,
     }));
   };
+
+  function convertDateString(tournamentData: GetTournamentQuery): string {
+    if (tournamentData.tournament?.briefingTime) {
+      return new Date(
+        new Date(tournamentData.tournament.briefingTime).getTime() - new Date().getTimezoneOffset() * 60000,
+      )
+        .toISOString()
+        .slice(0, 16);
+    } else {
+      return '';
+    }
+  }
 
   const handleSave = async () => {
     try {
@@ -96,8 +101,11 @@ const TournamentAdminTab: React.FC = () => {
           id: tournamentId,
           data: {
             name: formState.name,
+            eventId: formState.event.id,
+            gameId: formState.game.id,
             category: formState.category,
-            rules: formState.rules,
+            registrationGroup: formState.registrationGroup,
+            rules: formState.rules ? formState.rules : '',
             prize1: formState.prize1,
             prize2: formState.prize2,
             prize3: formState.prize3,
@@ -105,6 +113,7 @@ const TournamentAdminTab: React.FC = () => {
             maxSubstitutes: formState.maxSubstitutes,
             minParticipants: formState.minParticipants,
             maxParticipants: formState.maxParticipants,
+            briefingTime: formState.briefingTime,
             isPublished: formState.isPublished,
           },
         },
@@ -175,11 +184,11 @@ const TournamentAdminTab: React.FC = () => {
   return (
     <Container>
       {/*Section to edit tournament details*/}
-      <TournamentEditForm
-        formState={formState}
+      <TournamentForm
+        tournamentId={tournamentId}
+        formData={formState}
+        handleSubmit={handleSave}
         onFieldChange={handleFieldChange}
-        onSave={handleSave}
-        categories={existingTournamentCategories}
         disableTeamToggle={hasParticipants}
       />
 

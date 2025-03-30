@@ -15,6 +15,7 @@ query GetTournament($id: Int!)
         briefingTime
         game
         {
+            id
             name
             logoUrl
         }

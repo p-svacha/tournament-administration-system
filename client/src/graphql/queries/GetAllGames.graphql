@@ -1,0 +1,9 @@
+query GetGames
+{
+    games
+    {
+        id
+        name
+        logoUrl
+    }
+}
