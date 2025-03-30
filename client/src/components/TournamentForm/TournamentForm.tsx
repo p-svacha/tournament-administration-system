@@ -82,17 +82,17 @@ const TournamentForm: React.FC<TournamentFormProps> = (props: TournamentFormProp
   };
 
   function isEventFormError() {
-    return !!errors.event || (!!errors.event && touched.event) || props.formData.event.id === 0;
+    return !!errors.event || (!!errors.event && touched.event);
   }
 
   function isGameFormError() {
-    return !!errors.game || (!!errors.game && touched.game) || props.formData.game.id === 0;
+    return !!errors.game || (!!errors.game && touched.game);
   }
 
   function validateFields(): boolean {
     validateField('event', props.formData.event.id);
     validateField('game', props.formData.game.id);
-    return !isEventFormError() && !isGameFormError();
+    return !isEventFormError() && props.formData.event.id !== 0 && !isGameFormError() && props.formData.game.id !== 0;
   }
 
   async function handleSubmit(e: FormEvent) {
