@@ -23,21 +23,19 @@ const TournamentCreationPage: React.FC = () => {
     maxSubstitutes: 0,
     minParticipants: 8,
     maxParticipants: 64,
-    briefingTime: undefined,
+    briefingTime: '',
     isPublished: false,
     isTeamTournament: false,
   });
 
   const handleFieldChange = (field: keyof TournamentFormState, value: string | number | boolean | Game | Event) => {
-    setFormData({
-      ...formData,
+    setFormData((prevData) => ({
+      ...prevData,
       [field]: value,
-    });
+    }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
     try {
       await createTournament({
         variables: {
@@ -68,7 +66,12 @@ const TournamentCreationPage: React.FC = () => {
   };
   return (
     <Container>
-      <TournamentForm formData={formData} handleSubmit={handleSubmit} onFieldChange={handleFieldChange} />
+      <TournamentForm
+        formData={formData}
+        handleSubmit={handleSubmit}
+        onFieldChange={handleFieldChange}
+        disableTeamToggle={false}
+      />
     </Container>
   );
 };

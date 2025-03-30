@@ -70,34 +70,30 @@ const TournamentForm: React.FC<TournamentFormProps> = (props: TournamentFormProp
   };
 
   const handleTeamToggle = (event: React.ChangeEvent<HTMLInputElement>) => {
+    console.log('Checked:', event.target.checked);
     const isTeam = event.target.checked;
-
-    // Use a single batch update to minimize re-renders.
     props.onFieldChange('isTeamTournament', isTeam);
     props.onFieldChange('numPlayersPerTeam', isTeam ? 2 : 1);
     props.onFieldChange('maxSubstitutes', 0);
   };
 
   const handlePublishedToggle = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.checked) {
-      props.onFieldChange('isPublished', true);
-    } else {
-      props.onFieldChange('isPublished', false);
-    }
+    props.onFieldChange('isPublished', event.target.checked);
   };
 
   function isEventFormError() {
-    return !!errors.event || (!!errors.event && touched.event);
+    return !!errors.event || (!!errors.event && touched.event) || props.formData.event.id === 0;
   }
 
   function isGameFormError() {
-    return !!errors.game || (!!errors.game && touched.game);
+    return !!errors.game || (!!errors.game && touched.game) || props.formData.game.id === 0;
   }
 
   function validateFields(): boolean {
     validateField('event', props.formData.event.id);
     validateField('game', props.formData.game.id);
-
+    console.log(!isEventFormError());
+    console.log(!isGameFormError());
     return !isEventFormError() && !isGameFormError();
   }
 
