@@ -6,7 +6,7 @@ import {Field, InputType, Int} from '@nestjs/graphql';
 @InputType()
 export class CreateTournamentInput {
   @Field()
-  name: string;
+  name?: string;
 
   @Field(() => Int)
   eventId: number;
@@ -24,19 +24,19 @@ export class CreateTournamentInput {
   rules?: string;
 
   @Field()
-  prize1: string;
+  prize1?: string;
 
   @Field()
-  prize2: string;
+  prize2?: string;
 
   @Field()
-  prize3: string;
+  prize3?: string;
 
   @Field()
   numPlayersPerTeam: number;
 
   @Field()
-  maxSubstitutes: number;
+  maxSubstitutes?: number;
 
   @Field()
   minParticipants?: number;
@@ -48,5 +48,5 @@ export class CreateTournamentInput {
   briefingTime?: Date;
 
   @Field()
-  isPublished: boolean;
+  isPublished?: boolean;
 }

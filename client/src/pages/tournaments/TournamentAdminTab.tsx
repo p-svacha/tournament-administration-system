@@ -82,7 +82,7 @@ const TournamentAdminTab: React.FC = () => {
     }));
   };
 
-  function convertDateString(tournamentData: GetTournamentQuery) {
+  function convertDateString(tournamentData: GetTournamentQuery): string {
     if (tournamentData.tournament?.briefingTime) {
       return new Date(
         new Date(tournamentData.tournament.briefingTime).getTime() - new Date().getTimezoneOffset() * 60000,
@@ -101,8 +101,11 @@ const TournamentAdminTab: React.FC = () => {
           id: tournamentId,
           data: {
             name: formState.name,
+            eventId: formState.event.id,
+            gameId: formState.game.id,
             category: formState.category,
-            rules: formState.rules,
+            registrationGroup: formState.registrationGroup,
+            rules: formState.rules ? formState.rules : '',
             prize1: formState.prize1,
             prize2: formState.prize2,
             prize3: formState.prize3,
@@ -110,6 +113,7 @@ const TournamentAdminTab: React.FC = () => {
             maxSubstitutes: formState.maxSubstitutes,
             minParticipants: formState.minParticipants,
             maxParticipants: formState.maxParticipants,
+            briefingTime: formState.briefingTime,
             isPublished: formState.isPublished,
           },
         },

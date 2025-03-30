@@ -92,8 +92,6 @@ const TournamentForm: React.FC<TournamentFormProps> = (props: TournamentFormProp
   function validateFields(): boolean {
     validateField('event', props.formData.event.id);
     validateField('game', props.formData.game.id);
-    console.log(!isEventFormError());
-    console.log(!isGameFormError());
     return !isEventFormError() && !isGameFormError();
   }
 

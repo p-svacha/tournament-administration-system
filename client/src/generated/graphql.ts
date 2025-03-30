@@ -345,6 +345,8 @@ export type UpdateTeamInput = {
 export type UpdateTournamentInput = {
   briefingTime?: InputMaybe<Scalars['DateTime']['input']>;
   category?: InputMaybe<Scalars['String']['input']>;
+  eventId: Scalars['Int']['input'];
+  gameId: Scalars['Int']['input'];
   isPublished?: InputMaybe<Scalars['Boolean']['input']>;
   maxParticipants?: InputMaybe<Scalars['Int']['input']>;
   maxSubstitutes?: InputMaybe<Scalars['Int']['input']>;
@@ -355,7 +357,7 @@ export type UpdateTournamentInput = {
   prize2?: InputMaybe<Scalars['String']['input']>;
   prize3?: InputMaybe<Scalars['String']['input']>;
   registrationGroup?: InputMaybe<Scalars['String']['input']>;
-  rules?: InputMaybe<Scalars['String']['input']>;
+  rules: Scalars['String']['input'];
 };
 
 export type UpdateUserInput = {
