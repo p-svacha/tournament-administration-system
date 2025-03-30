@@ -1,4 +1,4 @@
-export default interface TournamentFormState {
+export interface TournamentFormState {
   name: string;
   event: Event;
   game: Game;
@@ -12,7 +12,7 @@ export default interface TournamentFormState {
   maxSubstitutes: number;
   minParticipants?: number;
   maxParticipants?: number;
-  briefingTime?: Date;
+  briefingTime?: string;
   isPublished: boolean;
   isTeamTournament?: boolean;
 }
