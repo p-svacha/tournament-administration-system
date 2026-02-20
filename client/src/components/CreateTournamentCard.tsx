@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, Grid2 as Grid, Card, CardActionArea, CardContent } from '@mui/material';
+import { Card, CardActionArea, CardContent, Grid2 as Grid, Typography } from '@mui/material';
 
 interface CreateTournamentCardProps {
   onCreate: () => void;
@@ -13,7 +13,7 @@ const CreateTournamentCard: React.FC<CreateTournamentCardProps> = (props: Create
   return (
     <>
       <Typography variant="h5" sx={{ mt: 4, mb: 2 }}>
-        Create New
+        Neues Turnier erstellen
       </Typography>
       <Grid container spacing={2}>
         <Grid size={{ xs: 12, sm: 6, md: 4 }}>

@@ -2,11 +2,7 @@ import React from 'react';
 import { Container, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../contexts/UserContext';
-import {
-  TournamentBasicFieldsFragment,
-  useCreateTournamentMutation,
-  useGetTournamentsQuery,
-} from '../generated/graphql';
+import { TournamentBasicFieldsFragment, useGetTournamentsQuery } from '../generated/graphql';
 import { useEvent } from '../contexts/EventContext';
 import TournamentSection from '../components/TournamentSection';
 import { hasTournamentAdminAccess, isGlobalAdmin } from '../utils/permissions';
@@ -16,7 +12,6 @@ const TournamentsPage: React.FC = () => {
   const { currentUser } = useUser();
   const { currentEvent } = useEvent();
   const navigate = useNavigate();
-  const [createTournament] = useCreateTournamentMutation();
 
   // Get data of all tournaments in selected event
   const { loading, error, data, refetch } = useGetTournamentsQuery({
@@ -38,14 +33,17 @@ const TournamentsPage: React.FC = () => {
   });
 
   // Group tournaments by category. If category is missing or empty, use "Uncategorized".
-  const groupedTournaments = filteredTournaments.reduce((acc, tournament) => {
-    const category = tournament.category && tournament.category.trim() !== '' ? tournament.category : 'Uncategorized';
-    if (!acc[category]) {
-      acc[category] = [];
-    }
-    acc[category].push(tournament);
-    return acc;
-  }, {} as Record<string, TournamentBasicFieldsFragment[]>);
+  const groupedTournaments = filteredTournaments.reduce(
+    (acc, tournament) => {
+      const category = tournament.category && tournament.category.trim() !== '' ? tournament.category : 'Uncategorized';
+      if (!acc[category]) {
+        acc[category] = [];
+      }
+      acc[category].push(tournament);
+      return acc;
+    },
+    {} as Record<string, TournamentBasicFieldsFragment[]>,
+  );
 
   // Convert grouped object into an array of sections.
   const sections = Object.keys(groupedTournaments)
@@ -55,40 +53,17 @@ const TournamentsPage: React.FC = () => {
       tournaments: groupedTournaments[category],
     }));
 
-  const handleCreateTournament = async () => {
-    try {
-      const result = await createTournament({
-        variables: {
-          data: {
-            name: 'Neues Turnier',
-            eventId: currentEvent.id,
-            gameId: 1
-          },
-        },
-      });
-      const newTournament = result.data?.createTournament;
-
-      // Redirect to tournament admin page
-      if (newTournament) {
-        navigate(`/tournaments/${newTournament.id}/admin`);
-        refetch();
-      }
-    } catch (err) {
-      console.error('Fehler beim Erstellen eines neuen Turniers:', err);
-    }
-  };
-
   return (
     <Container sx={{ mt: 4 }}>
       <Typography variant="h4" gutterBottom>
-        Tournaments
+        Turniere
       </Typography>
 
       {sections.map((section) => (
         <TournamentSection key={section.category} category={section.category} tournaments={section.tournaments} />
       ))}
 
-      {isGlobalAdmin(currentUser) && <CreateTournamentCard onCreate={handleCreateTournament} />}
+      {isGlobalAdmin(currentUser) && <CreateTournamentCard onCreate={() => navigate('/tournaments/create')} />}
     </Container>
   );
 };

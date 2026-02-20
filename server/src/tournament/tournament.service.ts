@@ -71,6 +71,18 @@ export class TournamentService {
       name: input.name,
       event: { id: input.eventId },
       game: { id: input.gameId },
+      category: input.category,
+      registration_group: input.registrationGroup,
+      rules: input.rules,
+      prize_first: input.prize1,
+      prize_second: input.prize2,
+      prize_third: input.prize3,
+      num_players_per_team: input.numPlayersPerTeam,
+      max_substitutes: input.maxSubstitutes,
+      min_participants: input.minParticipants,
+      max_participants: input.maxParticipants,
+      briefing_time: input.briefingTime,
+      is_published: input.isPublished,
     });
 
     // Save new entity
